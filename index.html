@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="dark">
+<title>Life Designer</title>
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#2A2A2F">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2A2A2F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Life Designer">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#2A2A2F;--s1:#1F1F23;--s2:#303036;--tx:#F5F4F7;--mu:#A2A1AB;
+  --green:#2FD27B;--red:#FF5B4A;--teal:#22D3C5;--violet:#9B6BFF;--amber:#FFB81C;
+  --disp:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text',system-ui,'Segoe UI',Roboto,sans-serif;
+  --ease-out:cubic-bezier(.23,1,.32,1);--ease-io:cubic-bezier(.77,0,.175,1);--ease-drawer:cubic-bezier(.32,.72,0,1);
+  --ser:'Instrument Serif',Georgia,'Times New Roman',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2A2A2F;--s1:#1F1F23;--s2:#303036;--tx:#F5F4F7;--mu:#A2A1AB}}
+:root[data-theme="dark"]{--bg:#2A2A2F;--s1:#1F1F23;--s2:#303036;--tx:#F5F4F7;--mu:#A2A1AB}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+body{overscroll-behavior:none;font-optical-sizing:auto}
+button,[role="button"],.chip,.mini,.tl{touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.swipe>.habit{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.lbl,.st,.sm,.mu,.legend span,.chip,.lbl2,.qmeta,.qlater,.hero-q span,.edge,.frow,.due,.warn{letter-spacing:.01em}
+.h2,.cost .ttl{letter-spacing:-.025em}
+.qstage{overscroll-behavior:contain}
+html,body{background:var(--bg);color:var(--tx);font-family:var(--disp);-webkit-font-smoothing:antialiased}
+body{padding:12px 12px 56px}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;overflow-x:clip}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+input,textarea{font:inherit;font-size:16px;color:var(--tx);background:var(--s2);border:0;border-radius:14px;padding:12px 14px;width:100%;outline:none}
+textarea{resize:vertical;min-height:80px}
+input::placeholder,textarea::placeholder{color:#75747E}
+:focus-visible{outline:2px solid var(--tx);outline-offset:2px}
+
+/* Hero */
+.hero{position:relative;border-radius:30px;overflow:hidden;aspect-ratio:3/4;max-height:560px;width:100%;background:var(--s1)}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(31,31,35,.6) 0%,rgba(31,31,35,0) 26%,rgba(31,31,35,.15) 48%,rgba(31,31,35,.97) 100%)}
+.hero-top{position:absolute;z-index:2;top:16px;left:18px;right:16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hero-top .d{font-weight:700;font-size:15px}
+.pill{display:inline-block;border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px}
+.hero-q{position:absolute;z-index:2;left:22px;right:22px;bottom:24px}
+.hero-q p{font-family:var(--ser);font-style:italic;font-size:clamp(27px,7.4vw,36px);line-height:1.12;letter-spacing:-.01em}
+.hero-q span{display:block;margin-top:12px;color:var(--mu);font-size:14px;font-weight:700}
+
+/* Cards */
+.card{background:var(--s1);border-radius:26px;padding:20px}
+.h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mu{color:var(--mu)}
+
+.north{background:var(--violet);color:var(--bg);text-align:left;width:100%}
+.north .big{font-size:clamp(26px,7vw,32px);font-weight:800;line-height:1.05;letter-spacing:-.03em}
+.north .sub{margin-top:14px;display:flex;justify-content:space-between;font-weight:700;font-size:14px}
+.bar{height:10px;border-radius:999px;background:rgba(16,13,24,.22);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--bg)}
+
+.money{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mcard{text-align:left;border-radius:24px;padding:18px 16px;background:var(--s1);display:flex;flex-direction:column;gap:4px;min-height:132px}
+.mcard .lbl{font-size:13px;font-weight:700}
+.mcard .amt{font-size:clamp(22px,6vw,27px);font-weight:800;letter-spacing:-.03em;margin-top:auto}
+.mcard .sm{font-size:12px;color:var(--mu);font-weight:600}
+
+/* Habits */
+.today-h{display:flex;align-items:flex-end;justify-content:space-between;padding:10px 4px 2px}
+.dots{display:flex;gap:5px}
+.dots i{width:12px;height:12px;border-radius:50%;opacity:.25}
+.dots i.on{opacity:1}
+.habit{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--s1);border-radius:24px;padding:16px;transition:background-color .18s ease,color .18s ease,transform .1s ease}
+.habit:active{transform:scale(.985)}
+.habit .dot{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center}
+.habit .dot svg{opacity:0;transition:opacity .15s}
+.habit .mid{min-width:0;flex:1}
+.habit .area{font-size:13px;font-weight:800}
+.habit .txt{font-size:19px;font-weight:700;line-height:1.2;margin-top:2px}
+.habit .warn{display:inline-block;margin-top:8px;font-size:12px;font-weight:800;border-radius:999px;padding:4px 10px}
+.habit .stk{text-align:right;flex:none}
+.habit .stk b{display:block;font-size:24px;font-weight:800;line-height:1}
+.habit .stk small{font-size:11px;font-weight:700;opacity:.7}
+.habit.done{color:var(--bg)}
+.habit.done .dot svg{opacity:1}
+.habit.done .area{color:var(--bg)!important;opacity:.7}
+.habit .due{display:inline-block;margin-top:8px;font-size:12px;font-weight:800;border-radius:999px;padding:4px 10px}
+.habit.done .due{display:none}
+.lhead{display:flex;align-items:center;gap:8px;padding:8px 6px 0;font-weight:800;font-size:15px}
+.lhead i{width:10px;height:10px;border-radius:50%}
+.lhead small{color:var(--mu);font-weight:700;font-size:13px;margin-left:auto}
+.fixed{width:100%;text-align:left}
+.frow{display:flex;justify-content:space-between;gap:10px;font-size:15px;font-weight:600;padding:5px 0}
+.frow span:last-child{font-weight:800}
+.left{margin-top:12px;border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;align-items:baseline;font-weight:800}
+.left b{font-size:22px;letter-spacing:-.02em}
+.fx{display:flex;gap:8px;margin-top:8px}
+.fx input:first-child{flex:1.6}.fx input:nth-child(2){flex:1}
+.fx button{flex:none;width:46px;border-radius:14px;background:var(--s2);font-weight:800;font-size:20px;color:var(--red)}
+.cost{display:flex;gap:8px;background:var(--s1);border-radius:26px;padding:8px;touch-action:pan-y;user-select:none}
+.cost .full{flex:1;min-width:0;padding:12px 8px 14px 12px}
+.cost .full.in-l{animation:inl .22s ease-out}.cost .full.in-r{animation:inr .22s ease-out}
+@keyframes inl{from{opacity:0;transform:translateX(-18px)}}@keyframes inr{from{opacity:0;transform:translateX(18px)}}
+.cost .mini{flex:none;width:44px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--bg);letter-spacing:.02em}
+.cost .mini span{writing-mode:vertical-rl}
+.cost .mini.l span{transform:rotate(180deg)}
+.cost .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.cost .ttl{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.cost .st{font-size:13px;color:var(--mu);font-weight:600;margin-top:2px}
+.cost .sum{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:10px 0 6px}
+.more{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--s2);color:var(--tx)}
+.tl{width:100%;text-align:left;background:var(--s2);border-radius:18px;padding:14px;margin-top:8px}
+.tl .row b{font-size:15px;font-weight:800}
+.tl .cnt{display:flex;gap:6px}
+.tl .cnt span{border-radius:999px;padding:3px 9px;font-size:12px;font-weight:800;color:var(--bg)}
+.tl .grp{margin-top:12px}
+.tl .grp h4{font-size:13px;font-weight:800;margin-bottom:4px}
+.tl .grp p{font-size:15px;line-height:1.45;font-weight:500}
+.edge{padding:6px 6px 2px;font-size:17px;font-weight:700;line-height:1.3;color:var(--mu)}
+.edge b{font-size:30px;font-weight:800;color:var(--tx);letter-spacing:-.03em;margin:0 2px}
+.goal{margin-top:14px}
+.goal .gl{display:flex;justify-content:space-between;font-weight:700;font-size:14px}
+.swipe{position:relative;border-radius:24px;overflow:hidden}
+.swipe>.del{position:absolute;top:1px;bottom:1px;right:1px;left:1px;clip-path:inset(0 0 0 100% round 22px);border-radius:22px;background:var(--red);display:flex;align-items:center;justify-content:flex-end;padding-right:20px;color:var(--bg);font-weight:800;font-size:14px;overflow:hidden;white-space:nowrap}
+.swipe:not(.sw)>.del{visibility:hidden}
+.swipe>.del>.dt{position:absolute;right:0;top:0;bottom:0;width:25%;display:flex;align-items:center;justify-content:center}
+.swipe>.del.snap{transition:clip-path .32s var(--ease-out)}
+.swipe.sw>.habit,.swipe.sw>.del{will-change:transform,clip-path}
+.swipe>.del.full{transition:clip-path .22s var(--ease-out);clip-path:inset(-1px round 24px)!important;inset:0!important;border-radius:24px}
+.swipe>.del.full>.dt{opacity:0;transition:opacity .15s var(--ease-out)}
+.swipe.gone{transition:transform .45s var(--ease-io),opacity .45s var(--ease-io)!important;opacity:0}
+.swipe.gone-l{transform:translateX(-112%)}.swipe.gone-r{transform:translateX(112%)}
+.bubble{position:fixed;z-index:60;display:grid;place-items:center;pointer-events:none;overflow:hidden;box-shadow:-10px 10px 22px rgba(0,0,0,.35);will-change:transform,opacity}
+.bubble .bt{position:absolute;left:78px;right:16px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:700;line-height:1.2;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bubble svg{width:52%;height:52%;opacity:0}
+body{overflow-anchor:none}
+.swipe.arriving{opacity:0;transform:scale(.96)}
+.swipe.arrived{transition:opacity .28s var(--ease-out),transform .32s var(--ease-out)}
+.habit .ck,.del .ck{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.del .ck svg{width:38px;height:38px;animation:popin .3s var(--ease-out) .12s both}
+.del .ck path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .3s var(--ease-out) .2s forwards}
+.habit .ck svg{width:40px;height:40px;animation:popin .3s var(--ease-out) both}
+.habit .ck path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .28s var(--ease-out) .1s forwards}
+.habit.clearing .dot,.habit.clearing .mid{opacity:0;transition:opacity .15s var(--ease-out)}
+.dlg .big{font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--teal);margin-top:4px}
+.dlg .cap{display:flex;gap:8px;margin-top:14px}
+.dlg .cap input{flex:1;background:var(--s2)}
+.dlg .cap button{flex:none;width:52px;border-radius:16px;background:var(--teal);color:var(--bg);font-size:24px;font-weight:800}
+.grp{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--s2);border-radius:18px;padding:13px 14px;margin-top:8px}
+.grp .gt{flex:1;min-width:0;font-size:16px;font-weight:700;line-height:1.25}
+.grp .gm{display:block;font-size:12px;font-weight:700;color:var(--mu);margin-top:3px;letter-spacing:.01em}
+.grp .gc{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--s1);color:var(--mu)}
+.grp.solved .gt{color:var(--mu);text-decoration:line-through}
+.grp.solved .gc{background:var(--green);color:var(--bg)}
+.clearbtn{width:100%;border-radius:22px;padding:15px 16px;font-weight:800;font-size:15px;color:var(--green);background-color:var(--s1)}
+.archlink{display:block;margin:0 auto;color:var(--mu);font-size:14px;font-weight:600;padding:8px 14px;letter-spacing:.01em}
+.arch{display:flex;flex-direction:column;gap:2px;padding:0 8px 4px}
+.arch .ai{display:flex;align-items:center;gap:10px;padding:7px 0;color:var(--mu);font-size:15px;font-weight:600}
+.arch .ai svg{flex:none;color:var(--green)}
+.arch .ai span{flex:1;min-width:0}
+.arch .ai small{font-size:12px;opacity:.8}
+.swipe>.habit{position:relative;touch-action:pan-y}
+.swipe>.habit.snap{transition:transform .32s var(--ease-out),background-color .18s ease}
+.swipe>.habit.out{transition:transform .2s var(--ease-out),opacity .2s var(--ease-out);transform:translateX(-110%)!important;opacity:0}
+.hbtn{display:flex;gap:8px;align-items:center}
+.rbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--s1);color:var(--tx);font-size:22px;font-weight:800}
+.undo-w{position:fixed;left:0;right:0;bottom:0;padding:0 12px calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:40}
+.undo{pointer-events:auto;display:flex;align-items:center;gap:14px;background:rgba(40,40,46,.72);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%);color:var(--tx);box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:999px;padding:8px 8px 8px 18px;font-weight:800;font-size:15px;max-width:496px;width:100%;justify-content:space-between;animation:up .2s ease-out}
+.undo button{background:var(--tx);color:var(--bg);border-radius:999px;padding:10px 16px;font-weight:800;font-size:14px}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.card,.mcard,.cost,.inl,.swipe>.habit:not(.done),.hero{background-image:linear-gradient(315deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 48%)}
+.sync{font-size:13px;color:var(--mu);font-weight:600;padding:2px 6px}
+
+/* Curve */
+.seg{display:flex;background:var(--s2);border-radius:999px;padding:4px}
+.seg button{border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;color:var(--mu)}
+.seg button.on{background:var(--tx);color:var(--bg)}
+.chart{margin-top:14px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend span{display:flex;align-items:center;gap:6px;background:var(--s2);border-radius:999px;padding:6px 11px;font-size:12px;font-weight:700}
+.legend i{width:9px;height:9px;border-radius:50%}
+.stat{margin-top:14px;font-size:15px;font-weight:600;line-height:1.4}
+.stat b{font-weight:800}
+
+/* 10-10-10 */
+.tabs{display:flex;gap:8px;margin-top:14px;overflow-x:auto}
+.tabs button{flex:1;border-radius:16px;padding:11px 8px;font-size:14px;font-weight:800;background:var(--s2);white-space:nowrap}
+.tabs button small{display:block;font-size:11px;font-weight:700;opacity:.7;margin-top:2px}
+.list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.li{display:flex;align-items:center;gap:10px}
+.li b{width:22px;flex:none;text-align:right;font-weight:800;font-size:14px}
+.acts{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;border-radius:16px;padding:14px 12px;font-weight:800;font-size:15px;background:var(--s2)}
+.btn.fill{color:var(--bg)}
+
+.refl textarea{margin-top:8px}
+.refl label{display:block;margin-top:14px;font-weight:700;font-size:15px}
+
+.foot{display:flex;justify-content:center;margin-top:6px}
+.foot button{color:var(--mu);font-weight:700;font-size:14px;padding:10px 16px;border-radius:999px;background:var(--s1)}
+
+/* Sheet */
+.inl{background-color:var(--s1);border-radius:26px;padding:22px 18px}
+.inl input,.inl textarea,.inl .btn,.inl .fx button{background:var(--bg)}
+.inl .btn.fill{background:inherit}
+.inl h3{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.inl p{color:var(--mu);margin-top:6px;font-size:15px;line-height:1.4}
+.inl .fld{margin-top:16px}
+.inl .fld span{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
+.inl .acts{margin-top:20px}
+.toast{align-self:center;background:var(--tx);color:var(--bg);font-weight:800;padding:10px 16px;border-radius:999px;font-size:14px}
+.warnbar{background:var(--red);color:var(--bg);border-radius:18px;padding:12px 16px;font-weight:800;font-size:14px}
+/* Morgonfrågor */
+.qo{position:fixed;inset:0;z-index:80}
+.qbg{position:absolute;inset:0;background:rgba(10,10,14,.18);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);animation:fade .35s ease both}
+.qo.fade .qbg{animation:fadeout .5s ease both}
+@keyframes fadeout{to{opacity:0}}
+.qbox{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px;right:12px;max-width:520px;margin:0 auto;border-radius:32px;
+  background:rgba(8,8,12,.2);-webkit-backdrop-filter:blur(20px) saturate(0%) brightness(.8);backdrop-filter:blur(20px) saturate(0%) brightness(.8);display:flex;flex-direction:column;padding:22px 20px 20px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);animation:qin .36s var(--ease-out) both}
+@keyframes qin{from{opacity:0;transform:translateY(20px) scale(.97);filter:blur(4px)}}
+.qbox.bye{animation:qout .22s var(--ease-out) both}
+.qbox.away{animation:qaway .22s var(--ease-out) both}
+@keyframes qout{to{opacity:0;transform:scale(.96);filter:blur(4px)}}
+@keyframes qaway{to{opacity:0;transform:translateY(20px) scale(.97)}}
+.qbox::before,.qbox::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:3px;pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.qbox::before{background:linear-gradient(115deg,#FF3B3B,#FF9F1C,#FFE14D,#3DDC84,#27C7FF,#3E6BFF,#A45BFF,#FF4FB3,#FF3B3B);background-size:180% 180%;animation:wave1 7s ease-in-out infinite}
+.qbox::after{background:linear-gradient(245deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));background-size:260% 260%;animation:wave2 4.6s ease-in-out infinite;mix-blend-mode:screen}
+@keyframes wave1{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes wave2{0%{background-position:100% 0%}50%{background-position:0% 100%}100%{background-position:100% 0%}}
+.qtop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.qprog{display:flex;gap:6px;flex:1}
+.qprog i{flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.14);transition:background-color .3s ease}
+.qprog i.on{background:#4F8DFF}
+.qlater{color:var(--mu);font-weight:700;font-size:14px;padding:6px 4px}
+.qmeta{margin-top:18px;font-size:13px;font-weight:800;color:#7FB0FF;letter-spacing:.02em}
+.qstage{flex:1;overflow:auto;margin-top:8px;padding:2px}
+.qstage h2{font-size:clamp(26px,7vw,32px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
+.qstage p{color:rgba(255,255,255,.74);font-size:15px;line-height:1.4;margin-top:10px;font-weight:600;letter-spacing:.01em}
+.qf{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.qi{display:flex;align-items:center;gap:12px}
+.qi b{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;background:#2F6BFF;color:#fff;font-size:14px;font-weight:800}
+.qstage input,.qstage textarea{background:rgba(255,255,255,.08);font-size:18px;font-weight:600;padding:15px 16px;border-radius:18px}
+.qstage textarea{min-height:120px;resize:none;line-height:1.4}
+.qin{animation:qstep .34s cubic-bezier(.2,.8,.2,1) both}
+@keyframes qstep{from{opacity:0;transform:translateX(var(--qx,30px))}}
+.qnav{display:flex;gap:10px;margin-top:14px}
+.qnav button{flex:1;border-radius:18px;padding:17px 12px;font-weight:800;font-size:16px}
+.qback{background:rgba(255,255,255,.08)}
+.qnext{background:#2F6BFF;color:#fff;flex:2!important}
+.qnext[disabled]{opacity:.35}
+.qcheck{position:fixed;inset:0;z-index:81;display:grid;place-items:center;pointer-events:none}
+.qcheck svg{width:128px;height:128px;animation:popin .5s cubic-bezier(.2,.8,.2,1) both}
+.qcheck path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .45s ease-out .25s forwards}
+.qcheck.fade svg{animation:qout .25s var(--ease-out) both}
+.nudge{background:linear-gradient(135deg,#1A4DFF,#2F6BFF 55%,#4FA8FF)!important;color:#fff}
+.nudge .nh{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.nudge p{margin-top:8px;font-size:16px;line-height:1.4;font-weight:600;opacity:.95}
+.edgecard{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.edgecard .eff{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.edgecard .lbl2{font-size:13px;font-weight:700;color:var(--mu);margin-bottom:6px}
+.chips{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.chip{border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;background:var(--s2);color:var(--tx);white-space:nowrap}
+.chip.ok{background:var(--green);color:var(--bg)}
+.chip.go{background:#2F6BFF;color:#fff}
+.tl .ans{margin-top:12px}
+.tl .ans h4{font-size:13px;font-weight:800;color:#7FB0FF;margin-bottom:4px}
+.tl .ans p{font-size:15px;line-height:1.45;font-weight:500}
+.tl .ans{animation:rise .35s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-transparency:reduce){.qbox{background:rgba(24,24,28,.97)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.qbg{background:rgba(10,10,14,.6)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.undo{background:#2E2E34!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+/* Mikroanimationer */
+.rise{animation:rise .42s var(--ease-out) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+.hero.boot img{animation:settle 1.6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes settle{from{transform:scale(1.07);filter:brightness(.7)}}
+.hero.boot .hero-q{animation:rise .7s cubic-bezier(.2,.8,.2,1) .35s both}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s cubic-bezier(.45,0,.2,1) .12s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fadein{animation:fade .6s ease .5s both}
+@keyframes fade{from{opacity:0}}
+.popin{transform-box:fill-box;transform-origin:center;animation:popin .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes popin{from{opacity:0;transform:scale(.85)}}
+.justdone .dot{animation:dotpop .42s cubic-bezier(.2,.8,.2,1)}
+@keyframes dotpop{0%{transform:scale(.9)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.justdone .dot svg path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .34s ease-out .08s forwards}
+.dots i{transition:opacity .3s ease}
+.dots i.pop{animation:dotpop .42s cubic-bezier(.2,.8,.2,1)}
+.inl{animation:sheet .3s cubic-bezier(.2,.8,.2,1) both;transform-origin:top center}
+.inl.closing{animation:sheetout .16s var(--ease-out) both}
+@keyframes sheet{from{opacity:0;transform:translateY(-10px) scale(.98)}}
+@keyframes sheetout{to{opacity:0;transform:translateY(-6px) scale(.98)}}
+.toast{animation:popin .35s cubic-bezier(.2,.8,.2,1) both}
+.undo-w.out .undo{animation:down .18s var(--ease-out) both}
+@keyframes down{to{opacity:0;transform:translateY(14px)}}
+.tl .grp{animation:rise .35s cubic-bezier(.2,.8,.2,1) both}
+button{transition:transform 160ms var(--ease-out),background-color 180ms ease,color 180ms ease,opacity 180ms ease}
+.rbtn:active,.btn:active,.mini:active,.mcard:active,.tabs button:active,.seg button:active,.more:active,.foot button:active,.undo button:active,.tl:active,.chip:active,.qnav button:active,.qlater:active{transform:scale(.97)}
+.habit:active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rise,.inl,.qbox,.qbg,.toast,.undo,.qcheck svg,.popin{animation:fade .2s ease both!important}.draw,.justdone .dot svg path,.qcheck path{stroke-dasharray:none;stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const HEROES=[];
+let HIDX=null;
+function heroSrc(){
+  if(HIDX===null){let seen=[];try{seen=JSON.parse(localStorage.getItem('lifedesigner:h')||'[]')}catch(e){}
+    const pool=HEROES.map((_,i)=>i).filter(i=>!seen.includes(i));
+    HIDX=(pool.length?pool:HEROES.map((_,i)=>i))[Math.floor(Math.random()*(pool.length||HEROES.length))];
+    seen=[...seen,HIDX].slice(-Math.max(1,HEROES.length-3));
+    try{localStorage.setItem('lifedesigner:h',JSON.stringify(seen))}catch(e){}}
+  return 'data:image/jpeg;base64,'+HEROES[HIDX];
+}
+
+/* Ögonblicksbild av Påminnelser – uppdateras av Claude i chatten */
+const REM={lists:[{items:[]}]};
+
+const AREAS=[
+ {a:'Hälsa',c:'#FF5B4A',t:'1 set negativa chins'},
+ {a:'Personlig utveckling',c:'#FFB81C',t:'Läs 10 sidor'},
+ {a:'Relationer',c:'#FF5FA8',t:'Ett genuint meddelande till någon'},
+ {a:'Ekonomi',c:'#2FD27B',t:'Logga dagens siffror'},
+ {a:'Karriär',c:'#3E7BFF',t:'Skriv en ny ad-hook'}
+];
+
+const Q=[
+["Easy to do. Easy not to do.","The Slight Edge-principen"],
+["Varje dag står du på en av två kurvor. Välj den som går uppåt.","The Slight Edge-principen"],
+["Du ser inte resultatet av en dag. Du ser resultatet av 365.","The Slight Edge-principen"],
+["Det som gör dig framgångsrik är enkelt. Just därför hoppar de flesta över det.","The Slight Edge-principen"],
+["Små felbeslut, upprepade dagligen, är hela förklaringen till misslyckande.","The Slight Edge-principen"],
+["Tid är multiplikatorn. Dina dagliga val är insatsen.","The Slight Edge-principen"],
+["Framgång är en process, inte en händelse.","The Slight Edge-principen"],
+["Ingen enskild dag avgör. Alla dagar tillsammans gör det.","The Slight Edge-principen"],
+["Success is nothing more than a few simple disciplines, practiced every day.","Jim Rohn"],
+["We must all suffer one of two things: the pain of discipline or the pain of regret.","Jim Rohn"],
+["Discipline is the bridge between goals and accomplishment.","Jim Rohn"],
+["Motivation is what gets you started. Habit is what keeps you going.","Jim Rohn"],
+["Don't wish it were easier. Wish you were better.","Jim Rohn"],
+["Work harder on yourself than you do on your job.","Jim Rohn"],
+["If you are not willing to risk the usual, you will have to settle for the ordinary.","Jim Rohn"],
+["Either you run the day or the day runs you.","Jim Rohn"],
+["Income seldom exceeds personal development.","Jim Rohn"],
+["Take care of your body. It's the only place you have to live.","Jim Rohn"],
+["If you really want to do something, you'll find a way. If you don't, you'll find an excuse.","Jim Rohn"],
+["Success is not to be pursued; it is to be attracted by the person you become.","Jim Rohn"],
+["Formal education will make you a living; self-education will make you a fortune.","Jim Rohn"],
+["Don't let your learning lead to knowledge. Let your learning lead to action.","Jim Rohn"],
+["Your life does not get better by chance, it gets better by change.","Jim Rohn"],
+["Every discipline affects every other discipline.","Jim Rohn"],
+["Discipline weighs ounces while regret weighs tons.","Jim Rohn"],
+["The few who do are the envy of the many who only watch.","Jim Rohn"],
+["If you don't design your own life plan, chances are you'll fall into someone else's plan.","Jim Rohn"],
+["Learn how to be happy with what you have while you pursue all that you want.","Jim Rohn"],
+["Time is more valuable than money. You can get more money, but you cannot get more time.","Jim Rohn"],
+["For things to change, you have to change.","Jim Rohn"],
+["Give whatever you are doing and whoever you are with the gift of your attention.","Jim Rohn"],
+["I am not what happened to me, I am what I choose to become.","Carl Jung"],
+["Until you make the unconscious conscious, it will direct your life and you will call it fate.","Carl Jung"],
+["Who looks outside, dreams; who looks inside, awakes.","Carl Jung"],
+["The privilege of a lifetime is to become who you truly are.","Carl Jung"],
+["No tree, it is said, can grow to heaven unless its roots reach down to hell.","Carl Jung"],
+["Everything that irritates us about others can lead us to an understanding of ourselves.","Carl Jung"],
+["There is no coming to consciousness without pain.","Carl Jung"],
+["We cannot change anything until we accept it.","Carl Jung"],
+["Your vision will become clear only when you can look into your own heart.","Carl Jung"],
+["In all chaos there is a cosmos, in all disorder a secret order.","Carl Jung"],
+["Man needs difficulties; they are necessary for health.","Carl Jung"],
+["Knowing your own darkness is the best method for dealing with the darknesses of other people.","Carl Jung"],
+["Nothing lasts, nothing is finished, and nothing is perfect.","Richard Powell, om wabi-sabi"],
+["Det ofullkomliga, det förgängliga och det ofullständiga är också vackert.","Wabi-sabi"],
+["Det som gått sönder och lagats med guld blir starkare än innan.","Kintsugi"],
+["Fall seven times, stand up eight.","Japanskt ordspråk"],
+["Even monkeys fall from trees.","Japanskt ordspråk"],
+["Continuance is power.","Japanskt ordspråk"],
+["Dust amassed will make a mountain.","Japanskt ordspråk"],
+["Beginning is easy, continuing is hard.","Japanskt ordspråk"],
+["Vision without action is a daydream. Action without vision is a nightmare.","Japanskt ordspråk"],
+["The bamboo that bends is stronger than the oak that resists.","Japanskt ordspråk"],
+["A journey of a thousand miles begins with a single step.","Lao Tzu"],
+["Nature does not hurry, yet everything is accomplished.","Lao Tzu"],
+["Dripping water hollows out stone.","Ovidius"],
+["We are what we repeatedly do. Excellence, then, is not an act, but a habit.","Will Durant, om Aristoteles"],
+["Waste no more time arguing what a good man should be. Be one.","Marcus Aurelius"],
+["What stands in the way becomes the way.","Marcus Aurelius"],
+["Very little is needed to make a happy life; it is all within yourself.","Marcus Aurelius"],
+["You have power over your mind, not outside events. Realize this, and you will find strength.","Marcus Aurelius"],
+["It is not that we have a short time to live, but that we waste a lot of it.","Seneca"],
+["Luck is what happens when preparation meets opportunity.","Seneca"],
+["Begin at once to live.","Seneca"],
+["Difficulties strengthen the mind, as labor does the body.","Seneca"],
+["First say to yourself what you would be; and then do what you have to do.","Epiktetos"],
+["No man is free who is not master of himself.","Epiktetos"],
+["Well-being is realized by small steps, but is truly no small thing.","Zenon från Kition"],
+["It does not matter how slowly you go as long as you do not stop.","Konfucius"],
+["The man who moves a mountain begins by carrying away small stones.","Konfucius"],
+["Drop by drop is the water pot filled.","Buddha"],
+["Great things are not done by impulse, but by a series of small things brought together.","Vincent van Gogh"],
+["Success is the sum of small efforts, repeated day in and day out.","Robert Collier"],
+["Small deeds done are better than great deeds planned.","Peter Marshall"],
+["You will never change your life until you change something you do daily.","John C. Maxwell"],
+["The secret of your success is found in your daily routine.","John C. Maxwell"],
+["Chains of habit are too light to be felt until they are too heavy to be broken.","Samuel Johnson"],
+["The best time to plant a tree was 20 years ago. The second best time is now.","Kinesiskt ordspråk"],
+["Someone's sitting in the shade today because someone planted a tree a long time ago.","Warren Buffett"],
+["Do what you can, with what you have, where you are.","Theodore Roosevelt"],
+["Well done is better than well said.","Benjamin Franklin"],
+["Energy and persistence conquer all things.","Benjamin Franklin"],
+["An investment in knowledge pays the best interest.","Benjamin Franklin"],
+["Lost time is never found again.","Benjamin Franklin"],
+["What you do every day matters more than what you do once in a while.","Gretchen Rubin"],
+["You do not rise to the level of your goals. You fall to the level of your systems.","James Clear"],
+["Every action you take is a vote for the type of person you wish to become.","James Clear"],
+["Habits are the compound interest of self-improvement.","James Clear"],
+["The expert in anything was once a beginner.","Helen Hayes"],
+["Discipline equals freedom.","Jocko Willink"],
+["Amateurs sit and wait for inspiration, the rest of us just get up and go to work.","Stephen King"],
+["Simplicity is the ultimate sophistication.","Leonardo da Vinci"],
+["Knowing is not enough; we must apply. Being willing is not enough; we must do.","Leonardo da Vinci"],
+["Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.","Antoine de Saint-Exupéry"],
+["Do the thing and you shall have the power.","Ralph Waldo Emerson"],
+["The creation of a thousand forests is in one acorn.","Ralph Waldo Emerson"],
+["Go confidently in the direction of your dreams. Live the life you have imagined.","Henry David Thoreau"],
+["The unexamined life is not worth living.","Sokrates"],
+["Rome wasn't built in a day.","Ordspråk"],
+["Most people overestimate what they can do in one year and underestimate what they can do in ten years.","Tillskrivs Bill Gates"],
+["Patience is bitter, but its fruit is sweet.","Tillskrivs Jean-Jacques Rousseau"]
+];
+
+/* Inbakad data – uppdateras av Claude vid varje bygge */
+const BAKED={};
+
+/* ---------- datum ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const keyOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseKey=k=>{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d,12)};
+const addDays=(k,n)=>{const d=parseKey(k);d.setDate(d.getDate()+n);return keyOf(d)};
+const diffDays=(a,b)=>Math.round((parseKey(b)-parseKey(a))/864e5);
+const today=()=>keyOf(new Date(Date.now()-4*3600e3)); // ny dag kl 04:00
+const MON=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+const DOW=['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+const monthName=mk=>MON[+mk.slice(5,7)-1];
+const kr=n=>Math.round(n||0).toLocaleString('sv-SE')+' kr';
+const dec=(n,d=1)=>n.toLocaleString('sv-SE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- lagring ---------- */
+const KEY='lifedesigner:v1';
+let S=null, ui={range:'30',tab:0,cost:'priv',chart:'edge',tl:{},anim:'',canim:''}, storageOK=false, undoT=null, lastDel=null, noClick=0;
+function fresh(){const t=today();return{start:t,north:'Jag lever på mitt företag.',target:addDays(t,365),goal:3,doneLog:{},fixed:[],bizFixed:[],days:{},salary:null,revenue:{},refl:{},salarySnooze:null}}
+const MAIN_KEYS=['start','startV','north','target','goal','doneLog','fixed','bizFixed','salary','salaryHist','revenue','refl','salarySnooze','rem','archive','logs','gsolved','gsteps'];
+let mainRef=null,daysCol=null,loaded=false,lastMain='',lastDay={},saveT=null,saving=Promise.resolve();
+const clone=o=>JSON.parse(JSON.stringify(o));
+function mainData(){const o={};MAIN_KEYS.forEach(k=>{if(S[k]!==undefined)o[k]=S[k]});return clone(o)}
+async function initStorage(){
+  let db=null,user=null;
+  try{if(window.claude&&window.claude.use)[db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')])}catch(e){}
+  try{
+    const uid=user?await user.id():null;
+    if(db&&uid){
+      mainRef=db.doc('data/users/'+uid+'/main');daysCol=mainRef.collection('days');
+      const [m,ds]=await Promise.all([mainRef.get(),daysCol.get()]);
+      if(m.exists)Object.assign(S,clone(m.data()));
+      ds.docs.forEach(d=>{const v=clone(d.data());if(v&&v.a){S.days[d.id]={h:[],a:v.a,q:!!v.q};lastDay[d.id]=JSON.stringify({a:v.a,q:!!v.q})}});
+      lastMain=m.exists?JSON.stringify(mainData()):'';
+      storageOK='db';
+    }
+  }catch(e){mainRef=null;daysCol=null}
+  if(!storageOK){
+    try{const r=localStorage.getItem(KEY);if(r)Object.assign(S,JSON.parse(r));localStorage.setItem(KEY+':t','1');storageOK='local'}catch(e){storageOK=false}
+  }
+  if(!S.rem)S.rem=clone(REM.lists[0].items);
+  loaded=true;
+}
+async function flush(){
+  if(!loaded)return;
+  if(storageOK==='db'){
+    const m=JSON.stringify(mainData());
+    if(m!==lastMain){try{await mainRef.set(JSON.parse(m));lastMain=m}catch(e){}}
+    for(const k of Object.keys(S.days)){
+      const d=S.days[k];if(!d||!d.a)continue;
+      const o={a:clone(d.a),q:!!d.q},j=JSON.stringify(o);if(j===lastDay[k])continue;
+      try{await daysCol.doc(k).set(o);lastDay[k]=j}catch(e){}
+    }
+  }else if(storageOK==='local'){
+    try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  }
+}
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(flush)},600)}
+window.addEventListener('pagehide',()=>{if(saveT){clearTimeout(saveT);flush()}});
+
+/* ---------- data ---------- */
+const getDay=k=>S.days[k]||null;
+function day(k){if(!S.days[k])S.days[k]={h:[]};return S.days[k]}
+const QS=[
+ {k:'top3',q:'3 saker som ska vara klara idag',s:'Hamnar direkt överst i din Att göra-lista.',n:3,ph:['Första','Andra','Tredje'],h:'3 saker'},
+ {k:'why',q:'Varför gör du det här?',s:'Ditt syfte är det som drar dig framåt när motivationen tar slut.',ph:'Jag gör det här för att…',h:'Varför'},
+ {k:'disc',q:'Vilken disciplin gör du idag som du annars skulle ångra?',s:'Disciplin väger gram, ånger väger ton. Fritt efter Jim Rohn.',ph:'Idag gör jag…',h:'Disciplin'},
+ {k:'self',q:'Hur jobbar du på dig själv idag?',s:'Jobba hårdare på dig själv än på ditt jobb. Fritt efter Jim Rohn.',ph:'Idag utvecklar jag…',h:'Utveckling'},
+ {k:'manual',q:'Vad gjorde du manuellt igår?',s:'Skriv uppgift och tid, till exempel "förseningsmejl 25 min". Hoppa över om inget dyker upp.',ph:'Uppgift och minuter',h:'Manuellt',opt:true}
+];
+const STOP=['och','att','med','för','till','den','det','ett','en','min','minuter','timmar','timme','tim','igar','igår','som','har','jag','var','gjorde','pa','på','av','nya','ny'];
+const toks=s=>s.toLowerCase().replace(/[^a-zå-ö0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>2&&!/^\d+$/.test(w)&&!STOP.includes(w));
+function parseMin(s){let m=s.match(/(\d+(?:[.,]\d+)?)\s*(h|tim|timme|timmar)\b/i);if(m)return Math.round(parseFloat(m[1].replace(',','.'))*60);
+  m=s.match(/(\d+)\s*(min|minuter|m)\b/i);return m?+m[1]:0}
+const fmtMin=m=>m>=60?`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`:`${m} min`;
+function addLog(text){
+  const t=text.trim();if(!t)return;
+  const tk=toks(t);let gid=null,best=0;
+  (S.logs||[]).forEach(e=>{const o=toks(e.t),i=o.filter(w=>tk.includes(w)).length,sc=i/Math.max(1,Math.min(o.length,tk.length));
+    if(i&&sc>=.5&&sc>best){best=sc;gid=e.gid}});
+  S.logs=[{id:newId(),gid:gid||newId(),t,min:parseMin(t),ts:today()},...(S.logs||[])];
+}
+function groups(){
+  const g={};(S.logs||[]).forEach(e=>{const x=g[e.gid]=g[e.gid]||{gid:e.gid,n:0,min:0,t:e.t};x.n++;x.min+=e.min;if(e.t.length<x.t.length)x.t=e.t});
+  return Object.values(g).map(x=>({...x,solved:!!(S.gsolved||{})[x.gid]}));
+}
+const solvedMin=()=>groups().filter(x=>x.solved).reduce((s,x)=>s+x.min,0);
+const answered=k=>!!(S.days[k]&&S.days[k].q);
+function dayFactor(k){const q=answered(k),r=doneCount(k)>=S.goal;return q&&r?1.01:(q||r)?1.005:1}
+const doneCount=k=>Object.values(S.doneLog).filter(d=>d===k).length;
+const sumOf=l=>l.reduce((s,f)=>s+(+f.a||0),0);
+const revOf=mk=>{const r=S.revenue[mk];return Array.isArray(r)?sumOf(r):(+r||0)};
+const revRows=mk=>{const r=S.revenue[mk];return Array.isArray(r)?r:(r?[{n:'Shopify',a:+r}]:[])};
+const fixedSum=()=>sumOf(S.fixed);
+function curve(){const n=diffDays(S.start,today())+1;const v=[1];for(let j=0;j<n;j++)v.push(v[v.length-1]*dayFactor(addDays(S.start,j)));return v}
+let QI=null;
+function quote(){
+  if(QI===null){
+    let seen=[];try{seen=JSON.parse(localStorage.getItem('lifedesigner:q')||'[]')}catch(e){}
+    const pool=Q.map((_,i)=>i).filter(i=>!seen.includes(i));
+    QI=pool[Math.floor(Math.random()*pool.length)];
+    seen=[...seen,QI].slice(-40);
+    try{localStorage.setItem('lifedesigner:q',JSON.stringify(seen))}catch(e){}
+  }
+  return Q[QI];
+}
+function salaryDue(){
+  const t=today(),mk=t.slice(0,7),d=+t.slice(8);
+  const prev=addDays(mk+'-01',-1).slice(0,7);
+  const want=d>=24?mk:prev;
+  if(S.salarySnooze===t)return null;
+  if(!S.salary||S.salary.month<want)return want;
+  return null;
+}
+
+/* ---------- render ---------- */
+const CHECK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" pathLength="1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function render(){
+  openSw=null;
+  const t=today(),mk=t.slice(0,7),dt=parseKey(t);
+  const [qt,qa]=quote();
+  const dayNo=diffDays(S.start,t)+1;
+  const total=Math.max(1,diffDays(S.start,S.target));
+  const left=Math.max(0,diffDays(t,S.target));
+  const pct=Math.min(100,Math.max(0,(1-left/total)*100));
+  const rev=revOf(mk);
+  const cnt=doneCount(t);
+  const td=day(t);
+
+  let h=`
+  <div class="edge">Det har gått <b>${diffDays(S.start,t)}</b> dagar sedan du började med en edge.</div>
+  <section class="hero">
+    <img src="${heroSrc()}" alt="">
+    <div class="hero-top"><span class="d">${DOW[dt.getDay()]} ${dt.getDate()} ${MON[dt.getMonth()]}</span></div>
+    <div class="hero-q"><p>“${esc(qt)}”</p><span>${esc(qa)}</span></div>
+  </section>
+
+
+
+  ${dlgCard()}${nudgeCard()}${edgeCard()}
+  ${chartCard()}
+
+  <div class="today-h">
+    <div><div class="h2">Att göra</div><div class="mu" style="font-size:14px;font-weight:600;margin-top:2px">${cnt} av ${S.goal} klara idag</div>
+      <div class="dots" style="margin-top:8px">${Array.from({length:S.goal},(_,i)=>`<i class="${i<cnt?'on':''}${ui.popDot&&i===cnt-1?' pop':''}" style="background:var(--green)"></i>`).join('')}</div></div>
+    <div class="hbtn" id="remh"><button class="rbtn" data-act="addrem" aria-label="Ny påminnelse">+</button><button class="rbtn" data-act="editrem" aria-label="Redigera påminnelser">${DOTS}</button></div>
+  </div>`;
+
+  const RC='#3E7BFF';
+  const order=[...S.rem.filter(x=>!S.doneLog[x.id]),...S.rem.filter(x=>S.doneLog[x.id])];
+  if(!order.length)h+=`<div class="card mu" style="font-weight:600">Inga påminnelser. Tryck på + för att lägga till.</div>`;
+  order.forEach(x=>{
+    const d=!!S.doneLog[x.id];
+    const over=x.due&&x.due<t, dueTxt=x.due?(over?'Förfallen '+x.due:'Senast '+x.due):'';
+    h+=`<div class="swipe${(ui.fresh||[]).includes(x.id)?' rise':''}${ui.arriving===x.id?' arriving':''}" data-id="${x.id}"><button class="del" data-act="delrem" tabindex="-1"><span class="dt">Ta bort</span></button><button class="habit ${d?'done':''}${d&&ui.justDone===x.id?' justdone':''}" data-act="rem" data-id="${x.id}" aria-pressed="${d}" style="${d?'background:var(--green)':''}">
+      <span class="dot" style="background:${d?'var(--bg)':RC+'33'};color:${d?'var(--green)':RC}">${CHECK}</span>
+      <span class="mid"><span class="txt" style="display:block;font-size:17px">${esc(x.t)}</span>
+      ${dueTxt?`<span class="due" style="background:${over?'var(--red)':'var(--s2)'};color:${over?'var(--bg)':'var(--tx)'}">${dueTxt}</span>`:''}</span>
+    </button></div>`;
+  });
+
+  const doneN=S.rem.filter(x=>S.doneLog[x.id]).length;
+  if(doneN)h+=`<button class="clearbtn" data-act="cleardone">Rensa färdiga påminnelser</button>`;
+  h+=`<button class="archlink" data-act="arch" aria-expanded="${!!ui.showArch}">${ui.showArch?'Dölj':'Se'} färdiga påminnelser</button>`;
+  if(ui.showArch){const ar=(S.archive||[]).slice(0,30);
+    h+=`<div class="arch">${ar.length?ar.map(x=>{const d=parseKey(x.done||t);return `<div class="ai">${CHECK}<span>${esc(x.t)}</span><small>${d.getDate()} ${MON[d.getMonth()].slice(0,3)}</small></div>`}).join(''):'<div class="ai"><span>Inga färdiga påminnelser än.</span></div>'}</div>`}
+
+  // Ekonomi
+  h+=`
+  <div class="money">
+    <button class="mcard" data-act="salary">
+      <span class="lbl" style="color:var(--teal)">Senaste lön</span>
+      <span class="amt">${S.salary?kr(S.salary.amount):'Lägg till'}</span>
+      <span class="sm">${S.salary?'Netto, '+monthName(S.salary.month):'Netto'}</span>
+    </button>
+    <button class="mcard" data-act="revenue">
+      <span class="lbl" style="color:var(--violet)">Omsättning ${monthName(mk)}</span>
+      <span class="amt">${kr(rev)}</span>
+      <span class="sm">varav ${kr(rev*0.2)} moms</span>
+    </button>
+  </div>
+
+  ${costCard()}
+`;
+
+
+  h+=`<section class="card"><div class="h2">Tidslinje</div><div id="tlw">${tlHTML()}</div></section>`;
+
+  // Söndag: beskriv en regel
+  const openG=groups().filter(x=>!x.solved).sort((a,b)=>b.min-a.min);
+  if(dt.getDay()===0&&openG.length){
+    const g0=openG[0];
+    h+=`<section class="card refl" id="sunday" data-g="${g0.gid}">
+      <div class="h2">Beskriv regeln</div>
+      <p class="mu" style="font-size:15px;font-weight:600;margin-top:6px">${esc(g0.t)} — ${g0.n} ${g0.n===1?'gång':'ggr'}, ${fmtMin(g0.min)}</p>
+      <textarea data-steps placeholder="Steg för steg: vad går in, vad görs, hur ser ett bra resultat ut?">${esc((S.gsteps||{})[g0.gid]||'')}</textarea>
+      <div class="acts"><button class="btn" data-act="stepsno">Inte än</button><button class="btn fill" data-act="stepsok" style="background:var(--green)">Klart</button></div>
+    </section>`;
+  }
+
+
+  if(loaded&&!storageOK)h+=`<div class="warnbar">Sparning är inte tillgänglig i den här vyn. Det du fyller i försvinner när du stänger.</div>`;
+  h+=`<div class="foot"><button data-act="settings">Inställningar</button></div>`;
+  const app=document.getElementById('app');app.innerHTML=h;
+  if(ui.boot){[...app.children].forEach((el,i)=>{if(i<9){el.classList.add('rise');el.style.animationDelay=(i*55)+'ms'}});
+    const hr=app.querySelector('.hero');if(hr)hr.classList.add('boot');countUps(app)}
+  ui.justDone=null;ui.fresh=null;ui.popDot=false;ui.arriving=null;
+}
+
+const RM=()=>!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const GOAL=200000;
+const GOALS=[1000,5000,10000,20000,50000,100000,200000];
+const months=()=>{const out=[];let m=S.start.slice(0,7);const end=today().slice(0,7);while(m<=end){out.push(m);m=addDays(m+'-01',32).slice(0,7)}return out};
+const totalRev=()=>months().reduce((s,m)=>s+revOf(m),0);
+const salOf=m=>{const hs=S.salaryHist||{};const k=Object.keys(hs).filter(x=>x<=m).sort().pop();return k?hs[k]:(S.salary?S.salary.amount:0)};
+const krK=n=>n>=1000?dec(n/1000,n>=100000||n%1000===0?0:1)+'k':String(Math.round(n));
+const DOTS='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg>';
+function costCard(){
+  const biz=ui.cost==='biz',key=biz?'bizFixed':'fixed',c=biz?'var(--violet)':'var(--teal)';
+  const full=`<div class="full ${ui.anim||''}">
+    <div class="top"><div><div class="ttl" style="color:${c}">${biz?'Företaget':'Privat'}</div><div class="st">Fasta kostnader per månad</div></div>
+    <button class="more" data-act="editcost" aria-label="Redigera fasta kostnader">${DOTS}</button></div>
+    <div class="sum">${kr(sumOf(S[key]))}</div>
+    ${S[key].map(f=>`<div class="frow"><span class="mu">${esc(f.n)}</span><span>${kr(f.a)}</span></div>`).join('')}
+  </div>`;
+  const mini=biz?`<button class="mini l" data-act="side" data-s="priv" style="background:var(--teal)"><span>Privat</span></button>`
+                :`<button class="mini" data-act="side" data-s="biz" style="background:var(--violet)"><span>Företag</span></button>`;
+  ui.anim='';
+  return `<section class="cost" id="cost">${biz?mini+full:full+mini}</section>`;
+}
+function tlHTML(){
+  const keys=Object.keys(S.days).filter(k=>S.days[k].a&&(S.days[k].q||Object.values(S.days[k].a).some(v=>Array.isArray(v)?v.some(x=>x&&x.trim()):v&&v.trim()))).sort().reverse();
+  if(!keys.length)return `<p class="mu" style="margin-top:10px;font-size:15px">Dina svar samlas här dag för dag.</p>`;
+  const t=today();
+  return keys.map(k=>{const d=S.days[k],dt=parseKey(k),open=ui.tl[k],a=d.a,c=doneCount(k);
+    return `<button class="tl" data-act="tl" data-k="${k}" aria-expanded="${!!open}">
+      <div class="row"><b>${k===t?'Idag':DOW[dt.getDay()]+' '+dt.getDate()+' '+MON[dt.getMonth()]}</b>
+      <span class="cnt"><span style="background:${d.q?'var(--green)':'var(--s1)'};color:${d.q?'var(--bg)':'var(--mu)'}">Frågor</span><span style="background:${c>=S.goal?'var(--green)':'var(--s1)'};color:${c>=S.goal?'var(--bg)':'var(--mu)'}">${c}/${S.goal}</span></span></div>
+      ${open?QS.map(x=>{const v=a[x.k];if(!v||(Array.isArray(v)&&!v.some(s=>s&&s.trim())))return'';
+        return `<div class="ans"><h4>${x.h}</h4>${Array.isArray(v)?v.filter(s=>s&&s.trim()).map((s,j)=>`<p>${j+1}. ${esc(s)}</p>`).join(''):`<p>${esc(v)}</p>`}</div>`}).join(''):''}
+    </button>`}).join('');
+}
+function nudgeCard(){
+  const t=today(),y=addDays(t,-1);
+  if(y<S.start||dayFactor(y)!==1||dayFactor(t)>1)return '';
+  return `<section class="card nudge"><div class="nh">Igår blev det 0 %</div><p>Slight Edge handlar om liten utveckling varje dag. Allt du kan idag kunde du igår. Kom igen, 1 % varje dag!</p></section>`;
+}
+function dlgCard(){
+  const gs=groups(),open=gs.filter(x=>!x.solved).sort((a,b)=>b.min-a.min),sol=gs.filter(x=>x.solved);
+  const shown=ui.logAll?[...open,...sol]:open.slice(0,3);
+  return `<section class="card dlg">
+    <div class="row" style="align-items:flex-start"><div><div class="h2" style="font-size:20px">Delegering</div><div class="big">${fmtMin(solvedMin())}</div><div class="mu" style="font-size:13px;font-weight:700">du slutat göra själv</div></div>
+    ${gs.length?`<button class="more" data-act="logall" aria-label="Se allt som tagit tid" aria-expanded="${!!ui.logAll}">${DOTS}</button>`:''}</div>
+    <div class="cap"><input id="logi" placeholder="Vad gjorde du manuellt? T.ex. förseningsmejl 25 min" autocomplete="off" enterkeyhint="done"><button data-act="addlog" aria-label="Lägg till">+</button></div>
+    ${shown.map(x=>`<button class="grp ${x.solved?'solved':''}" data-act="logdone" data-g="${x.gid}">
+      <span class="gt">${esc(x.t)}<span class="gm">${x.n} ${x.n===1?'gång':'ggr'}, ${fmtMin(x.min)}</span></span>
+      <span class="gc">${CHECK}</span></button>`).join('')}
+
+  </section>`;
+}
+function edgeCard(){
+  const t=today(),q=answered(t),c=doneCount(t),r=c>=S.goal,f=dayFactor(t);
+  const eff=f>1.009?'+1 %':f>1?'+0,5 %':'0 %',col=f>1.009?'var(--green)':f>1?'var(--amber)':'var(--mu)';
+  return `<section class="card edgecard" id="edgecard">
+    <div><div class="lbl2">Dagens edge just nu</div><div class="eff" style="color:${col}">${eff}</div></div>
+    <div class="chips">
+      ${q?`<button class="chip ok" data-act="tl0">Frågor klara</button>`:`<button class="chip go" data-act="openq">Svara på frågorna</button>`}
+      <span class="chip ${r?'ok':''}">${Math.min(c,S.goal)} av ${S.goal} påminnelser</span>
+    </div></section>`;
+}
+/* ---------- Frågerutan ---------- */
+let qs=null;
+function openQ(){
+  if(document.getElementById('qo'))return;
+  const t=today(),d=day(t);d.a=d.a||{top3:['','',''],why:'',disc:'',self:'',manual:''};
+  qs={step:0,t};
+  const o=document.createElement('div');o.className='qo';o.id='qo';
+  o.innerHTML=`<div class="qbg"></div><div class="qbox" role="dialog" aria-modal="true" aria-label="Dagens frågor">
+    <div class="qtop"><div class="qprog">${QS.map(()=>'<i></i>').join('')}</div><button class="qlater" data-q="later">Senare</button></div>
+    <div class="qmeta"></div><div class="qstage"></div>
+    <div class="qnav"><button class="qback" data-q="back">Tillbaka</button><button class="qnext" data-q="next">Nästa</button></div></div>`;
+  document.body.appendChild(o);document.body.style.overflow='hidden';
+  o.addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;
+    if(b.dataset.q==='later')closeQ(false);else if(b.dataset.q==='back')qGo(-1);else if(b.dataset.q==='next')qGo(1)});
+  o.addEventListener('input',e=>{const el=e.target,d=day(qs.t),x=QS[qs.step];
+    if(el.dataset.i!==undefined)d.a[x.k][+el.dataset.i]=el.value;else d.a[x.k]=el.value;save();qValid()});
+  o.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.shiftKey)return;const el=e.target;if(!el.matches('input,textarea'))return;e.preventDefault();
+    const all=[...o.querySelectorAll('.qstage input,.qstage textarea')],i=all.indexOf(el);if(i<all.length-1)all[i+1].focus();else if(!o.querySelector('.qnext').disabled)qGo(1)});
+  qDraw(0);
+}
+function qValid(){const d=day(qs.t),x=QS[qs.step],v=d.a[x.k];const ok=x.opt?true:(Array.isArray(v)?v.every(s=>s&&s.trim()):!!(v&&v.trim()));
+  const n=document.querySelector('#qo .qnext');n.disabled=!ok;return ok}
+function qDraw(dir){
+  const o=document.getElementById('qo'),x=QS[qs.step],d=day(qs.t),v=d.a[x.k],dt=parseKey(qs.t);
+  o.querySelectorAll('.qprog i').forEach((el,i)=>el.classList.toggle('on',i<=qs.step));
+  o.querySelector('.qmeta').textContent=`Fråga ${qs.step+1} av ${QS.length}`;
+  o.querySelector('.qback').style.display=qs.step?'':'none';
+  o.querySelector('.qnext').textContent=qs.step===QS.length-1?'Klar':'Nästa';
+  const st=o.querySelector('.qstage');
+  st.innerHTML=`<div class="qin" style="--qx:${dir<0?'-30px':dir>0?'30px':'0px'}"><h2>${x.q}</h2><p>${x.s}</p><div class="qf">${
+    Array.isArray(v)?v.map((s,i)=>`<label class="qi"><b>${i+1}</b><input data-i="${i}" value="${esc(s)}" placeholder="${x.ph[i]}" autocomplete="off" enterkeyhint="${i<2?'next':'done'}"></label>`).join('')
+    :`<textarea placeholder="${x.ph}" enterkeyhint="done">${esc(v)}</textarea>`}</div></div>`;
+  qValid();
+}
+function qGo(n){
+  if(n>0&&!qValid())return;
+  const s=qs.step+n;if(s<0)return;
+  if(s>=QS.length){finishQ();return}
+  qs.step=s;qDraw(n);
+}
+function closeQ(){const o=document.getElementById('qo');if(!o)return;
+  o.querySelector('.qbox').classList.add('away');o.classList.add('fade');
+  setTimeout(()=>{o.remove();document.body.style.overflow='';afterQ()},RM()?0:420)}
+function finishQ(){
+  const t=qs.t,d=day(t);d.q=true;if(d.a.manual&&d.a.manual.trim()){addLog(d.a.manual)}if(navigator.vibrate)navigator.vibrate([12,40,18]);
+  const add=d.a.top3.map(s=>s.trim()).filter(Boolean).map(s=>({id:newId(),t:s,day:t}));
+  S.rem=[...add,...S.rem];save();render();
+  const o=document.getElementById('qo');o.querySelector('.qbox').classList.add('bye');
+  const c=document.createElement('div');c.className='qcheck';
+  c.innerHTML=`<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#2FD27B"/><path d="M36 62l16 16 32-34" pathLength="1" fill="none" stroke="#1F1F23" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  document.body.appendChild(c);
+  const w=RM()?300:1150;
+  setTimeout(()=>{o.classList.add('fade');c.classList.add('fade')},w);
+  setTimeout(()=>{o.remove();c.remove();document.body.style.overflow='';afterQ()},w+(RM()?0:500));
+}
+function afterQ(){const due=salaryDue();if(due){anchorEl=null;salarySheet(due,true)}}
+function countUps(root){
+  if(RM())return;
+  root.querySelectorAll('.amt,.cost .sum,.edge b').forEach(el=>{
+    const txt=el.textContent,m=txt.replace(/\s/g,'').match(/^(\d+)(kr)?$/);if(!m)return;
+    const to=+m[1],isKr=!!m[2];if(!to)return;const t0=performance.now()+250,dur=900;
+    const f=now=>{const p=Math.min(1,Math.max(0,(now-t0)/dur)),e=1-Math.pow(1-p,3),v=Math.round(to*e);
+      el.textContent=isKr?kr(v):String(v);if(p<1)requestAnimationFrame(f)};
+    el.textContent=isKr?kr(0):'0';requestAnimationFrame(f);
+  });
+}
+function flyBubble(fr,id,text){
+  const R=Math.random,size=Math.round(46+R()*34),s2=size/2;
+  const cx0=fr.left+fr.width/2,cy0=fr.top+fr.height/2;
+  const b=document.createElement('div');b.className='bubble';
+  Object.assign(b.style,{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',background:'#1F1F23'});
+  b.innerHTML=`<span class="bt">${esc(text)}</span><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#1F1F23" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  document.body.appendChild(b);
+  const reveal=()=>{b.remove();const t2=document.querySelector(`.swipe[data-id="${id}"]`);if(t2){t2.classList.add('arrived');t2.classList.remove('arriving');setTimeout(()=>t2.classList.remove('arrived'),340)}};
+  if(!b.animate){reveal();return}
+  const M=240,E='cubic-bezier(.23,1,.32,1)';
+  b.animate([{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',backgroundColor:'#1F1F23'},
+    {left:(cx0-s2)+'px',top:(cy0-s2)+'px',width:size+'px',height:size+'px',borderRadius:s2+'px',backgroundColor:'#2FD27B'}],{duration:M,easing:E,fill:'forwards'});
+  b.querySelector('.bt').animate([{opacity:1},{opacity:0}],{duration:M*.45,easing:E,fill:'forwards'});
+  b.querySelector('svg').animate([{opacity:0,transform:'scale(.5)'},{opacity:1,transform:'scale(1)'}],{duration:M*.8,delay:M*.35,easing:E,fill:'forwards'});
+  setTimeout(()=>{
+    const tg=document.querySelector(`.swipe[data-id="${id}"]`);const tr=tg?tg.getBoundingClientRect():{left:cx0-s2,top:innerHeight,width:size,height:size};
+    const x1=tr.left+tr.width/2-cx0,y1=Math.min(tr.top+tr.height/2,innerHeight-s2-24)-cy0;
+    const dir=R()<.5?-1:1,cx=x1/2+dir*(50+R()*110),cy=y1*(.25+R()*.3)-(10+R()*50);
+    const peak=1.05+R()*.4,rot=dir*(10+R()*28),dur=620+R()*300,N=10,kf=[];
+    for(let i=0;i<=N;i++){const t=i/N,u=1-t,x=2*u*t*cx+t*t*x1,y=2*u*t*cy+t*t*y1;
+      kf.push({transform:`translate(${x}px,${y}px) scale(${1+(peak-1)*Math.sin(Math.PI*t)}) rotate(${rot*Math.sin(Math.PI*t)}deg)`,opacity:1,offset:t*.9})}
+    kf.push({transform:`translate(${x1}px,${y1}px) scale(1.25)`,opacity:0,offset:1});
+    const an=b.animate(kf,{duration:dur,easing:'cubic-bezier(.45,0,.3,1)',fill:'forwards'});an.onfinish=reveal;
+  },M);
+}
+function flipRender(){
+  const first={};document.querySelectorAll('.swipe[data-id]').forEach(el=>first[el.dataset.id]=el.getBoundingClientRect().top);
+  const sy=scrollY;render();if(scrollY!==sy)scrollTo(0,sy);
+  if(RM())return;
+  document.querySelectorAll('.swipe[data-id]').forEach(el=>{const f=first[el.dataset.id];if(f===undefined||el.classList.contains('arriving'))return;
+    const dy=f-el.getBoundingClientRect().top;if(Math.abs(dy)<1)return;
+    el.style.transform=`translateY(${dy}px)`;el.style.transition='none';void el.offsetHeight;
+    el.style.transition='transform .42s cubic-bezier(.2,.8,.2,1)';el.style.transform='';
+    setTimeout(()=>{el.style.transition=''},450)});
+}
+
+
+function statText(){
+  const v=curve(),n=v.length-1;
+  const rate=Math.pow(v[n],1/n);
+  const yr=Math.pow(rate,365);
+  const p=(rate-1)*100;
+  return `Din takt hittills: <b>${p>=0?'+':''}${dec(p,2)} % per dag</b>. Håller du den i ett år landar du på <b>×${yr>=10?dec(yr,0):dec(yr,2)}</b>. Klarar du både frågorna och 3 påminnelser varje dag ger det ×37,8.`;
+}
+
+function chartCard(){
+  ui.drawNow=!!ui.draw;ui.draw=false;
+  const g=ui.chart==='goal';
+  const full=`<div class="full ${ui.canim||''}">${g?`
+    <div class="top"><div class="h2" style="font-size:20px">Mål</div></div>
+    <div class="chart">${goalChart()}</div>
+    <div class="legend"><span><i style="background:var(--violet)"></i>Omsättning/mån</span><span><i style="background:var(--teal)"></i>Din lön</span><span><i style="background:var(--tx)"></i>Mål</span><span><i style="background:var(--green)"></i>Nått</span></div>
+    <div class="stat">${goalText()}</div>`:`
+    <div class="top" style="align-items:center"><div class="h2" style="font-size:20px">Slight Edge</div>
+      <div class="seg"><button data-act="range" data-r="30" class="${ui.range==='30'?'on':''}">30 d</button><button data-act="range" data-r="365" class="${ui.range==='365'?'on':''}">1 år</button></div></div>
+    <div class="chart">${chart()}</div>
+    <div class="legend"><span><i style="background:var(--green)"></i>Success 1,01ⁿ</span><span><i style="background:var(--red)"></i>Failure 0,99ⁿ</span><span><i style="background:var(--tx)"></i>Du</span></div>
+    <div class="stat">${statText()}</div>`}</div>`;
+  const mini=g?`<button class="mini l" data-act="cside" data-s="edge" style="background:var(--green)"><span>Slight Edge</span></button>`
+              :`<button class="mini" data-act="cside" data-s="goal" style="background:var(--tx)"><span>Mål</span></button>`;
+  ui.canim='';
+  return `<section class="cost" id="chartcard">${g?mini+full:full+mini}</section>`;
+}
+function setChart(s){ui.draw=true;const el=document.getElementById('chartcard');if(ui.chart===s||(el&&el.dataset.busy))return;ui.chart=s;swapCard(el,chartCard,s==='goal')}
+function swapCard(old,build,toRight,fs='.full',ms='.mini'){
+  if(!old)return;
+  if(RM()){old.outerHTML=build();return}
+  old.dataset.busy='1';
+  const h0=old.offsetHeight,ease='cubic-bezier(.23,1,.32,1)',dx=toRight?-38:38;
+  old.style.height=h0+'px';old.style.overflow='hidden';
+  const f=old.querySelector(fs),m=ms?old.querySelector(ms):null;
+  f.style.transition=`transform .16s ${ease},opacity .16s ${ease},filter .16s ${ease}`;f.style.transform=`translateX(${dx}%)`;f.style.opacity='0';f.style.filter='blur(3px)';
+  if(m){m.style.transition=`opacity .12s ${ease},transform .16s ${ease}`;m.style.opacity='0';m.style.transform=`translateX(${toRight?40:-40}px)`}
+  setTimeout(()=>{
+    const tmp=document.createElement('div');tmp.innerHTML=build();const nw=tmp.firstElementChild;
+    const nf=nw.querySelector(fs),nm=ms?nw.querySelector(ms):null;
+    nf.style.transform=`translateX(${-dx}%)`;nf.style.opacity='0';nf.style.filter='blur(3px)';
+    if(nm){nm.style.transform=`translateX(${toRight?-40:40}px)`;nm.style.opacity='0'}
+    nw.style.overflow='hidden';old.replaceWith(nw);
+    const h1=nw.offsetHeight;nw.style.height=h0+'px';void nw.offsetHeight;
+    requestAnimationFrame(()=>{
+      nw.style.transition=`height .3s ${ease}`;nw.style.height=h1+'px';
+      nf.style.transition=`transform .3s ${ease},opacity .24s ${ease},filter .24s ${ease}`;nf.style.transform='none';nf.style.opacity='1';nf.style.filter='none';
+      if(nm){nm.style.transition=`transform .3s ${ease},opacity .22s linear`;nm.style.transform='none';nm.style.opacity='1'}
+      setTimeout(()=>{nw.style.height='';nw.style.overflow='';nw.style.transition='';[nf,nm].filter(Boolean).forEach(x=>{x.style.transition='';x.style.transform='';x.style.opacity='';x.style.filter=''})},320);
+    });
+  },160);
+}
+function goalText(){
+  const m=revOf(today().slice(0,7)),next=GOALS.find(x=>x>m),hit=GOALS.filter(x=>x<=m).length;
+  let s=next?`Nästa mål: <b>${kr(next)}/mån</b>${next===GOAL?' (lön från AB)':''}. Kvar: <b>${kr(next-m)}</b>. `:'<b>Alla mål nådda den här månaden.</b> ';
+  s+=`Nådda: <b>${hit} av ${GOALS.length}</b>.`;
+  const sal=salOf(today().slice(0,7));
+  if(sal)s+=` Omsättningen är ${m>=sal?'<b>'+dec(m/sal,1)+' gånger</b>':'<b>'+Math.round(m/sal*100)+' %</b> av'} din lön.`;
+  return s;
+}
+function goalChart(){
+  const ms=months();while(ms.length<4)ms.push(addDays(ms[ms.length-1]+'-01',32).slice(0,7));
+  const cur=today().slice(0,7),curRev=revOf(cur);
+  const W=300,H=240,L=30,R=8,T=16,B=12,split=L+(W-L-R)*.62;
+  const lo=500,hi=260000,lg=Math.log10;
+  const Y=v=>T+(1-(lg(Math.max(lo,v))-lg(lo))/(lg(hi)-lg(lo)))*(H-T-B);
+  const X=i=>L+(i/ms.length)*(split-L-6);
+  const step=f=>{let d='',prev=null;ms.forEach((m,i)=>{if(m>cur)return;const v=f(m);if(!v){prev=null;return}
+    const y=Y(v).toFixed(1);d+=(prev===null?'M':'L')+X(i).toFixed(1)+' '+y+'L'+X(i+1).toFixed(1)+' '+y;prev=v});return d};
+  const path=(f,c)=>{const d=step(f);return d?`<path d="${d}" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:''};
+  const flat=(v,c,t,below)=>v?`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${c}" stroke-width="3" stroke-linecap="round"${ui.drawNow?' pathLength="1" class="draw"':''}/>`:'';
+  const next=GOALS.find(x=>x>curRev);
+  const grid=[1000,10000,100000].map(v=>`<line x1="${L}" x2="${split}" y1="${Y(v)}" y2="${Y(v)}" stroke="#34343B" stroke-width="1"/><text x="${L-5}" y="${Y(v)+3.5}" fill="#A2A1AB" font-size="9.5" font-weight="700" font-family="inherit" text-anchor="end">${krK(v)}</text>`).join('');
+  const zx=i=>split+14+i*((W-R-split-26)/(GOALS.length-1));
+  const dots=GOALS.map((v,i)=>{const ok=curRev>=v,x=zx(i),y=Y(v);
+    return `<circle cx="${x}" cy="${y}" r="${v===GOAL?7:5.5}" fill="${ok?'#2FD27B':'#F5F4F7'}"${ui.drawNow?` class="popin" style="animation-delay:${.35+i*.07}s"`:''}/>
+    <text x="${x-9}" y="${y+3.5}" fill="${ok?'#2FD27B':'#F5F4F7'}" font-size="10" font-weight="800" font-family="inherit" text-anchor="end">${v===GOAL?'Lön från AB':krK(v)}</text>`}).join('');
+  const nl=next?`<line x1="${L}" x2="${zx(GOALS.indexOf(next))}" y1="${Y(next)}" y2="${Y(next)}" stroke="#F5F4F7" stroke-width="1.5" stroke-dasharray="3 5" opacity=".55"/>`:'';
+  const mlab=ms.map((m,i)=>(i===0||m===cur||i===ms.length-1)?`<text x="${(X(i)+X(i+1))/2}" y="${H-6}" fill="${m===cur?'#F5F4F7':'#A2A1AB'}" font-size="10" font-weight="700" font-family="inherit" text-anchor="middle">${MON[+m.slice(5)-1].slice(0,3)}</text>`:'').join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Omsättning och lön per månad mot målen">
+    ${curRev?`<rect x="${L}" y="${Y(curRev)}" width="${W-R-L}" height="${Math.max(0,H-B-Y(curRev))}" fill="#9B6BFF" opacity=".16"${ui.drawNow?' class="fadein"':''}/>`:''}${grid}${nl}${flat(salOf(cur),'#22D3C5','Din lön',salOf(cur)<curRev&&Math.abs(Y(salOf(cur))-Y(curRev))<18)}${flat(curRev,'#9B6BFF','Omsättning',curRev<=salOf(cur)&&Math.abs(Y(salOf(cur))-Y(curRev))<18)}${dots}</svg>`;
+}
+function chart(){
+  const v=curve(),n=v.length-1;
+  const xmax=ui.range==='30'?Math.max(30,n):Math.max(365,n);
+  const W=340,H=200,L=6,R=46,T=12,B=24;
+  const rate=Math.pow(v[n],1/n);
+  const proj=[];if(ui.range==='365'){for(let x=n;x<=xmax;x++)proj.push([x,v[n]*Math.pow(rate,x-n)])}
+  const vis=v.slice(0,xmax+1);
+  const ys=[2,Math.pow(1.01,xmax),Math.pow(.99,xmax),...vis,...proj.map(p=>p[1])];
+  const ymax=Math.max(...ys)*1.04,ymin=Math.min(...ys,1)*(ui.range==='30'?.98:1);
+  const X=x=>L+(x/xmax)*(W-L-R), Y=y=>T+(1-(y-ymin)/(ymax-ymin))*(H-T-B);
+  const path=f=>{let d='';const st=Math.max(1,Math.floor(xmax/120));for(let x=0;x<=xmax;x+=st)d+=(d?'L':'M')+X(x).toFixed(1)+' '+Y(f(x)).toFixed(1);d+='L'+X(xmax).toFixed(1)+' '+Y(f(xmax)).toFixed(1);return d};
+  const you=vis.map((y,x)=>(x?'L':'M')+X(x).toFixed(1)+' '+Y(y).toFixed(1)).join('');
+  const pj=proj.length?proj.map((p,j)=>(j?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(''):'';
+  const sE=Math.pow(1.01,xmax),fE=Math.pow(.99,xmax);
+  const lbl=y=>'×'+(y>=10?dec(y,0):dec(y,2));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Kurva över din utveckling jämfört med success- och failure-kurvan">
+    <line x1="${L}" x2="${W-R}" y1="${Y(1)}" y2="${Y(1)}" stroke="#45454D" stroke-width="1.5" stroke-dasharray="3 5"/>
+    <line x1="${L}" x2="${W-R}" y1="${Y(2)}" y2="${Y(2)}" stroke="${v[n]>=2?'#2FD27B':'#F5F4F7'}" stroke-width="1.5" stroke-dasharray="3 5" opacity=".55"/>
+    <text x="${X(Math.min(70,xmax))<(W-R)/2?X(Math.min(70,xmax))+10:L}" y="${Y(2)-(X(Math.min(70,xmax))<(W-R)/2?12:8)}" fill="${v[n]>=2?'#2FD27B':'#F5F4F7'}" font-size="11" font-weight="800" font-family="inherit">100 % bättre${v[n]>=2?', nått':''}</text>
+    <path d="${path(x=>Math.pow(1.01,x))}"${ui.drawNow?' pathLength="1" class="draw"':''} fill="none" stroke="#2FD27B" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
+    <path d="${path(x=>Math.pow(.99,x))}"${ui.drawNow?' pathLength="1" class="draw"':''} fill="none" stroke="#FF5B4A" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
+    ${pj?`<path d="${pj}" fill="none" stroke="#F5F4F7" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round" opacity=".6"/>`:''}
+    <path d="${you}"${ui.drawNow?' pathLength="1" class="draw" style="animation-delay:.3s"':''} fill="none" stroke="#F5F4F7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${X(Math.min(70,xmax))}" cy="${Y(2)}" r="6.5" fill="${v[n]>=2?'#2FD27B':'#F5F4F7'}"${ui.drawNow?' class="popin" style="animation-delay:.9s"':''}/>
+    <circle cx="${X(n)}" cy="${Y(v[n])}" r="5.5" fill="#F5F4F7"${ui.drawNow?' class="popin" style="animation-delay:1.1s"':''}/>
+    <text x="${W-R+6}" y="${Y(sE)+4}" fill="#2FD27B" font-size="12" font-weight="800" font-family="inherit">${lbl(sE)}</text>
+    <text x="${W-R+6}" y="${Math.min(H-B,Y(fE)+4)}" fill="#FF5B4A" font-size="12" font-weight="800" font-family="inherit">${lbl(fE)}</text>
+    <text x="${L}" y="${H-6}" fill="#A2A1AB" font-size="11" font-weight="700" font-family="inherit">Dag 1</text>
+    <text x="${W-R}" y="${H-6}" fill="#A2A1AB" font-size="11" font-weight="700" font-family="inherit" text-anchor="end">Dag ${xmax}</text>
+  </svg>`;
+}
+
+/* ---------- sheets ---------- */
+let anchorEl=null;
+const anchor=()=>(anchorEl&&anchorEl.isConnected)?anchorEl:document.querySelector('.hero');
+function sheet(html,onMount){
+  document.querySelectorAll('.inl').forEach(x=>x.remove());
+  const o=document.createElement('div');o.className='inl';o.setAttribute('role','group');
+  o.innerHTML=html;topBlock(anchor()).after(o);
+  o.remove=function(){if(!this.isConnected||this.classList.contains('closing'))return Element.prototype.remove.call(this);this.classList.add('closing');setTimeout(()=>Element.prototype.remove.call(this),180)};
+  onMount&&onMount(o);
+  try{o.scrollIntoView({block:'nearest'})}catch(e){}
+  return o;
+}
+function topBlock(a){while(a&&a.parentElement&&a.parentElement.id!=='app')a=a.parentElement;return a}
+function toast(msg){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.textContent=msg;topBlock(anchor()).after(d);setTimeout(()=>d.remove(),1800)}
+const num=s=>Number(String(s).replace(/\s/g,'').replace(',','.'))||0;
+
+function salarySheet(month,prompted){
+  const mk=month||(S.salary?S.salary.month:today().slice(0,7));
+  sheet(`<h3>${prompted?'Lönedags':'Senaste lön'}</h3>
+    <p>${prompted?'Vad fick du ut netto för '+monthName(mk)+'?':'Netto, det som landade på kontot.'}</p>
+    <div class="fld"><span>Belopp i kr</span><input id="sal" inputmode="numeric" value="${prompted?'':(S.salary?S.salary.amount:'')}" placeholder="t.ex. 18 500"></div>
+    <div class="acts"><button class="btn" data-x="later">${prompted?'Senare':'Avbryt'}</button><button class="btn fill" data-x="ok" style="background:var(--teal)">Spara lön</button></div>`,
+  o=>{
+    o.querySelector('[data-x=later]').onclick=()=>{if(prompted){S.salarySnooze=today();save()}o.remove()};
+    o.querySelector('[data-x=ok]').onclick=()=>{const a=num(o.querySelector('#sal').value);if(!a)return;S.salary={amount:a,month:mk};S.salaryHist=S.salaryHist||{};S.salaryHist[mk]=a;S.salarySnooze=null;save();o.remove();render();toast('Lön sparad')};
+  });
+}
+function rowSheet(title,desc,init,ph,color,saveLbl,onSave){
+  let rows=init.length?init.map(f=>({...f})):[{n:'',a:''}];
+  const draw=o=>{o.querySelector('#fl').innerHTML=rows.map((f,i)=>`<div class="fx"><input data-fn="${i}" value="${esc(f.n)}" placeholder="${ph}"><input data-fa="${i}" inputmode="numeric" value="${f.a}" placeholder="kr"><button data-rm="${i}" aria-label="Ta bort rad">×</button></div>`).join('')};
+  sheet(`<h3>${title}</h3><p>${desc}</p>
+    <div id="fl" class="fld"></div>
+    <div class="acts"><button class="btn" data-x="add">Lägg till rad</button></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:${color}">${saveLbl}</button></div>`,
+  o=>{
+    draw(o);
+    o.addEventListener('input',e=>{const el=e.target;if(el.dataset.fn!==undefined)rows[+el.dataset.fn].n=el.value;if(el.dataset.fa!==undefined)rows[+el.dataset.fa].a=el.value});
+    o.addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){rows.splice(+r.dataset.rm,1);draw(o)}});
+    o.querySelector('[data-x=add]').onclick=()=>{rows.push({n:'',a:''});draw(o)};
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();
+    o.querySelector('[data-x=ok]').onclick=()=>{onSave(rows.filter(r=>r.n.trim()&&num(r.a)).map(r=>({n:r.n.trim(),a:num(r.a)})));save();o.remove();render()};
+  });
+}
+function revenueSheet(){
+  const mk=today().slice(0,7),prev=addDays(mk+'-01',-1).slice(0,7);
+  rowSheet(`Omsättning ${monthName(mk)}`,`Intäkter inklusive moms.${revOf(prev)?' Förra månaden: '+kr(revOf(prev))+'.':''}`,
+    revRows(mk),'t.ex. Shopify-utbetalning','var(--violet)','Spara intäkter',r=>{S.revenue[mk]=r});
+}
+function costSheet(){
+  const biz=ui.cost==='biz',key=biz?'bizFixed':'fixed';
+  rowSheet(`Fasta kostnader ${biz?'företaget':'privat'}`,biz?'Det företaget betalar varje månad.':'Det som dras varje månad.',
+    S[key],biz?'t.ex. Shopify':'t.ex. Hyra',biz?'var(--violet)':'var(--teal)','Spara kostnader',r=>{S[key]=r});
+}
+const newId=()=>'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function addRemSheet(){
+  anchorEl=document.getElementById('remh').closest('.today-h');
+  sheet(`<h3>Ny påminnelse</h3>
+    <div class="fld"><input id="nr" placeholder="Vad ska göras?" autocomplete="off" enterkeyhint="done"></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--green)">Lägg till</button></div>`,
+  o=>{
+    const ok=()=>{const v=o.querySelector('#nr').value.trim();if(!v)return;const nid=newId();S.rem.unshift({id:nid,t:v});ui.fresh=[nid];save();o.remove();flipRender()};
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();o.querySelector('[data-x=ok]').onclick=ok;
+    o.querySelector('#nr').addEventListener('keydown',e=>{if(e.key==='Enter')ok()});
+    o.querySelector('#nr').focus();
+  });
+}
+function editRemSheet(){
+  anchorEl=document.getElementById('remh').closest('.today-h');
+  let rows=S.rem.map(x=>({...x}));
+  const draw=o=>{o.querySelector('#rl').innerHTML=rows.map((r,i)=>`<div class="fx"><input data-rt="${i}" value="${esc(r.t)}" placeholder="Påminnelse"><button data-rm="${i}" aria-label="Ta bort">×</button></div>`).join('')};
+  sheet(`<h3>Redigera påminnelser</h3><p>Ändra text, ta bort eller lägg till.</p>
+    <div id="rl" class="fld"></div>
+    <div class="acts"><button class="btn" data-x="add">Lägg till rad</button></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--green)">Spara</button></div>`,
+  o=>{
+    draw(o);
+    o.addEventListener('input',e=>{const el=e.target;if(el.dataset.rt!==undefined)rows[+el.dataset.rt].t=el.value});
+    o.addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){rows.splice(+r.dataset.rm,1);draw(o)}});
+    o.querySelector('[data-x=add]').onclick=()=>{rows.push({id:newId(),t:''});draw(o)};
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();
+    o.querySelector('[data-x=ok]').onclick=()=>{S.rem=rows.filter(r=>r.t.trim()).map(r=>({...r,t:r.t.trim()}));save();o.remove();render()};
+  });
+}
+let clearing=false;
+function clearDone(){
+  if(clearing)return;
+  const items=[...document.querySelectorAll('.swipe[data-id]')].filter(sw=>S.doneLog[sw.dataset.id]);
+  if(!items.length)return;
+  const ids=items.map(sw=>sw.dataset.id);
+  const fin=()=>{
+    const before=S.rem.map(x=>({...x})),archBefore=[...(S.archive||[])];
+    S.archive=[...S.rem.filter(x=>ids.includes(x.id)).map(x=>({id:x.id,t:x.t,done:S.doneLog[x.id]})),...(S.archive||[])];
+    S.rem=S.rem.filter(x=>!ids.includes(x.id));clearing=false;save();flipRender();
+    showUndo(ids.length===1?'1 påminnelse rensad':ids.length+' påminnelser rensade',()=>{ui.fresh=ids;S.rem=before;S.archive=archBefore;save();flipRender()});
+  };
+  if(RM()){fin();return}
+  clearing=true;if(navigator.vibrate)navigator.vibrate(10);
+  items.forEach((sw,i)=>setTimeout(()=>{
+    const card=sw.querySelector('.habit');card.classList.add('clearing');card.style.background='var(--green)';
+    const ck=document.createElement('span');ck.className='ck';
+    ck.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" pathLength="1" stroke="#DDFBE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    card.appendChild(ck);
+    setTimeout(()=>sw.classList.add('gone','gone-r'),420);
+  },i*150));
+  setTimeout(fin,(items.length-1)*150+420+460);
+}
+function deleteRem(id){
+  const i=S.rem.findIndex(x=>x.id===id);if(i<0)return;
+  const item=S.rem[i];S.rem.splice(i,1);save();flipRender();
+  showUndo('Påminnelse borttagen',()=>{ui.fresh=[item.id];S.rem.splice(Math.min(i,S.rem.length),0,item);save();flipRender()});
+}
+function hideUndo(w){w.classList.add('out');setTimeout(()=>w.remove(),230)}
+function showUndo(msg,undo){
+  document.querySelectorAll('.undo-w').forEach(x=>x.remove());clearTimeout(undoT);
+  const w=document.createElement('div');w.className='undo-w';
+  w.innerHTML=`<div class="undo" role="status"><span>${msg}</span><button>Ångra</button></div>`;
+  let used=false;
+  w.querySelector('button').onclick=()=>{if(!used){used=true;undo()}hideUndo(w)};
+  document.body.appendChild(w);
+  undoT=setTimeout(()=>hideUndo(w),5000);
+}
+function settingsSheet(){
+  sheet(`<h3>Inställningar</h3>
+    <div class="fld"><span>Dagsmål, antal klara påminnelser</span><input id="goal" inputmode="numeric" value="${S.goal}"></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--tx)">Spara ändringar</button></div>
+    <div class="acts"><button class="btn" data-x="exp">Exportera backup</button><button class="btn" data-x="imp">Importera backup</button></div>`,
+  o=>{
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();
+    o.querySelector('[data-x=ok]').onclick=()=>{
+      const g=Math.round(num(o.querySelector('#goal').value));if(g>0&&g<=20)S.goal=g;
+      save();o.remove();render();toast('Ändringar sparade');
+    };
+    o.querySelector('[data-x=exp]').onclick=()=>{o.remove();copyText(JSON.stringify(S),'Backup')};
+    o.querySelector('[data-x=imp]').onclick=()=>{o.remove();importSheet()};
+  });
+}
+function importSheet(){
+  sheet(`<h3>Importera backup</h3><p>Klistra in texten du exporterade. Nuvarande data ersätts.</p>
+    <div class="fld"><textarea id="imp" rows="6"></textarea></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--tx)">Importera</button></div>`,
+  o=>{
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();
+    o.querySelector('[data-x=ok]').onclick=()=>{try{const d=JSON.parse(o.querySelector('#imp').value);if(!d.start||!d.days)throw 0;S=Object.assign(fresh(),d);save();o.remove();render();toast('Backup importerad')}catch(e){toast('Texten är inte en giltig backup')}};
+  });
+}
+async function copyText(txt,what){
+  try{await navigator.clipboard.writeText(txt);toast(what+' kopierad')}
+  catch(e){
+    sheet(`<h3>Kopiera</h3><p>Markera texten och kopiera den.</p><div class="fld"><textarea id="cp" rows="8" readonly>${esc(txt)}</textarea></div><div class="acts"><button class="btn" data-x="no">Stäng</button></div>`,
+    o=>{o.querySelector('[data-x=no]').onclick=()=>o.remove();const ta=o.querySelector('#cp');ta.focus();ta.select()});
+  }
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  if(openSw&&!e.target.closest('[data-act]')){closeSw(openSw);return}
+  const b=e.target.closest('[data-act]');if(!b)return;
+  anchorEl=b;const a=b.dataset.act,t=today();
+  if(a==='delrem'){const sw=b.closest('.swipe'),card=sw.querySelector('.habit'),id=sw.dataset.id;openSw=null;if(navigator.vibrate)navigator.vibrate(8);
+    if(RM()){deleteRem(id);return}
+    b.classList.add('full');card.style.transition='opacity .18s var(--ease-out)';card.style.opacity='0';
+    const ck=document.createElement('span');ck.className='ck';
+    ck.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#FFE1DC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16" pathLength="1"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" pathLength="1"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" pathLength="1"/><path d="M10 11v6M14 11v6" pathLength="1"/></svg>';
+    b.appendChild(ck);
+    setTimeout(()=>{sw.classList.add('gone','gone-l')},620);
+    setTimeout(()=>deleteRem(id),620+450);return}
+  if(a==='cleardone'){clearDone();return}
+  if(a==='arch'){ui.showArch=!ui.showArch;render();return}
+  else if(a==='addlog'){const i=document.getElementById('logi');if(!i.value.trim())return;addLog(i.value);save();render();return}
+  else if(a==='logall'){ui.logAll=!ui.logAll;render();return}
+  else if(a==='logdone'){const g=b.dataset.g;S.gsolved=S.gsolved||{};if(S.gsolved[g])delete S.gsolved[g];else{S.gsolved[g]=t;if(navigator.vibrate)navigator.vibrate(8)}save();render();return}
+  else if(a==='stepsok'||a==='stepsno'){const sec=b.closest('#sunday'),g=sec.dataset.g,v=sec.querySelector('[data-steps]').value;
+    S.gsteps=S.gsteps||{};S.gsteps[g]=v;if(a==='stepsok'){S.gsolved=S.gsolved||{};S.gsolved[g]=t}save();render();return}
+  if(openSw){closeSw(openSw);return}
+  if(a==='rem'&&Date.now()-noClick<450)return;
+  if(a==='addrem'){addRemSheet();return}
+  if(a==='editrem'){editRemSheet();return}
+  if(a==='rem'){const id=b.dataset.id;
+    if(S.doneLog[id]){delete S.doneLog[id];save();flipRender();return}
+    S.doneLog[id]=t;{const k=S.rem.findIndex(x=>x.id===id);if(k>-1)S.rem.push(...S.rem.splice(k,1))}save();if(navigator.vibrate)navigator.vibrate(10);
+    if(RM()){ui.popDot=true;render();return}
+    const sw=b.closest('.swipe'),from=sw.getBoundingClientRect(),txt=(S.rem.find(x=>x.id===id)||{}).t||'';
+    b.blur();ui.popDot=true;ui.arriving=id;flipRender();flyBubble(from,id,txt);
+  }
+  else if(a==='editcost'){anchorEl=document.getElementById('cost');costSheet()}
+  else if(a==='side'){setSide(b.dataset.s)}
+  else if(a==='tl'){const k=b.dataset.k;ui.tl[k]=!ui.tl[k];document.getElementById('tlw').innerHTML=tlHTML()}
+  else if(a==='openq')openQ();
+  else if(a==='tl0'){const k=today();ui.tl[k]=true;document.getElementById('tlw').innerHTML=tlHTML();document.getElementById('tlw').scrollIntoView({behavior:RM()?'auto':'smooth',block:'center'})}
+  else if(a==='range'){ui.range=b.dataset.r;ui.draw=true;document.getElementById('chartcard').outerHTML=chartCard()}
+  else if(a==='cside'){setChart(b.dataset.s)}
+  else if(a==='salary')salarySheet(null,false);
+  else if(a==='revenue')revenueSheet();
+  else if(a==='settings')settingsSheet();
+});
+function setSide(s){const el=document.getElementById('cost');if(ui.cost===s||(el&&el.dataset.busy))return;ui.cost=s;swapCard(el,costCard,s==='biz')}
+let sx=null,sy=null;
+let rs=null,openSw=null;
+function swSet(card,o,q,anim){const sw=card.parentNode,del=sw.querySelector('.del');
+  card.classList.toggle('snap',!!anim);if(del)del.classList.toggle('snap',!!anim);
+  card.style.transform=o?`translateX(${o}px)`:'';
+  if(del){const vis=-o+26;del.style.clipPath=o<0?`inset(0 0 0 ${Math.max(0,card.offsetWidth-2-vis)}px round 22px)`:''}}
+function closeSw(card){if(!card||!card.isConnected){openSw=null;return}swSet(card,0,0,true);const sw=card.parentNode;openSw=null;setTimeout(()=>{if(openSw!==card&&sw)sw.classList.remove('sw')},340)}
+document.addEventListener('touchstart',e=>{const b=e.target.closest('.swipe>.habit');
+  if(openSw&&openSw!==b&&!e.target.closest('.del'))closeSw(openSw);
+  rs=b?{b,x:e.touches[0].clientX,y:e.touches[0].clientY,drag:false,hist:[],base:b===openSw?-b.offsetWidth/4:0,o:0}:null},{passive:true});
+document.addEventListener('touchmove',e=>{if(!rs)return;const dx=e.touches[0].clientX-rs.x,dy=e.touches[0].clientY-rs.y;
+  if(!rs.drag){if(Math.abs(dx)>16&&Math.abs(dx)>Math.abs(dy)*1.5){rs.drag=true;rs.w=rs.b.offsetWidth;rs.q=rs.w/4;rs.b.parentNode.classList.add('sw');rs.x0=e.touches[0].clientX}else return}
+  const fx=e.touches[0].clientX-rs.x0;
+  let o=Math.min(0,rs.base+fx*.55);
+  if(o<-rs.q)o=-rs.q-(-rs.q-o)*.3;
+  rs.o=o;rs.hist.push([performance.now(),fx]);if(rs.hist.length>5)rs.hist.shift();
+  swSet(rs.b,o,rs.q,false);
+},{passive:true});
+function swEnd(cancel){if(!rs)return;const r=rs;rs=null;if(!r.drag)return;noClick=Date.now();
+  const hs=r.hist,v=hs.length>1?(hs[hs.length-1][1]-hs[0][1])/Math.max(1,hs[hs.length-1][0]-hs[0][0]):0;
+  let open=r.base<0;
+  if(!cancel)open=r.base<0?!(r.o>-r.q*.6||v>.5):(r.o<-r.q*.4||(v<-.5&&r.o<-12));
+  if(open){swSet(r.b,-r.q,r.q,true);openSw=r.b;if(r.base===0&&navigator.vibrate)navigator.vibrate(6)}
+  else closeSw(r.b);
+}
+document.addEventListener('touchend',()=>swEnd(false),{passive:true});
+document.addEventListener('touchcancel',()=>swEnd(true),{passive:true});
+let swEl=null;
+document.addEventListener('touchstart',e=>{swEl=e.target.closest('.cost');if(swEl){sx=e.touches[0].clientX;sy=e.touches[0].clientY}else sx=null},{passive:true});
+document.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3){if(swEl&&swEl.id==='chartcard')setChart(dx<0?'goal':'edge');else setSide(dx<0?'biz':'priv')}},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='logi'){e.preventDefault();if(e.target.value.trim()){addLog(e.target.value);save();render()}}});
+document.addEventListener('input',e=>{
+  const el=e.target,t=today();
+  if(el.dataset.steps!==undefined){const sec=el.closest('#sunday');S.gsteps=S.gsteps||{};S.gsteps[sec.dataset.g]=el.value;save()}
+});
+
+/* ---------- start ---------- */
+(async()=>{
+  S=Object.assign(fresh(),JSON.parse(JSON.stringify(BAKED)));
+  S.rem=clone(REM.lists[0].items);
+  let done=false;const st=initStorage().then(()=>{done=true});
+  await Promise.race([st,new Promise(r=>setTimeout(r,2500))]);
+  day(today());ui.boot=true;ui.draw=true;render();ui.boot=false;
+  if(!done){await st;day(today());render()}
+  save();
+  if(!answered(today()))setTimeout(openQ,RM()?0:650);else afterQ();
+  let last=today();
+  setInterval(()=>{if(today()!==last){last=today();day(last);render();if(!answered(last))openQ()}},60000);
+})();
+</script>
+</body>
+</html>
