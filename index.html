@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -1515,31 +1514,12 @@ function tlHTML(){
         return `<div class="ans"><h4>${x.h}</h4>${Array.isArray(v)?v.filter(s=>s&&s.trim()).map((s,j)=>`<p>${j+1}. ${esc(s)}</p>`).join(''):`<p>${esc(v)}</p>`}</div>`}).join(''):''}
     </button>`}).join('');
 }
-function nudgeCard(){
-  const t=today(),y=addDays(t,-1);
-  if(y<S.start||dayFactor(y)!==1||dayFactor(t)>1)return '';
-  return `<section class="card nudge glow" style="${PAL.blue}"><div class="nh">Igår blev det 0 %</div><p>Slight Edge handlar om liten utveckling varje dag. Allt du kan idag kunde du igår. Kom igen, 1 % varje dag!</p></section>`;
-}
 function gymBtn(){
   const on=!!(((G&&G.sess)||{})[today()]);
   return `<button class="habit gymb${on?' done':''}" data-act="gym" aria-pressed="${on}">
     <span class="dot">${CHECK}</span>
     <span class="mid"><span class="txt" style="display:block;font-size:19px">Gym</span><span class="gs">${on?'Dagens pass registrerat':'Tryck när du har tränat idag'}</span></span>
   </button>`;
-}
-function dlgCard(){
-  const gs=groups(),open=gs.filter(x=>!x.solved).sort((a,b)=>b.min-a.min),sol=gs.filter(x=>x.solved);
-  const shown=ui.logAll?[...open,...sol]:open.slice(0,3);
-  const dlit=solvedMin()>0;
-  return `<section class="card dlg glow ${dlit?'lit':''}" id="dlgcard" style="${PAL.aqua};--gh:165px;--ga:.95">
-    <div class="row" style="align-items:flex-start"><div><div class="h2" style="font-size:20px">Delegering</div><div class="big">${fmtMin(solvedMin())}</div><div class="mu" style="font-size:13px;font-weight:700">du slutat göra själv</div></div>
-    ${gs.length?`<button class="more" data-act="logall" aria-label="Se allt som tagit tid" aria-expanded="${!!ui.logAll}">${DOTS}</button>`:''}</div>
-    <div class="cap"><input id="logi" placeholder="Vad gjorde du manuellt? T.ex. förseningsmejl 25 min" autocomplete="off" enterkeyhint="done"><button data-act="addlog" aria-label="Lägg till">${ico('plus')}</button></div>
-    ${shown.map(x=>`<button class="grp ${x.solved?'solved':''}" data-act="logdone" data-g="${x.gid}">
-      <span class="gt">${esc(x.t)}<span class="gm">${x.n} ${x.n===1?'gång':'ggr'}, ${fmtMin(x.min)}</span></span>
-      <span class="gc">${CHECK}</span></button>`).join('')}
-
-  </section>`;
 }
 /* ---------- Frågerutan ---------- */
 let qs=null;
@@ -1682,34 +1662,6 @@ function flipRender(){
 }
 
 
-function statText(){
-  const v=curve(),n=v.length-1;
-  const rate=Math.pow(v[n],1/n);
-  const yr=Math.pow(rate,365);
-  const p=(rate-1)*100;
-  return `Din takt hittills: <b>${p>=0?'+':''}${dec(p,2)} % per dag</b>. Håller du den i ett år landar du på <b>×${yr>=10?dec(yr,0):dec(yr,2)}</b>. Klarar du både frågorna och 3 påminnelser varje dag i ett år blir det <b>365 %</b>.`;
-}
-
-function chartCard(){
-  ui.drawNow=!!ui.draw;ui.draw=false;
-  const g=ui.chart==='goal';
-  const full=`<div class="full ${ui.canim||''}">${g?`
-    <div class="top"><div class="h2" style="font-size:20px">Mål</div></div>
-    <div class="chart">${goalChart()}</div>
-    <div class="legend"><span><i style="background:var(--biz)"></i>Omsättning/mån</span><span><i style="background:var(--priv)"></i>Din lön</span><span><i style="background:var(--tx)"></i>Mål</span><span><i style="background:var(--green)"></i>Nått</span></div>
-    <div class="stat">${goalText()}</div>`:`
-    <div class="top" style="align-items:center"><div class="h2" style="font-size:20px">Slight Edge</div>
-      <div class="seg"><button data-act="range" data-r="30" class="${ui.range==='30'?'on':''}">30 d</button><button data-act="range" data-r="365" class="${ui.range==='365'?'on':''}">1 år</button></div></div>
-    <div class="chart">${chart()}</div>
-    <div class="legend"><span><i style="background:var(--green)"></i>Framgång</span><span><i style="background:var(--red)"></i>Misslyckande</span><span><i style="background:var(--tx)"></i>Du</span></div>
-    <div class="stat">${statText()}</div>`}</div>`;
-  const mini=g?`<button class="mini l" data-act="cside" data-s="edge" style="background:linear-gradient(180deg,#0A9E42,#10D95B);color:#07130C"><span>Slight Edge</span></button>`
-              :`<button class="mini" data-act="cside" data-s="goal" style="background:linear-gradient(180deg,#10D95B,#0A9E42);color:#07130C"><span>Mål</span></button>`;
-  ui.canim='';
-  const cv=curve(),clit=cv[cv.length-1]>=2;
-  return `<section class="cost glow ${clit?'lit':''}" id="chartcard" style="${PAL.violet};--gh:140px;--ga:.9">${g?mini+full:full+mini}</section>`;
-}
-function setChart(s){ui.draw=true;const el=document.getElementById('chartcard');if(ui.chart===s||(el&&el.dataset.busy))return;ui.chart=s;swapCard(el,chartCard,s==='goal')}
 function swapCard(old,build,toRight,fs='.full',ms='.mini'){
   if(!old)return;
   if(RM()){old.outerHTML=build();return}
@@ -1733,68 +1685,6 @@ function swapCard(old,build,toRight,fs='.full',ms='.mini'){
       setTimeout(()=>{nw.style.height='';nw.style.overflow='';nw.style.transition='';[nf,nm].filter(Boolean).forEach(x=>{x.style.transition='';x.style.transform='';x.style.opacity='';x.style.filter=''})},320);
     });
   },160);
-}
-function goalText(){
-  const m=revOf(today().slice(0,7)),next=GOALS.find(x=>x>m),hit=GOALS.filter(x=>x<=m).length;
-  let s=next?`Nästa mål: <b>${kr(next)}/mån</b>${next===GOAL?' (lön från AB)':''}. Kvar: <b>${kr(next-m)}</b>. `:'<b>Alla mål nådda den här månaden.</b> ';
-  s+=`Nådda: <b>${hit} av ${GOALS.length}</b>.`;
-  const sal=salOf(today().slice(0,7));
-  if(sal)s+=` Omsättningen är ${m>=sal?'<b>'+dec(m/sal,1)+' gånger</b>':'<b>'+Math.round(m/sal*100)+' %</b> av'} din lön.`;
-  return s;
-}
-function goalChart(){
-  const ms=months();while(ms.length<4)ms.push(addDays(ms[ms.length-1]+'-01',32).slice(0,7));
-  const cur=today().slice(0,7),curRev=revOf(cur);
-  const W=300,H=240,L=30,R=8,T=16,B=12,split=L+(W-L-R)*.62;
-  const lo=500,hi=260000,lg=Math.log10;
-  const Y=v=>T+(1-(lg(Math.max(lo,v))-lg(lo))/(lg(hi)-lg(lo)))*(H-T-B);
-  const X=i=>L+(i/ms.length)*(split-L-6);
-  const step=f=>{let d='',prev=null;ms.forEach((m,i)=>{if(m>cur)return;const v=f(m);if(!v){prev=null;return}
-    const y=Y(v).toFixed(1);d+=(prev===null?'M':'L')+X(i).toFixed(1)+' '+y+'L'+X(i+1).toFixed(1)+' '+y;prev=v});return d};
-  const path=(f,c)=>{const d=step(f);return d?`<path d="${d}" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:''};
-  const flat=(v,c,t,below)=>v?`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${c}" stroke-width="3" stroke-linecap="round"${ui.drawNow?' pathLength="1" class="draw"':''}/>`:'';
-  const next=GOALS.find(x=>x>curRev);
-  const grid=[1000,10000,100000].map(v=>`<line x1="${L}" x2="${split}" y1="${Y(v)}" y2="${Y(v)}" stroke="#34343B" stroke-width="1"/><text x="${L-5}" y="${Y(v)+3.5}" fill="#A2A1AB" font-size="9.5" font-weight="700" font-family="inherit" text-anchor="end">${krK(v)}</text>`).join('');
-  const zx=i=>split+14+i*((W-R-split-26)/(GOALS.length-1));
-  const dots=GOALS.map((v,i)=>{const ok=curRev>=v,x=zx(i),y=Y(v);
-    return `<circle cx="${x}" cy="${y}" r="${v===GOAL?7:5.5}" fill="${ok?'#10D95B':'#F5F4F7'}"${ui.drawNow?` class="popin" style="animation-delay:${.35+i*.07}s"`:''}/>
-    <text x="${x-9}" y="${y+3.5}" fill="${ok?'#10D95B':'#F5F4F7'}" font-size="10" font-weight="800" font-family="inherit" text-anchor="end">${v===GOAL?'Lön från AB':krK(v)}</text>`}).join('');
-  const nl=next?`<line x1="${L}" x2="${zx(GOALS.indexOf(next))}" y1="${Y(next)}" y2="${Y(next)}" stroke="#F5F4F7" stroke-width="1.5" stroke-dasharray="3 5" opacity=".55"/>`:'';
-  const mlab=ms.map((m,i)=>(i===0||m===cur||i===ms.length-1)?`<text x="${(X(i)+X(i+1))/2}" y="${H-6}" fill="${m===cur?'#F5F4F7':'#A2A1AB'}" font-size="10" font-weight="700" font-family="inherit" text-anchor="middle">${MON[+m.slice(5)-1].slice(0,3)}</text>`:'').join('');
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Omsättning och lön per månad mot målen">
-    ${curRev?`<rect x="${L}" y="${Y(curRev)}" width="${W-R-L}" height="${Math.max(0,H-B-Y(curRev))}" fill="#1A8FE3" opacity=".14"${ui.drawNow?' class="fadein"':''}/>`:''}${grid}${nl}${flat(salOf(cur),'#10D95B','Din lön',salOf(cur)<curRev&&Math.abs(Y(salOf(cur))-Y(curRev))<18)}${flat(curRev,'#1A8FE3','Omsättning',curRev<=salOf(cur)&&Math.abs(Y(salOf(cur))-Y(curRev))<18)}${dots}</svg>`;
-}
-function chart(){
-  const v=curve(),n=v.length-1;
-  const xmax=ui.range==='30'?Math.max(30,n):Math.max(365,n);
-  const W=340,H=200,L=6,R=46,T=12,B=24;
-  const rate=Math.pow(v[n],1/n);
-  const proj=[];if(ui.range==='365'){for(let x=n;x<=xmax;x++)proj.push([x,v[n]*Math.pow(rate,x-n)])}
-  const vis=v.slice(0,xmax+1);
-  const ys=[2,Math.pow(1.01,xmax),Math.pow(.99,xmax),...vis,...proj.map(p=>p[1])];
-  const ymax=Math.max(...ys)*1.04,ymin=Math.min(...ys,1)*(ui.range==='30'?.98:1);
-  const X=x=>L+(x/xmax)*(W-L-R), Y=y=>T+(1-(y-ymin)/(ymax-ymin))*(H-T-B);
-  const path=f=>{let d='';const st=Math.max(1,Math.floor(xmax/120));for(let x=0;x<=xmax;x+=st)d+=(d?'L':'M')+X(x).toFixed(1)+' '+Y(f(x)).toFixed(1);d+='L'+X(xmax).toFixed(1)+' '+Y(f(xmax)).toFixed(1);return d};
-  const you=vis.map((y,x)=>(x?'L':'M')+X(x).toFixed(1)+' '+Y(y).toFixed(1)).join('');
-  const pj=proj.length?proj.map((p,j)=>(j?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(''):'';
-  const sE=Math.pow(1.01,xmax),fE=Math.pow(.99,xmax);
-  const lbl=y=>'×'+(y>=10?dec(y,0):dec(y,2));
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Kurva över din utveckling jämfört med success- och failure-kurvan">
-    <line x1="${L}" x2="${W-R}" y1="${Y(1)}" y2="${Y(1)}" stroke="#45454D" stroke-width="1.5" stroke-dasharray="3 5"/>
-    <line x1="${L}" x2="${W-R}" y1="${Y(2)}" y2="${Y(2)}" stroke="${v[n]>=2?'#10D95B':'#F5F4F7'}" stroke-width="1.5" stroke-dasharray="3 5" opacity=".55"/>
-    <text x="${X(Math.min(70,xmax))<(W-R)/2?X(Math.min(70,xmax))+10:L}" y="${Y(2)-(X(Math.min(70,xmax))<(W-R)/2?12:8)}" fill="${v[n]>=2?'#10D95B':'#F5F4F7'}" font-size="11" font-weight="800" font-family="inherit">100 % bättre${v[n]>=2?', nått':''}</text>
-    <path d="${path(x=>Math.pow(1.01,x))}"${ui.drawNow?' pathLength="1" class="draw"':''} fill="none" stroke="#10D95B" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
-    <path d="${path(x=>Math.pow(.99,x))}"${ui.drawNow?' pathLength="1" class="draw"':''} fill="none" stroke="#FF5B4A" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
-    ${pj?`<path d="${pj}" fill="none" stroke="#F5F4F7" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round" opacity=".6"/>`:''}
-    <path d="${you}"${ui.drawNow?' pathLength="1" class="draw" style="animation-delay:.3s"':''} fill="none" stroke="#F5F4F7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${X(Math.min(70,xmax))}" cy="${Y(2)}" r="6.5" fill="${v[n]>=2?'#10D95B':'#F5F4F7'}"${ui.drawNow?' class="popin" style="animation-delay:.9s"':''}/>
-    <circle cx="${X(n)}" cy="${Y(v[n])}" r="5.5" fill="#F5F4F7"${ui.drawNow?' class="popin" style="animation-delay:1.1s"':''}/>
-    <text x="${W-R+6}" y="${Y(sE)+4}" fill="#10D95B" font-size="12" font-weight="800" font-family="inherit">${lbl(sE)}</text>
-    <text x="${W-R+6}" y="${Math.min(H-B,Y(fE)+4)}" fill="#FF5B4A" font-size="12" font-weight="800" font-family="inherit">${lbl(fE)}</text>
-    <text x="${L}" y="${H-6}" fill="#A2A1AB" font-size="11" font-weight="700" font-family="inherit">Dag 1</text>
-    <text x="${W-R}" y="${H-6}" fill="#A2A1AB" font-size="11" font-weight="700" font-family="inherit" text-anchor="end">Dag ${xmax}</text>
-    ${X(n)-L>44&&W-R-X(n)>44?`<text x="${X(n)}" y="${H-6}" fill="#F5F4F7" font-size="11" font-weight="800" font-family="inherit" text-anchor="middle">Dag ${n+1}</text>`:''}
-  </svg>`;
 }
 
 /* ---------- sheets ---------- */
@@ -2748,7 +2638,7 @@ document.addEventListener('click',e=>{
   else if(a==='side'){setSide(b.dataset.s)}
   else if(a==='tl'){const k=b.dataset.k;ui.tl[k]=!ui.tl[k];document.getElementById('tlw').innerHTML=tlHTML()}
   else if(a==='openq')openQ();
-  else if(a==='tl0'){daySheet(today());return;const k=today();ui.tl[k]=true;document.getElementById('tlw').innerHTML=tlHTML();document.getElementById('tlw').scrollIntoView({behavior:RM()?'auto':'smooth',block:'center'})}
+  else if(a==='tl0'){daySheet(today());return}
   else if(a==='range'){if(b.dataset.r!==ui.range)jZoom(b.dataset.r)}
   else if(a==='today'){daySheet(today())}
   else if(a==='gymday'){G.sess=G.sess||{};const k=today(),on=!G.sess[k];if(on)G.sess[k]=1;else delete G.sess[k];gsave();updGymHead();
@@ -2761,7 +2651,6 @@ document.addEventListener('click',e=>{
   else if(a==='editgoals'){goalsSheet()}
   else if(a==='ringrem'){const th=document.querySelector('.today-h');if(th){th.scrollIntoView({behavior:RM()?'auto':'smooth',block:'start'});setTimeout(()=>pulse(th),350)}}
   else if(a==='step'){ui.stSel=+b.dataset.i;const si=document.getElementById('stinfo');if(si)si.innerHTML=stairInfo(ui.stSel);const r=b.querySelector('rect');if(r&&r.animate&&!RM())r.animate([{opacity:1},{opacity:.55},{opacity:1}],{duration:320});vib(6)}
-  else if(a==='cside'){setChart(b.dataset.s)}
   else if(a==='salary')salarySheet(null,false);
   else if(a==='revenue')revenueSheet();
   else if(a==='settings')settingsSheet();
@@ -2793,7 +2682,7 @@ document.addEventListener('touchend',()=>swEnd(false),{passive:true});
 document.addEventListener('touchcancel',()=>swEnd(true),{passive:true});
 let swEl=null;
 document.addEventListener('touchstart',e=>{swEl=e.target.closest('.cost');if(swEl){sx=e.touches[0].clientX;sy=e.touches[0].clientY}else sx=null},{passive:true});
-document.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3){if(swEl&&swEl.id==='chartcard')setChart(dx<0?'goal':'edge');else setSide(dx<0?'biz':'priv')}},{passive:true});
+document.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3){setSide(dx<0?'biz':'priv')}},{passive:true});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='logi'){e.preventDefault();if(e.target.value.trim()){addLog(e.target.value);save();render()}}});
 document.addEventListener('input',e=>{
   const el=e.target,t=today();
@@ -3447,7 +3336,7 @@ function puLoad(e){
 }
 function puSVG(e,intro){
   return `<svg class="pub${intro?' intro':''}" viewBox="0 0 340 ${PU_H}" role="img" aria-label="Pull-up-stång"><defs><linearGradient id="pubsh" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#A4A5AC"/><stop offset=".5" stop-color="#6A6B72"/><stop offset="1" stop-color="#45464D"/></linearGradient></defs>
-    ${puLoad(e)}${puFrame()}</svg>`;
+    ${puLoad(e)}${puFrame()}${puLadder()}</svg>`;
 }
 const puLabel=e=>!e?`<div class="wbig pul"><span class="bandl">Kroppsvikt</span></div>`
   :e.band?`<div class="wbig pul"><span class="bandl" style="color:${bandInfo(e.band)[1]}">${bandInfo(e.band)[3]}</span></div>`
@@ -3733,17 +3622,6 @@ function bindGv(o){
     if(a==='bwsave'){saveBW(o);return}
     if(a==='bwdel'){const k=b.dataset.k,v=G.bw[k];delete G.bw[k];gsave();gvRender();renderGym();
       showUndo('Vägning borttagen',()=>{G.bw[k]=v;gsave();gvRender();renderGym()});return}
-  });
-  o.addEventListener('input',e=>{
-    const el=e.target,card=el.closest('.ex');if(!card)return;const ex=G.ex.find(x=>x.id===card.dataset.id);if(!ex)return;const t=today();
-    if(el.dataset.gw!==undefined){ex.w=Math.max(0,num(el.value));const c=(L[t]||{})[ex.id];if(c){c.w=ex.w;gsave(t)}else gsave()}
-    else if(el.dataset.gr!==undefined){
-      const i=+el.dataset.gr,v=el.value.replace(/\D/g,'').slice(0,3);if(v!==el.value)el.value=v;
-      L[t]=L[t]||{};let c=L[t][ex.id];if(!c)c=L[t][ex.id]={w:ex.w,r:[]};
-      c.r[i]=v===''?null:+v;while(c.r.length&&c.r[c.r.length-1]==null)c.r.pop();
-      if(!c.r.length)delete L[t][ex.id];gsave(t);
-    }
-    card.querySelector('.recw').innerHTML=recHTML(ex);
   });
   o.addEventListener('keydown',e=>{
     if(e.key!=='Enter')return;const el=e.target;
@@ -4777,5 +4655,3 @@ function preEnd(){const el=document.getElementById('pl');if(!el)return;
 </script>
 </body>
 </html>
-
-</body></html>
