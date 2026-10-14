@@ -195,6 +195,10 @@ body{overflow-anchor:none}
 @keyframes up{from{opacity:0;transform:translateY(12px)}}
 
 /* Färgmoln */
+/* Gör ljusets höjd och styrka animerbara, så att Dagens edge kan glida mellan nivåer */
+@property --gh{syntax:'<length>';inherits:true;initial-value:190px}
+@property --ga{syntax:'<number>';inherits:true;initial-value:1}
+.card.edgecard.glow{padding-bottom:59px;transition:--gh .9s cubic-bezier(.23,1,.32,1),--ga .9s cubic-bezier(.23,1,.32,1)}
 .glow{--g1:70,70,90;--g2:90,90,110;--g3:130,130,150;--ga:1;--gh:190px;
   position:relative;background-color:#0B0B0F;overflow:hidden;
   background-image:
@@ -780,10 +784,15 @@ button.wbig{padding:2px 8px;margin-left:-8px;border-radius:14px;transition:backg
 .qo.inhero .qstage h2{font-size:clamp(22px,6.2vw,28px)}
 .qo.inhero .qstage p{font-size:14px;margin-top:8px}
 .qo.inhero .qf{margin-top:16px;gap:8px}
-.qsug{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.qsug button{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.14);color:#F5F4F7;font-size:13.5px;font-weight:700;transition:transform .1s var(--ease-out)}.qsug button:active{transform:scale(.95)}
 .qo.inhero .qstage input{padding:13px 14px;font-size:17px}
 .qo.inhero .qstage textarea{min-height:96px;font-size:17px}
 .qo.inhero .qnav button{padding:15px 12px}
+.qdate{text-align:center;font-size:15px;font-weight:800;color:#F5F4F7;margin:-4px 0 12px;letter-spacing:.01em}
+.hero:has(>.qo) .hero-top{opacity:0}
+/* Bilden andas: en långsam zoom och glidning som aldrig stannar */
+@keyframes drift{from{transform:none}50%{transform:scale(1.06) translate(-1.2%,-.8%)}to{transform:scale(1.035) translate(1%,.7%)}}
+.hero img{animation:drift 28s ease-in-out var(--dd,0s) infinite alternate;will-change:transform}
+.hero.boot img{animation:settle 1.6s cubic-bezier(.2,.8,.2,1) both,drift 28s ease-in-out var(--dd,1.6s) infinite alternate}
 .qfly{position:fixed;z-index:90;pointer-events:none;will-change:transform}.qfly svg{width:100%;height:100%;display:block}
 .qdone{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
 .qdone svg{width:112px;height:112px;animation:popin .5s cubic-bezier(.2,.8,.2,1) both}
@@ -1425,6 +1434,8 @@ function salaryDue(){
 /* ---------- render ---------- */
 const CHECK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" pathLength="1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+/* Bildens rörelse räknas från en fast starttid, så den fortsätter mjukt när sidan ritas om */
+let HT0=null;
 function render(){
   openSw=null;
   const t=today(),mk=t.slice(0,7),dt=parseKey(t);
@@ -1436,11 +1447,12 @@ function render(){
   const rev=revOf(mk);
   const cnt=doneCount(t);
   const td=day(t);
+  if(ui.boot||HT0===null)HT0=performance.now()+(ui.boot?1600:0);
 
   let h=`
   <div class="edge">Det har gått <b data-roll="days" data-v="${diffDays(S.start,t)}">${diffDays(S.start,t)}</b> dagar sedan du började med en edge.</div>
   <section class="hero" style="--gc:${(heroSrc(),heroGlow())}">
-    <img src="${heroURL()}" alt="" decoding="async">
+    <img src="${heroURL()}" alt="" decoding="async" style="--dd:${((HT0-performance.now())/1000).toFixed(2)}s">
     <div class="hero-top"><span class="d">${DOW[dt.getDay()]} ${dt.getDate()} ${MON[dt.getMonth()]}</span></div>
     <div class="hero-q"><p>“${esc(qt)}”</p><span>${esc(qa)}</span></div>
   </section>
@@ -1488,6 +1500,8 @@ function render(){
   ui.justDone=null;ui.fresh=null;ui.popDot=false;ui.arriving=null;
   if(ui.cf)cfRender();
   ringSync();stairHop();pctWatch();qPos(qo);if(qf)try{qf.focus({preventScroll:true})}catch(e){}
+  /* Flytten startar om rutans intoning – hoppa direkt till slutet så den inte blinkar */
+  if(qo&&qo.getAnimations)try{qo.getAnimations({subtree:true}).forEach(a=>{if(a.effect&&a.effect.getTiming().iterations!==Infinity)a.finish()})}catch(e){}
 }
 
 const RM=()=>!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -1529,17 +1543,14 @@ function openQ(){
   if(document.getElementById('qo'))return;
   const t=today(),d=day(t);d.a=d.a||{top3:['','',''],why:'',disc:'',self:''};
   qs={step:0,t};
-  const o=document.createElement('div');o.className='qo inhero';o.id='qo';
+  const o=document.createElement('div');o.className='qo inhero';o.id='qo';const dt=parseKey(t);
   o.innerHTML=`<div class="qbg"></div><div class="qbox" role="dialog" aria-modal="true" aria-label="Dagens frågor">
+    <div class="qdate">${dt.getDate()} ${MON[dt.getMonth()]}</div>
     <div class="qtop"><div class="qprog">${QS.map(()=>'<i></i>').join('')}</div></div>
     <div class="qmeta"></div><div class="qstage"></div>
     <div class="qnav"><button class="qback" data-q="back">Tillbaka</button><button class="qnext" data-q="next">Nästa</button></div></div>`;
   qPos(o);{const hr=document.querySelector('#app .hero'),hb=hr&&hr.getBoundingClientRect();if(hr&&(hb.top<0||hb.bottom>innerHeight))scrollTo({top:Math.max(0,hr.getBoundingClientRect().top+scrollY-12),behavior:RM()?'auto':'smooth'})}
-  o.addEventListener('click',e=>{const sg=e.target.closest('[data-sug]');
-    if(sg){const d=day(qs.t),a=d.a.top3,k=a.findIndex(s=>!s.trim());if(k<0)return;a[k]=sg.dataset.sug;save();
-      const st=o.querySelector('.qstage'),inp=st.querySelector(`input[data-i="${k}"]`);if(inp)inp.value=a[k];
-      if(!RM())sg.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.85)'}],{duration:160,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});
-      setTimeout(()=>{const w=st.querySelector('.qsug'),n=document.createElement('div');n.innerHTML=qSug(a);if(w)w.replaceWith(n.firstChild||document.createTextNode(''));qValid()},RM()?0:150);return}
+  o.addEventListener('click',e=>{
     const b=e.target.closest('[data-q]');if(!b)return;
     if(b.dataset.q==='later')closeQ(false);else if(b.dataset.q==='back')qGo(-1);else if(b.dataset.q==='next')qGo(1)});
   o.addEventListener('input',e=>{const el=e.target,d=day(qs.t),x=QS[qs.step];
@@ -1548,10 +1559,6 @@ function openQ(){
     const all=[...o.querySelectorAll('.qstage input,.qstage textarea')],i=all.indexOf(el);if(i<all.length-1)all[i+1].focus();else if(!o.querySelector('.qnext').disabled)qGo(1)});
   qDraw(0);
 }
-/* Ogjorda påminnelser som förslag – ett tryck fyller nästa tomma rad */
-function qSug(v){const used=new Set(v.map(s=>s.trim().toLowerCase()).filter(Boolean));
-  const list=S.rem.filter(r=>!S.doneLog[r.id]&&!used.has(r.t.trim().toLowerCase())).slice(0,6);
-  return list.length&&v.some(s=>!s.trim())?`<div class="qsug">${list.map(r=>`<button type="button" data-sug="${esc(r.t)}">${esc(r.t)}</button>`).join('')}</div>`:''}
 function qValid(){const d=day(qs.t),x=QS[qs.step],v=d.a[x.k];const ok=x.opt?true:(Array.isArray(v)?v.every(s=>s&&s.trim()):!!(v&&v.trim()));
   const n=document.querySelector('#qo .qnext');n.disabled=!ok;return ok}
 function qDraw(dir){
@@ -1563,7 +1570,7 @@ function qDraw(dir){
   const st=o.querySelector('.qstage');
   st.innerHTML=`<div class="qin" style="--qx:${dir<0?'-30px':dir>0?'30px':'0px'}"><h2>${x.q}</h2><p>${x.s}</p><div class="qf">${
     Array.isArray(v)?v.map((s,i)=>`<label class="qi"><b>${i+1}</b><input data-i="${i}" value="${esc(s)}" placeholder="${x.ph[i]}" autocomplete="off" enterkeyhint="${i<2?'next':'done'}"></label>`).join('')
-    :`<textarea placeholder="${x.ph}" enterkeyhint="done">${esc(v)}</textarea>`}</div>${x.k==='top3'?qSug(v):''}</div>`;
+    :`<textarea placeholder="${x.ph}" enterkeyhint="done">${esc(v)}</textarea>`}</div></div>`;
   qValid();
 }
 function qGo(n){
@@ -2310,15 +2317,22 @@ function daySheet(k){
 /* ---- Ringen: två halvor, frågor och påminnelser ---- */
 function arcD(cx,cy,r,a0,a1){const p=a=>[cx+r*Math.sin(a*Math.PI/180),cy-r*Math.cos(a*Math.PI/180)];const[x0,y0]=p(a0),[x1,y1]=p(a1);
   return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${Math.abs(a1-a0)>180?1:0} ${a1>a0?1:0} ${x1.toFixed(2)} ${y1.toFixed(2)}`}
+/* Gröna ljuset stiger med hur mycket av dagen som är klart: frågorna är ena halvan, påminnelserna den andra */
+function eGlow(p){
+  if(p<=0)return PAL.dim+';--gh:130px;--ga:1';if(p>=1)return PAL.green+';--gh:130px;--ga:1';
+  return `${PAL.green};--gh:${Math.round(34+96*p)}px;--ga:${(.35+.65*p).toFixed(2)}`}
+function eGlowSet(el,p){eGlow(p).split(';').forEach(s=>{const i=s.indexOf(':');if(i>0)el.style.setProperty(s.slice(0,i).trim(),s.slice(i+1).trim())})}
 function edgeCard(){
   const t=today(),q=answered(t),c=doneCount(t),rf=Math.min(1,c/S.goal),f=dayFactor(t),full=q&&rf>=1;
   const sh=ui.rShown||{q:q?1:0,r:rf};
   const col=f>1.009?'var(--green)':f>1?'#10D95B':'var(--mu)';
-  const gc=f>1.009?PAL.green:f>1?PAL.green+';--ga:.55':PAL.dim;
+  /* Ritas med förra värdet; ringSync låter sedan ljuset glida upp till det nya. Från 0 börjar det grönt men släckt. */
+  const p0=(sh.q+sh.r)/2,p1=((q?1:0)+rf)/2;
+  const gc=full?eGlow(1):p0<=0&&p1>0?PAL.green+';--gh:0px;--ga:0':eGlow(p0);
   const R=46,C=60;
   const wasFull=!ui.rShown||(ui.rShown.q>=1&&ui.rShown.r>=1);
   const pctOn=f>1.009&&S.pctDay===t&&!ui.showRing&&!ui.pctForce&&wasFull;
-  return `<section class="card edgecard glow ${f>1.009?'lit nobox':''}${pctOn?' pctmode':''}" id="edgecard" style="${gc};--gh:130px">
+  return `<section class="card edgecard glow ${f>1.009?'lit nobox':''}${pctOn?' pctmode':''}" id="edgecard" style="${gc}">
     <div class="ewrap"><div class="ring${full?' full':''}" id="ring">
       <svg viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="${C}" cy="${C}" r="${R}" class="rt"/>
@@ -2342,6 +2356,7 @@ function ringSync(){
   const t=today(),q=answered(t)?1:0,r=Math.min(1,doneCount(t)/S.goal),was=ui.rShown;ui.rShown={q,r};
   const fly=ui.ringFly||0;ui.ringFly=0;
   const go=()=>{const a=document.querySelector('#ring .rq'),b=document.querySelector('#ring .rr');if(!a||!b)return;
+    {const ec=document.getElementById('edgecard');if(ec&&!ec.classList.contains('lit'))eGlowSet(ec,(q+r)/2)}
     a.style.strokeDasharray=q+' 2';b.style.strokeDasharray=r+' 2';a.classList.toggle('e0',!(q>0));b.classList.toggle('e0',!(r>0));{const fc=document.querySelector('#ring .rfull');if(fc)fc.classList.toggle('on',q>=1&&r>=1)};
     const closed=was&&!(was.q>=1&&was.r>=1)&&q>=1&&r>=1;
     const willPct=closed&&dayFactor(t)>1.009;if(willPct){ui.pctForce=true;ui.showRing=false;if(!RM())ui.liftHold=true}
@@ -2524,8 +2539,7 @@ function pctAnim(card,rev){
   wrap.querySelectorAll('.rmid,.rside').forEach(x=>A(x,[{opacity:1,transform:'none'},{opacity:0,transform:'scale(.9)'}],{duration:240,easing:'cubic-bezier(.4,0,1,1)'}));
   A(up,[{stroke:'#10D95B'},{stroke:'#7DF5A8',offset:.12},{stroke:'#10D95B',offset:.2},{stroke:'#10D95B'}],{easing:'ease-in-out'});
   /* Fas 2 (0,4–1,25 s): ringen flyger upp, kortet krymper till 4:1 och bakgrunden tonas bort */
-  A(card,[{height:h0+'px'},{height:h0+'px',offset:.2,easing:'cubic-bezier(.55,0,.25,1)'},{height:h1+'px',offset:.86},{height:h1+'px'}]);
-  const bg={remove(){}};card.classList.add('pcting');
+  A(card,[{height:h0+'px'},{height:h0+'px',offset:.2,easing:'cubic-bezier(.55,0,.25,1)'},{height:h1+'px',offset:.86},{height:h1+'px'}]);  const bg={remove(){}};card.classList.add('pcting');
   const fl=document.createElement('div');fl.className='pctfloor';pct.appendChild(fl);
   A(fl,[{opacity:0,transform:'scaleX(.2)'},{opacity:0,transform:'scaleX(.2)',offset:.6},{opacity:1,transform:'scaleX(1.06)',offset:.9},{opacity:1,transform:'scaleX(1)'}],{easing:'ease-out'});
   /* Fas 3: först snedstrecket (uppifrån), sedan 1:an och nedre ringen samtidigt */
@@ -4502,7 +4516,14 @@ document.documentElement.classList.add('home');
 
 try{document.fonts&&['500 20px EdgeRound','20px EdgeBlock'].forEach(f=>document.fonts.load(f))}catch(e){}
 const PRE_T0=performance.now();
-function preEnd(){const el=document.getElementById('pl');if(!el)return;
+/* Uppvaknandet: när preloadern släpper tonas sidan in suddig och mörk, och skärps sedan som när man vaknar */
+function wake(){
+  const p=document.getElementById('pages');if(!p||!p.animate||RM())return;
+  p.animate([{opacity:0,filter:'blur(14px) brightness(.45) saturate(.6)',transform:'scale(1.03)'},
+    {opacity:1,filter:'blur(7px) brightness(.75) saturate(.8)',offset:.4},
+    {opacity:1,filter:'blur(0px) brightness(1) saturate(1)',transform:'none'}],{duration:1500,easing:'cubic-bezier(.22,.8,.24,1)'});
+}
+function preEnd(){const el=document.getElementById('pl');if(!el)return;wake();
   const br=document.querySelector('#brand [data-bt="2"]'),w=el.querySelector('.pl-w'),ps=el.querySelector('.pl-s');
   if(br&&w&&ps&&ps.animate&&!RM()&&document.documentElement.classList.contains('home')){const a=w.getBoundingClientRect(),b=br.getBoundingClientRect();
     if(b.height>0&&a.height>0){const sc=b.height/a.height,dx=(b.left+b.width/2)-(a.left+a.width/2),dy=(b.top+b.height/2)-(a.top+a.height/2);
