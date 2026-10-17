@@ -725,6 +725,20 @@ button.wbig{padding:2px 8px;margin-left:-8px;border-radius:14px;transition:backg
 .dpill.ok{background:#10D95B;color:#07130C}
 .dsec{font-size:13px;font-weight:800;color:var(--mu);margin-top:18px;margin-bottom:4px;letter-spacing:.01em}
 .ddone{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:15px;font-weight:600}
+/* Dagsvyn: rader som kan hållas in, ogjorda nedtonade, plus för något man glömde anteckna */
+.ddone,.dopen{width:100%;text-align:left;color:var(--tx);border-radius:12px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  transition:transform .18s var(--ease-out),background-color .18s ease}
+.ddone.hold,.dopen.hold{transform:scale(.97);background:rgba(255,255,255,.06)}
+.ddone.lift,.dopen.lift{background:rgba(255,255,255,.08)}
+.dopen{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:15px;font-weight:600;color:var(--mu)}
+.dopen i{flex:none;width:18px;height:18px;margin:0 0 0 0;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.28)}
+.dsec{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dplus{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:var(--tx)}
+.dplus:active{transform:scale(.92)}
+.dedit{padding:4px 0}
+.dedit input{width:100%;font-size:16px;font-weight:600}
+.cm.over{z-index:95}
+.cm-card.drow>*{height:100%;padding:0 12px;background:#1F1F25;box-shadow:0 14px 34px rgba(0,0,0,.45)}
 .ddone svg{flex:none;color:#10D95B}
 .dans{margin-top:10px}
 .dans h4{font-size:13px;font-weight:800;color:#10D95B;margin-bottom:3px}
@@ -1511,7 +1525,7 @@ const months=()=>{const out=[];let m=S.start.slice(0,7);const end=today().slice(
 const totalRev=()=>months().reduce((s,m)=>s+revOf(m),0);
 const salOf=m=>{const hs=S.salaryHist||{};const k=Object.keys(hs).filter(x=>x<=m).sort().pop();return k?hs[k]:(S.salary?S.salary.amount:0)};
 const krK=n=>n>=1000?dec(n/1000,n>=100000||n%1000===0?0:1)+'k':String(Math.round(n));
-const ICP={plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+const ICP={plus:'<path d="M12 5v14M5 12h14"/>',check:'<path d="M5 12.5l4.2 4.2L19 7"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
   pencil:'<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',top:'<path d="M5 4.5h14"/><path d="M12 20V9"/><path d="M7 13.5l5-5 5 5"/>',
   cal:'<rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8.5 3.5v4M15.5 3.5v4M4 10.5h16"/>',
   folder:'<path d="M3.5 7.6a2 2 0 0 1 2-2h3.8l2.1 2.2h7.1a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',
@@ -1539,10 +1553,12 @@ function gymBtn(){
 }
 /* ---------- Frågerutan ---------- */
 let qs=null;
-function openQ(){
-  if(document.getElementById('qo'))return;
-  const t=today(),d=day(t);d.a=d.a||{top3:['','',''],why:'',disc:'',self:''};
-  qs={step:0,t};
+/* k = dagen frågorna gäller. Utan k: idag. En tidigare dag kan avbrytas och lägger inget i Att göra. */
+function openQ(k){
+  const t0=today();k=typeof k==='string'?k:t0;
+  {const ex=document.getElementById('qo');if(ex){if(qs&&qs.t===k)return;ex.remove()}}
+  const t=k,d=day(t);d.a=d.a||{top3:['','',''],why:'',disc:'',self:''};
+  qs={step:0,t,past:t<t0};
   const o=document.createElement('div');o.className='qo inhero';o.id='qo';const dt=parseKey(t);
   o.innerHTML=`<div class="qbg"></div><div class="qbox" role="dialog" aria-modal="true" aria-label="Dagens frågor">
     <div class="qdate">${dt.getDate()} ${MON[dt.getMonth()]}</div>
@@ -1565,10 +1581,11 @@ function qDraw(dir){
   const o=document.getElementById('qo'),x=QS[qs.step],d=day(qs.t),v=d.a[x.k],dt=parseKey(qs.t);
   o.querySelectorAll('.qprog i').forEach((el,i)=>el.classList.toggle('on',i<=qs.step));
   o.querySelector('.qmeta').textContent=`Fråga ${qs.step+1} av ${QS.length}`;
-  o.querySelector('.qback').style.display=qs.step?'':'none';
+  {const qb=o.querySelector('.qback');qb.style.display=qs.step||qs.past?'':'none';qb.textContent=qs.step?'Tillbaka':'Avbryt';qb.dataset.q=qs.step?'back':'later'}
   o.querySelector('.qnext').textContent=qs.step===QS.length-1?'Klar':'Nästa';
   const st=o.querySelector('.qstage');
-  st.innerHTML=`<div class="qin" style="--qx:${dir<0?'-30px':dir>0?'30px':'0px'}"><h2>${x.q}</h2><p>${x.s}</p><div class="qf">${
+  const pt=qs.past&&x.k==='top3';
+  st.innerHTML=`<div class="qin" style="--qx:${dir<0?'-30px':dir>0?'30px':'0px'}"><h2>${pt?'3 saker som skulle bli klara':x.q}</h2>${pt?'':`<p>${x.s}</p>`}<div class="qf">${
     Array.isArray(v)?v.map((s,i)=>`<label class="qi"><b>${i+1}</b><input data-i="${i}" value="${esc(s)}" placeholder="${x.ph[i]}" autocomplete="off" enterkeyhint="${i<2?'next':'done'}"></label>`).join('')
     :`<textarea placeholder="${x.ph}" enterkeyhint="done">${esc(v)}</textarea>`}</div></div>`;
   qValid();
@@ -1579,10 +1596,20 @@ function qGo(n){
   if(s>=QS.length){finishQ();return}
   qs.step=s;qDraw(n);
 }
-function closeQ(){const o=document.getElementById('qo');if(!o)return;
+function closeQ(){const o=document.getElementById('qo');if(!o)return;const past=qs&&qs.past?qs.t:null;
   o.querySelector('.qbox').classList.add('away');o.classList.add('fade');
-  setTimeout(()=>{o.remove();document.body.style.overflow='';afterQ()},RM()?0:420)}
+  setTimeout(()=>{o.remove();document.body.style.overflow='';if(past)qPastEnd(past);else afterQ()},RM()?0:420)}
+/* Efter frågor för en tidigare dag: tillbaka till den dagen i resan, och dagens frågor igen om de inte är besvarade */
+function qPastEnd(k){qs=null;render();daySheet(k);if(!answered(today()))setTimeout(openQ,400)}
 function finishQ(){
+  if(qs.past){const k=qs.t,o=document.getElementById('qo');day(k).q=true;bumpBest();save();vib([12,40,18]);
+    const fin=()=>{if(o)o.remove();qPastEnd(k)};if(!o||RM()){fin();return}
+    const box=o.querySelector('.qbox');
+    [...box.children].forEach(c=>c.animate([{opacity:1},{opacity:0,transform:'scale(.94)',filter:'blur(6px)'}],{duration:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}));
+    const c=document.createElement('div');c.className='qdone';
+    c.innerHTML=`<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#10D95B"/><path d="M36 62l16 16 32-34" pathLength="1" fill="none" stroke="#07130C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    setTimeout(()=>box.appendChild(c),180);
+    setTimeout(()=>{o.animate([{opacity:1},{opacity:0}],{duration:320,fill:'forwards'}).onfinish=fin},1100);return}
   const t=qs.t,d=day(t);d.q=true;vib([12,40,18]);
   /* En vald ogjord påminnelse flyttas upp i stället för att dubbleras */
   const add=d.a.top3.map(s=>s.trim()).filter(Boolean).map(s=>{const old=S.rem.find(r=>!S.doneLog[r.id]&&r.t.trim().toLowerCase()===s.toLowerCase());return old||{id:newId(),t:s,day:t}});
@@ -1814,7 +1841,9 @@ function editRemSheet(){
     o.addEventListener('click',e=>{const r=e.target.closest('[data-rm]');if(r){rows.splice(+r.dataset.rm,1);draw(o)}});
     o.querySelector('[data-x=add]').onclick=()=>{rows.push({id:newId(),t:''});draw(o)};
     o.querySelector('[data-x=no]').onclick=()=>o.remove();
-    o.querySelector('[data-x=ok]').onclick=()=>{S.rem=rows.filter(r=>r.t.trim()).map(r=>({...r,t:r.t.trim()}));save();o.remove();render()};
+    o.querySelector('[data-x=ok]').onclick=()=>{const keep=rows.filter(r=>r.t.trim()),ids=new Set(keep.map(r=>r.id));
+      S.rem.forEach(r=>{if(!ids.has(r.id)){delete S.doneLog[r.id];if(S.doneAt)delete S.doneAt[r.id]}});
+      S.rem=keep.map(r=>({...r,t:r.t.trim()}));save();o.remove();render()};
   });
 }
 let clearing=false;
@@ -1850,8 +1879,9 @@ function clearDone(){
 }
 function deleteRem(id){
   const i=S.rem.findIndex(x=>x.id===id);if(i<0)return;
-  const item=S.rem[i];S.rem.splice(i,1);save();flipRender();
-  showUndo('Påminnelse borttagen',()=>{ui.fresh=[item.id];S.rem.splice(Math.min(i,S.rem.length),0,item);save();flipRender()});
+  /* En borttagen påminnelse räknas inte längre som klar – Ångra lägger tillbaka även bocken */
+  const item=S.rem[i],dl=S.doneLog[id],da=(S.doneAt||{})[id];S.rem.splice(i,1);delete S.doneLog[id];if(S.doneAt)delete S.doneAt[id];save();flipRender();
+  showUndo('Påminnelse borttagen',()=>{ui.fresh=[item.id];S.rem.splice(Math.min(i,S.rem.length),0,item);if(dl)S.doneLog[id]=dl;if(da){S.doneAt=S.doneAt||{};S.doneAt[id]=da}save();flipRender()});
 }
 function hideUndo(w){w.classList.add('out');setTimeout(()=>w.remove(),230)}
 function showUndo(msg,undo){bubble(msg,{action:undo,label:'Ångra',key:'undo'})}
@@ -2296,22 +2326,103 @@ function journeyLift(delay){
   document.addEventListener('pointerup',up);document.addEventListener('pointercancel',()=>{if(p){p=null;mark(null)}});
 })();
 /* En dag i resan: svar, påminnelser, effekt */
-function daySheet(k){
-  const t=today(),f=dayFactor(k),d=S.days[k]||{},a=d.a||{},no=diffDays(S.start,k)+1,c=doneCount(k);
-  const seen=new Set(),done=[];
-  (S.rem||[]).filter(x=>S.doneLog[x.id]===k).forEach(x=>{seen.add(x.id);done.push(x.t)});
-  (S.archive||[]).filter(x=>x.done===k&&!seen.has(x.id)).forEach(x=>done.push(x.t));
+/* ---------- Uppgifter i efterhand ----------
+   En uppgift finns antingen i Att göra (S.rem) eller i Färdiga påminnelser (S.archive). S.doneLog[id] = dagen den blev klar
+   och är det som räknas i kurvan, ringen och serien. Funktionerna nedan håller de tre i takt. */
+const taskSnap=()=>clone({rem:S.rem,archive:S.archive||[],doneLog:S.doneLog,doneAt:S.doneAt||{}});
+const taskRestore=s=>{S.rem=s.rem;S.archive=s.archive;S.doneLog=s.doneLog;S.doneAt=s.doneAt};
+/* Klar dag k: idag ligger den kvar avbockad i Att göra, en tidigare dag flyttas den direkt till Färdiga påminnelser */
+function taskDone(id,k){
+  const t=today();S.doneLog[id]=k;S.doneAt=S.doneAt||{};S.doneAt[id]=k===t?new Date().toISOString():k+'T12:00:00';
+  const i=S.rem.findIndex(x=>x.id===id);if(i<0)return;
+  if(k<t){const x=S.rem.splice(i,1)[0];S.archive=[{id:x.id,t:x.t,done:k,at:S.doneAt[id]},...(S.archive||[])]}
+  else S.rem.push(...S.rem.splice(i,1));
+}
+/* Inte klar: tillbaka överst i Att göra */
+function taskUndone(id){
+  delete S.doneLog[id];if(S.doneAt)delete S.doneAt[id];
+  const a=S.archive||[],i=a.findIndex(x=>x.id===id);
+  if(i>-1){const x=a.splice(i,1)[0];S.rem.unshift({id:x.id,t:x.t})}
+  else{const j=S.rem.findIndex(x=>x.id===id);if(j>-1)S.rem.unshift(...S.rem.splice(j,1))}
+}
+function taskAdd(k,txt){const id=newId();S.rem.push({id,t:txt});taskDone(id,k);return id}
+function taskText(id,txt){const x=S.rem.find(r=>r.id===id)||(S.archive||[]).find(r=>r.id===id);if(x)x.t=txt}
+function taskDel(id){S.rem=S.rem.filter(x=>x.id!==id);S.archive=(S.archive||[]).filter(x=>x.id!==id);delete S.doneLog[id];if(S.doneAt)delete S.doneAt[id]}
+/* Liten meny som öppnas när man håller in en rad i ett ark */
+function dMenu(row,items,cb){
+  const r=row.getBoundingClientRect(),mh=items.length*51,below=r.bottom+mh+24<innerHeight;
+  const top=below?r.bottom+8:Math.max(16,r.top-8-mh),left=Math.min(Math.max(12,r.left),innerWidth-262);
+  const o=document.createElement('div');o.className='cm over';
+  o.innerHTML=`<div class="cm-bg"></div><div class="cm-card drow" style="left:${r.left-12}px;top:${r.top}px;width:${r.width+24}px;height:${r.height}px"></div><div class="cm-menu" role="menu" style="left:${left}px;top:${top}px;transform-origin:30px ${below?'0':'100%'}">${items.map(([a,l,ic,dg])=>`<button role="menuitem" data-cm="${a}"${dg?' class="danger"':''}><span>${l}</span>${ico(ic,19)}</button>`).join('')}</div>`;
+  /* Raden lyfts skarp ovanför oskärpan, som i påminnelselistan */
+  {const cl=row.cloneNode(true);cl.classList.remove('hold');cl.removeAttribute('data-tid');o.querySelector('.cm-card').appendChild(cl)}
+  document.body.appendChild(o);row.classList.add('lift');
+  const close=a=>{if(o.classList.contains('out'))return;o.classList.add('out');row.classList.remove('lift');setTimeout(()=>{o.remove();if(a)cb(a)},200)};
+  o.addEventListener('click',e=>{const b=e.target.closest('[data-cm]');close(b?b.dataset.cm:null)});
+  o.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();close()}});
+  const f=o.querySelector('button');if(f)f.focus({preventScroll:true});
+}
+/* En dag i resan: effekt, uppgifter (klara + ogjorda), svar */
+function dayBody(k){
+  const t=today(),f=dayFactor(k),d=S.days[k]||{},a=d.a||{},c=doneCount(k),ed=ui.dEdit;
+  const done=[...S.rem.filter(x=>S.doneLog[x.id]===k),...(S.archive||[]).filter(x=>x.done===k&&!S.rem.some(r=>r.id===x.id))];
+  const open=S.rem.filter(x=>!S.doneLog[x.id]);
+  const row=(x,on)=>ed===x.id?`<div class="dedit"><input data-eid="${x.id}" value="${esc(x.t)}" autocomplete="off" enterkeyhint="done" aria-label="Uppgift"></div>`
+    :`<button class="${on?'ddone':'dopen'}" data-tid="${x.id}">${on?CHECK:'<i></i>'}<span>${esc(x.t)}</span></button>`;
   const ans=QS.map(x=>{const val=a[x.k];if(!val||(Array.isArray(val)&&!val.some(s=>s&&s.trim())))return'';
     return `<div class="dans"><h4>${x.h}</h4>${Array.isArray(val)?val.filter(s=>s&&s.trim()).map((s,j)=>`<p>${j+1}. ${esc(s)}</p>`).join(''):`<p>${esc(val)}</p>`}</div>`}).join('');
   const col=f>1.009?'var(--green)':f>1?'#10D95B':'var(--mu)';
-  sheet(`<h3>${k===t?'Idag':longDate(k)}</h3><p>Dag ${no} på resan${k===t?' · dagen pågår':''}</p>
-    <div class="dhead"><b style="color:${col}">${effTxt(f)}</b>
+  return `<div class="dhead"><b style="color:${col}">${effTxt(f)}</b>
       <span class="dpill ${d.q?'ok':''}">${d.q?'Frågor klara':'Frågor ej besvarade'}</span><span class="dpill ${c>=S.goal?'ok':''}">${Math.min(c,S.goal)} av ${S.goal} påminnelser</span></div>
-    ${done.length?`<div class="dsec">Klart den dagen</div>${done.map(s=>`<div class="ddone">${CHECK}<span>${esc(s)}</span></div>`).join('')}`:''}
-    ${ans?`<div class="dsec">Dina svar</div>${ans}`:''}
-    ${!done.length&&!ans?`<p>${k===t?'Inget gjort än idag.':'Inget loggat den här dagen.'}</p>`:''}
-    <div class="acts">${k===t&&!d.q?`<button class="btn fill" data-x="q" style="background:var(--green)">Svara på frågorna</button>`:''}<button class="btn" data-x="no">Stäng</button></div>`,
-  o=>{o.querySelector('[data-x=no]').onclick=()=>o.remove();const q=o.querySelector('[data-x=q]');if(q)q.onclick=()=>{o.remove();setTimeout(openQ,200)}});
+    <div class="dsec"><span>Klart den dagen</span><button class="dplus" data-x="add" aria-label="Lägg till något du gjorde">${ico('plus',16)}</button></div>
+    ${ui.dAdd?`<div class="dedit"><input id="dnew" placeholder="Vad gjorde du?" autocomplete="off" enterkeyhint="done"></div>`:''}
+    ${done.map(x=>row(x,true)).join('')}
+    ${open.length?`<div class="dsec"><span>Att göra</span></div>${open.map(x=>row(x,false)).join('')}`:''}
+    ${ans?`<div class="dsec"><span>Dina svar</span></div>${ans}`:''}
+    <div class="acts">${!d.q?`<button class="btn fill" data-x="q" style="background:var(--green)">Svara på frågorna</button>`:''}<button class="btn" data-x="no">Stäng</button></div>`;
+}
+function daySheet(k){
+  ui.dEdit=null;ui.dAdd=false;const t=today(),no=diffDays(S.start,k)+1;
+  sheet(`<h3>${k===t?'Idag':longDate(k)}</h3><p>Dag ${no} på resan${k===t?' · dagen pågår':''}</p><div id="dsb">${dayBody(k)}</div>`,
+  o=>{
+    const b=o.querySelector('#dsb');
+    const redraw=sel=>{b.innerHTML=dayBody(k);const i=sel&&b.querySelector(sel);if(i){i.focus({preventScroll:true});if(i.setSelectionRange)i.setSelectionRange(i.value.length,i.value.length)}};
+    /* Varje ändring räknar om kurvan, ringen och serien, och ritar om sidan bakom arket */
+    const changed=(msg,snap)=>{bumpBest();save();render();redraw();
+      if(msg)showUndo(msg,()=>{taskRestore(snap);save();render();if(b.isConnected)redraw()})};
+    const act=(a,id)=>{const s=taskSnap();
+      if(a==='done'){taskDone(id,k);vib(8);changed()}
+      else if(a==='undone'){taskUndone(id);changed('Flyttad till Att göra',s)}
+      else if(a==='del'){taskDel(id);changed('Uppgift borttagen',s)}
+      else if(a==='edit'){ui.dEdit=id;redraw(`[data-eid="${id}"]`)}};
+    const menu=r=>dMenu(r,r.classList.contains('ddone')
+      ?[['edit','Redigera','pencil'],['undone','Inte klar','undo'],['del','Ta bort','trash',1]]
+      :[['done',k===t?'Klar idag':'Klar den dagen','check'],['edit','Redigera','pencil']],a=>act(a,r.dataset.tid));
+    /* Håll in en rad = meny. Kort tryck på en ogjord = klar den dagen. */
+    let lp=null;
+    b.addEventListener('pointerdown',e=>{const r=e.target.closest('[data-tid]');if(!r||e.button>0)return;
+      lp={r,x:e.clientX,y:e.clientY,fired:false};r.classList.add('hold');
+      lp.t=setTimeout(()=>{if(!lp||lp.r!==r)return;lp.fired=true;r.classList.remove('hold');vib(10);menu(r)},500)});
+    b.addEventListener('pointermove',e=>{if(lp&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>8){clearTimeout(lp.t);lp.r.classList.remove('hold');lp=null}});
+    const up=e=>{if(!lp)return;const p=lp;lp=null;clearTimeout(p.t);p.r.classList.remove('hold');
+      if(!p.fired&&e.type==='pointerup'&&p.r.classList.contains('dopen'))act('done',p.r.dataset.tid)};
+    b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);
+    b.addEventListener('contextmenu',e=>{if(e.target.closest('[data-tid]'))e.preventDefault()});
+    b.addEventListener('click',e=>{
+      const r=e.target.closest('[data-tid]');if(r&&e.detail===0){if(r.classList.contains('dopen'))act('done',r.dataset.tid);else menu(r);return}
+      const x=e.target.closest('[data-x]');if(!x)return;
+      if(x.dataset.x==='add'){ui.dAdd=true;ui.dEdit=null;redraw('#dnew')}
+      else if(x.dataset.x==='q'){o.remove();setTimeout(()=>openQ(k),200)}
+      else if(x.dataset.x==='no')o.remove()});
+    const saveEdit=el=>{const id=el.dataset.eid;if(ui.dEdit!==id)return;ui.dEdit=null;const v=el.value.trim();
+      if(v){taskText(id,v);save();render()}setTimeout(()=>{if(b.isConnected)redraw()},0)};
+    b.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const el=e.target;
+      if(el.id==='dnew'){e.preventDefault();const v=el.value.trim();if(!v)return;taskAdd(k,v);vib(8);changed();redraw('#dnew')}
+      else if(el.dataset.eid!==undefined){e.preventDefault();saveEdit(el)}});
+    b.addEventListener('focusout',e=>{const el=e.target;
+      if(el.dataset&&el.dataset.eid!==undefined)saveEdit(el);
+      else if(el.id==='dnew'&&!el.value.trim()&&ui.dAdd){ui.dAdd=false;setTimeout(()=>{if(b.isConnected&&!ui.dAdd)redraw()},0)}});
+  });
 }
 
 /* ---- Ringen: två halvor, frågor och påminnelser ---- */
