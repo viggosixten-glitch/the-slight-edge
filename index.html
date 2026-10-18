@@ -3915,7 +3915,7 @@ function renderPr(){
   const t=today(),dt=parseKey(t),hv=histSpan(),fin=PR.list.filter(p=>p.kind==='exp'&&diffDays(p.start,t)>=14);
   let h=`<div class="pwrap"><div class="phd"><button class="padd" data-pa="add" aria-label="Ny princip">${ico('plus')}</button></div>`;
   if(!PR.list.length)h+=`<div class="pempty"><b>Skriv din första princip</b>En princip är en regel du lever efter. Tryck på + för att lägga till.</div>`;
-  else h+=`<div class="pgrid" id="pgrid"><div class="pgin ppat" id="pgin">${hv.html}</div></div>${ui.pwk?`<button class="pback" data-pa="now">${hv.label} · Till idag</button>`:''}<p class="note" style="padding:0 2px">Tryck på en rad för att bocka av idag. Håll inne för att redigera.</p>`;
+  else h+=`<div class="pgrid" id="pgrid"><div class="pgin ppat" id="pgin">${hv.html}</div></div>${ui.pwk?`<button class="pback" data-pa="now">${hv.label} · Till idag</button>`:''}`;
   h+=fin.map(expRes).join('')+'</div>';
   el.innerHTML=h;
 }
