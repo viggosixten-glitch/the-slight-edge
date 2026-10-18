@@ -907,12 +907,6 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .pres{background:var(--s1);border-radius:24px;padding:14px 16px;font-size:14.5px;font-weight:600;line-height:1.45;color:var(--tx)}
 .pres b{font-weight:800}
 .pmove{display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:var(--mu);font-weight:800;font-size:14px;padding:8px 12px 8px 10px;border-radius:999px;background:rgba(139,92,246,.16);color:#D8CCFF}
-.pmiss{background:linear-gradient(135deg,#2A1C4A,#1B1530);border-radius:30px;padding:18px}
-.pmiss b{font-size:19px;font-weight:800;letter-spacing:-.02em}
-.pmiss p{color:rgba(255,255,255,.75);font-size:15px;font-weight:600;margin-top:4px}
-.pmiss .acts{display:flex;gap:8px;margin-top:14px}
-.pmiss .btn{background:rgba(255,255,255,.1)}
-.pmiss .btn.fill{background:#8B5CF6;color:#fff}
 .pempty{background:var(--s1);border-radius:30px;padding:20px;font-size:15px;font-weight:600;color:var(--mu);line-height:1.45}
 .pempty b{display:block;color:var(--tx);font-size:19px;font-weight:800;margin-bottom:4px}
 .pcard{background:var(--s1);border-radius:36px;padding:18px 16px}
@@ -975,8 +969,6 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .prr .pc.pre{background:transparent}
 .prr .pc.pend{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(167,139,250,.9)}
 .prx{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);padding:10px 0 2px}
-.pfill{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(139,92,246,.14);border-radius:16px;padding:10px 10px 10px 14px;font-size:14px;font-weight:700}
-.pfill button{background:#8B5CF6;color:#fff;border-radius:12px;padding:8px 14px;font-weight:800}
 .pback{align-self:center;color:#C4B5FD;font-size:13px;font-weight:800;padding:7px 12px;border-radius:99px;background:rgba(139,92,246,.14)}
 .padd{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(139,92,246,.2);color:#D8CCFF;font-size:22px;font-weight:800}
 
@@ -3838,8 +3830,8 @@ const wkStart=k=>addDays(k,-((parseKey(k).getDay()+6)%7));
 function weekNo(k){const t=parseKey(k);t.setDate(t.getDate()+3-((t.getDay()+6)%7));const w1=new Date(t.getFullYear(),0,4,12);return 1+Math.round(((t-w1)/864e5-3+((w1.getDay()+6)%7))/7)}
 function wkCount(p,k){const s=wkStart(k),t=today();let n=0;for(let i=0;i<7;i++){const d=addDays(s,i);if(d>=p.start&&d<=t&&isChk(p,d))n++}return n}
 const dayDone=(p,k)=>p.freq==='w'?(isChk(p,k)||wkCount(p,k)>=p.per):isChk(p,k);
-const yLocked=()=>PR.asked[addDays(today(),-1)]==='no';
-const canEditDay=k=>k===today()||(k===addDays(today(),-1)&&!yLocked());
+/* Idag och igår går alltid att bocka av – ingen fråga om igår, ingen låsning */
+const canEditDay=k=>k===today()||k===addDays(today(),-1);
 const prMin=()=>PR.list.reduce((m,p)=>p.start<m?p.start:m,today());
 function prRate(p,from,to){
   const t=today(),s=from>p.start?from:p.start;if(s>to)return null;
@@ -3849,11 +3841,6 @@ function prRate(p,from,to){
     for(let k=a;k<=b;k=addDays(k,1))if(isChk(p,k))c++;
     const tg=Math.min(p.per,diffDays(a,we)+1);if(we>=t&&c<tg)continue;num+=Math.min(c,tg);den+=tg}
   return den?num/den:null;
-}
-function missAsk(){
-  const y=addDays(today(),-1);if(PR.asked[y])return null;
-  const act=PR.list.filter(p=>p.start<=y&&!prGym(p));if(!act.length)return null;
-  return act.some(p=>isChk(p,y))?null:y;
 }
 
 const DL=['M','T','O','T','F','L','S'];
@@ -3925,10 +3912,8 @@ function prAnalysis(){
 }
 function renderPr(){
   const el=document.getElementById('pr');if(!el||!PR)return;
-  const t=today(),dt=parseKey(t),miss=missAsk(),hv=histSpan(),fin=PR.list.filter(p=>p.kind==='exp'&&diffDays(p.start,t)>=14);
+  const t=today(),dt=parseKey(t),hv=histSpan(),fin=PR.list.filter(p=>p.kind==='exp'&&diffDays(p.start,t)>=14);
   let h=`<div class="pwrap"><div class="phd"><button class="padd" data-pa="add" aria-label="Ny princip">${ico('plus')}</button></div>`;
-  if(miss)h+=`<div class="pmiss"><b>Igår är tomt</b><p>Missade du bara att anteckna igår?</p><div class="acts"><button class="btn" data-pa="missno">Nej, jag missade</button><button class="btn fill" data-pa="missyes">Ja, fyll i igår</button></div></div>`;
-  if(ui.pday==='y')h+=`<div class="pfill"><span>${yLocked()?'Igår är låst.':'Tryck på en rad för att bocka av igår.'}</span><button data-pa="yday">Klar</button></div>`;
   if(!PR.list.length)h+=`<div class="pempty"><b>Skriv din första princip</b>En princip är en regel du lever efter. Tryck på + för att lägga till.</div>`;
   else h+=`<div class="pgrid" id="pgrid"><div class="pgin ppat" id="pgin">${hv.html}</div></div>${ui.pwk?`<button class="pback" data-pa="now">${hv.label} · Till idag</button>`:''}<p class="note" style="padding:0 2px">Tryck på en rad för att bocka av idag. Håll inne för att redigera.</p>`;
   h+=fin.map(expRes).join('')+'</div>';
@@ -4010,11 +3995,8 @@ function prInit(){
     const r=e.target.closest('[data-press]');if(r&&e.detail===0){prToggle(r.dataset.pid);return}
     const b=e.target.closest('[data-pa]');if(!b)return;const a=b.dataset.pa,t=today(),y=addDays(t,-1);
     if(a==='day'){ui.pday=b.dataset.d;renderPr()}
-    else if(a==='yday'){ui.pday='t';renderPr()}
     else if(a==='now'){ui.pwk=0;renderPr()}
     else if(a==='add')prSheet();
-    else if(a==='missyes'){PR.asked[y]='yes';prsave();ui.pday='y';renderPr()}
-    else if(a==='missno'){PR.asked[y]='no';prsave();ui.pday='t';renderPr();gToast('Igår räknas som missad')}
     else if(a==='cell'){if(Date.now()-gridDrag<350)return;const p=PR.list.find(x=>x.id===b.dataset.pid),k=b.dataset.k;if(!p||!canEditDay(k))return;const on=!isChk(p,k);setChk(p,k,on);if(on)vib(8);renderPr()}
     else if(a==='hv'){ui.phv=b.dataset.v;renderPr()}
     else if(a==='hprev')prShift(-1,0);
