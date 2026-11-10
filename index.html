@@ -976,7 +976,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
    Rader med ring rundas till höger koncentriskt med ringen (halva rutan + 4 px). */
 .prr{padding:4px;border-radius:11px;--hc:139,92,246;--cs:calc((100cqw - 48px) / 9)}
 .prr.rg{border-radius:11px calc(var(--cs) / 2 + 4px) calc(var(--cs) / 2 + 4px) 11px}
-.prr::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,#0A9E42,#10D95B);opacity:0;pointer-events:none}
+.prr::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,#108C3F,#18C057);opacity:0;pointer-events:none}
 .prr.done::before,.prr.undone::before{opacity:1}
 .prr.fresh::before{animation:pin .48s cubic-bezier(.32,.72,0,1) both}
 .prr.undone::before{animation:pout .32s cubic-bezier(.32,.72,0,1) forwards}
@@ -993,10 +993,11 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 .prr.plift{transform:scale(1.03);z-index:5;transition:transform .2s cubic-bezier(.23,1,.32,1);background:#15151B;box-shadow:0 14px 34px rgba(0,0,0,.55)}
 .prr.plift.done{background:transparent}
 .prr.pdrag{transition:none}
-.prr>i:nth-child(n+7){touch-action:none}
+.prr.done .prn{color:#fff}
+.prr>i:nth-child(-n+5){touch-action:none}
 .hring{position:fixed;z-index:99;pointer-events:none;overflow:visible}
 .hring path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
-.prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgb(var(--hc))}
 .prr .pc{display:grid;place-items:center;height:auto;aspect-ratio:1;border-radius:7px;background:rgba(var(--hc),.16);transition:transform .5s var(--ease-out)}
 .prr .pc.on{background:rgb(var(--hc))}
 .prr .pc.fut{background:rgba(var(--hc),.06);box-shadow:none}
@@ -1016,20 +1017,36 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 @keyframes pring{from{stroke-dashoffset:var(--o0)}}
 .pwr b{position:relative;font-size:12px!important}
 .pwr .ck{position:relative;width:15px;height:15px;color:#fff}
+/* Mönster-diagrammet */
+.pch{margin:26px 18px 0}
+.pchs{display:flex;justify-content:center;margin-top:14px}
+.pchh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px 10px}
+.pchh b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.pchw{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.pchw svg{display:block;overflow:visible}
+.pchl{transition:opacity .25s ease,stroke-width .2s ease}
+.pchl.anim{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s cubic-bezier(.45,0,.2,1) forwards}
+.pcht{position:absolute;top:6px;display:flex;flex-direction:column;gap:3px;padding:9px 11px;border-radius:14px;background:rgba(26,26,32,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);pointer-events:none;max-width:62%;z-index:2}
+.pcht[hidden]{display:none}
+.pcht span{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden}
+.pcht span i{flex:none;width:8px;height:8px;border-radius:50%}
+.pcht span b{margin-left:auto;padding-left:10px;font-variant-numeric:tabular-nums}
+.pcht .pchd{font-size:11.5px;color:var(--mu);font-weight:800;margin-bottom:2px}
 /* Färgval i dagens kolumn + inställningar där resten av sidan tonats bort */
-#pgin,.prh,#pr .phd,#pr .pempty{transition:opacity .22s var(--ease-out)}
+#pgin,.prh,#pr .phd,#pr .pempty,#pr .pch{transition:opacity .22s var(--ease-out)}
 #pr{position:relative}
-#pr.pediting #pgin,#pr.pediting .phd{pointer-events:none}
+#pr.pediting #pgin,#pr.pediting .phd,#pr.pediting .pch{pointer-events:none}
 .pov{position:absolute;inset:0;pointer-events:none;z-index:3}
 .pcs{position:absolute;padding:0;border-radius:7px;background:rgb(var(--hc));display:grid;place-items:center;pointer-events:auto;-webkit-tap-highlight-color:transparent}
 .pcs svg{opacity:0;transition:opacity .15s}
 .pcs.on svg{opacity:1}
 .ped{position:absolute;pointer-events:auto;display:flex;flex-direction:column;gap:10px}
 .ped input{background:var(--s2);font-size:17px;font-weight:700}
-.ped .seg2 button{padding:11px 2px;font-size:13.5px}
-.ped .pgo{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.07);border-radius:16px;padding:6px 6px 6px 14px}
+.ped .seg2 button{padding:11px 0;font-size:12px;letter-spacing:-.015em;white-space:nowrap}
+.ped .pgo{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 8px;background:rgba(255,255,255,.07);border-radius:16px;padding:10px 6px 6px 14px}
 .ped .pgo[hidden],.ped .tgl[hidden]{display:none}
-.ped .pgo>span{font-size:14px;font-weight:700}
+.ped .pgo>span{flex:1 0 100%;font-size:13px;font-weight:700;color:var(--mu)}
+.ped .pgo .stepper{flex:1;justify-content:space-between}
 .ped .pgo .stepper{gap:4px}
 .ped .pgo .stepper button{width:38px;height:38px;border-radius:12px;font-size:18px;display:grid;place-items:center}
 .ped .pgo .stepper b{min-width:40px;font-size:22px}
@@ -3999,7 +4016,10 @@ window.addEventListener('pagehide',()=>{if(prSaveT){clearTimeout(prSaveT);prSave
 
 const prGym=p=>p.freq==='w'&&!!p.gym;
 /* Habits: färg per habit (ingen grön – grön betyder klar). Ordning: marinblå, lila, röd, korall, ljusblå */
-const PCOL=[['navy','47,91,255'],['violet','139,92,246'],['red','240,48,74'],['coral','255,128,72'],['sky','44,196,245']];
+/* 15 färger i tre kolumner (5 per kolumn): dagens kolumn = originalen, sedan ljusare toner, sedan andra nyanser. Ingen grön, ingen gul. */
+const PCOL=[['navy','47,91,255'],['violet','139,92,246'],['red','240,48,74'],['coral','255,128,72'],['sky','44,196,245'],
+  ['blue2','122,152,255'],['lilac','190,158,255'],['rose','255,118,140'],['peach','255,172,128'],['ice','150,222,255'],
+  ['indigo','94,92,230'],['magenta','217,70,239'],['pink','255,45,140'],['orange','255,140,0'],['cyan','0,182,212']];
 const hcOf=p=>(PCOL.find(c=>c[0]===(p&&p.c))||PCOL[1])[1];
 const prCnt=p=>p.freq==='w';
 const prUnit=(p,n)=>p.u==='h'?(n===1?'timme':'timmar'):(n===1?'gång':'gånger');
@@ -4128,9 +4148,88 @@ function renderPr(){
   let h=`<div class="pwrap"><div class="phd"><button class="padd" data-pa="add" aria-label="Ny habit">${ico('plus')}</button></div>`;
   if(!PR.list.length)h+=`<div class="pempty"><b>Lägg till din första habit</b></div>`;
   else h+=`<div class="pgrid" id="pgrid"><div class="pgin ppat" id="pgin">${hv.html}</div></div>${ui.pwk?`<button class="pback" data-pa="now">${hv.label} · Till idag</button>`:''}`;
-  h+=fin.map(expRes).join('')+'</div>';
-  el.innerHTML=h;
+  h+=fin.map(expRes).join('')+prChart()+'</div>';
+  el.innerHTML=h;ui.pchAnim=false;
   if(prEd){el.appendChild(prEd.ov);prFade(false)}
+}
+/* ---------- Mönster: linjediagram, en mjuk linje per habit (% av mål, rullande 7 dagar) ---------- */
+let PCH=null;
+function prSeries(p,days){
+  const t=today();
+  return days.map(k=>{if(k<p.start||k>t)return null;
+    const a=addDays(k,-6),s=a>p.start?a:p.start,n=diffDays(s,k)+1;
+    if(p.freq==='w'){let c=0;for(let d=s;d<=k;d=addDays(d,1))c+=cnt(p,d);return Math.min(1,c/Math.max(1e-9,p.per*n/7))}
+    let c=0,m=0;for(let d=s;d<=k;d=addDays(d,1)){const on=isChk(p,d);if(d===t&&!on)continue;m++;if(on)c++}
+    return m?c/m:null});
+}
+/* Kubisk B-spline: kurvan går nära punkterna men har aldrig några hörn (C2-kontinuerlig),
+   och håller sig alltid inom punkternas spann – alltså aldrig under 0 % eller över 100 %. */
+const bPad=a=>[a[0],a[0],...a,a[a.length-1],a[a.length-1]];
+function bsplinePath(pts){
+  if(!pts.length)return '';if(pts.length===1)return `M${pts[0][0]} ${pts[0][1]}`;
+  const q=bPad(pts),f=v=>v.toFixed(1),S=i=>[(q[i-1][0]+4*q[i][0]+q[i+1][0])/6,(q[i-1][1]+4*q[i][1]+q[i+1][1])/6];
+  let st=S(1),d=`M${f(st[0])} ${f(st[1])}`;
+  for(let i=1;i<q.length-2;i++){const c1=[(2*q[i][0]+q[i+1][0])/3,(2*q[i][1]+q[i+1][1])/3],c2=[(q[i][0]+2*q[i+1][0])/3,(q[i][1]+2*q[i+1][1])/3],e=S(i+1);
+    d+=`C${f(c1[0])} ${f(c1[1])} ${f(c2[0])} ${f(c2[1])} ${f(e[0])} ${f(e[1])}`}
+  return d;
+}
+/* Kurvans värde vid dag i (för punkterna när man drar fingret) */
+function bsplineAt(v,i){if(v[i]==null)return null;let a=i,b=i;while(a>0&&v[a-1]!=null)a--;while(b<v.length-1&&v[b+1]!=null)b++;
+  const seg=v.slice(a,b+1),q=bPad(seg),k=i-a+2;return (q[k-1]+4*q[k]+q[k+1])/6}
+function prChart(){
+  const list=PR.list.filter(p=>p.kind==='main');if(!list.length)return '';
+  const t=today(),r=ui.pcr||'30',s0=list.reduce((m,p)=>p.start<m?p.start:m,t);
+  let from=r==='all'?s0:addDays(t,-(+r-1));if(r!=='all'&&from<s0&&diffDays(s0,t)>=1)from=s0;if(diffDays(from,t)<1)from=addDays(t,-1);
+  const days=[];for(let k=from;k<=t;k=addDays(k,1))days.push(k);
+  const el=document.getElementById('pr'),W=Math.round(Math.min(520,(el&&el.getBoundingClientRect().width)||360))-36,H=Math.max(100,Math.round(innerHeight/6)); /* 1/6 av skärmens höjd */
+  const L=34,R=10,T=12,B=24,X=i=>L+(days.length>1?i/(days.length-1):.5)*(W-L-R),Y=v=>T+(1-v)*(H-T-B);
+  /* Linjerna jämnas ut (gaussisk utjämning) innan kurvan ritas, så de blir runda i stället för sicksack. Avläsningen visar de riktiga värdena. */
+  const sig=r==='7'?1.1:Math.max(1.8,days.length/18),rad=Math.ceil(sig*2.5);
+  const soft=v=>v.map((x,i)=>{if(x==null)return null;let a=0,w=0;for(let j=-rad;j<=rad;j++){const y=v[i+j];if(y==null)continue;const k=Math.exp(-(j*j)/(2*sig*sig));a+=y*k;w+=k}return a/w});
+  const series=list.map(p=>{const v=prSeries(p,days),sv=soft(v);return {id:p.id,t:p.t,c:hcOf(p),v,sv,cv:sv.map((_,i)=>bsplineAt(sv,i))}});
+  PCH={days,series,X,Y,W,H,L,R,T,B};
+  const hl=ui.phl&&series.some(x=>x.id===ui.phl)?ui.phl:null,an=ui.pchAnim&&!RM();
+  const grid=[0,.5,1].map(v=>`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#24242B" stroke-width="1"/><text x="${L-7}" y="${Y(v)+3.5}" fill="#8E8D98" font-size="10" font-weight="700" font-family="inherit" text-anchor="end">${v*100} %</text>`).join('');
+  const paths=series.map((x,si)=>{const segs=[];let cur=[];x.sv.forEach((v,i)=>{if(v==null){if(cur.length)segs.push(cur);cur=[]}else cur.push([X(i),Y(v)])});if(cur.length)segs.push(cur);
+    const d=segs.map(bsplinePath).join('');if(!d)return '';
+    const dim=hl&&hl!==x.id;
+    return `<path class="pchl${an?' anim':''}" data-sid="${x.id}" d="${d}" fill="none" stroke="rgb(${x.c})" stroke-width="${hl===x.id?3.4:2.4}" stroke-linecap="round" stroke-linejoin="round" pathLength="1" style="opacity:${dim?.14:1};${an?`animation-delay:${si*70}ms`:''}"/>`}).join('');
+  const seg=[['7','7 d'],['30','30 d'],['all','Allt']].map(([k,l])=>`<button data-pa="pcr" data-r="${k}" class="${r===k?'on':''}">${l}</button>`).join('');
+  return `<section class="pch" id="pch">
+    <div class="pchw" id="pchw" style="height:${H}px"><svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none" aria-label="Mönster per habit">${grid}${paths}
+      <text x="${L}" y="${H-6}" fill="#8E8D98" font-size="10" font-weight="700" font-family="inherit">${dlabel(days[0])}</text><text x="${W-R}" y="${H-6}" fill="#F5F4F7" font-size="10" font-weight="700" font-family="inherit" text-anchor="end">Idag</text>
+      <g id="pchx"></g></svg><div class="pcht" id="pcht" hidden></div></div><div class="pchs"><div class="seg">${seg}</div></div></section>`;
+}
+/* Dra fingret längs diagrammet: linje + datum + varje habits värde. Tryck på en linje: lyft fram den. */
+function prChartAt(clientX,show){
+  const w=document.getElementById('pchw'),gx=document.getElementById('pchx'),tip=document.getElementById('pcht');if(!w||!PCH||!gx)return null;
+  const b=w.getBoundingClientRect(),sx=PCH.W/b.width,x=(clientX-b.left)*sx,n=PCH.days.length;
+  const i=Math.max(0,Math.min(n-1,Math.round((x-PCH.L)/((PCH.W-PCH.L-PCH.R)/Math.max(1,n-1)))));
+  if(!show){gx.innerHTML='';tip.hidden=true;return i}
+  const X=PCH.X(i),hl=ui.phl;
+  gx.innerHTML=`<line x1="${X}" x2="${X}" y1="${PCH.T}" y2="${PCH.H-PCH.B}" stroke="rgba(255,255,255,.35)" stroke-width="1"/>`+
+    PCH.series.map(sr=>sr.v[i]==null?'':`<circle cx="${X}" cy="${PCH.Y(sr.cv[i])}" r="4" fill="rgb(${sr.c})" stroke="#08080B" stroke-width="2" opacity="${hl&&hl!==sr.id?.2:1}"/>`).join('');
+  const rows=PCH.series.filter(sr=>sr.v[i]!=null).sort((a,c)=>c.v[i]-a.v[i]);
+  tip.innerHTML=`<span class="pchd">${i===n-1?'Idag':dlabel(PCH.days[i])}</span>`+rows.map(sr=>`<span style="opacity:${hl&&hl!==sr.id?.35:1}"><i style="background:rgb(${sr.c})"></i>${esc(sr.t)}<b>${Math.round(sr.v[i]*100)} %</b></span>`).join('');
+  tip.hidden=false;const left=X/sx>b.width/2;tip.style.left=left?'8px':'';tip.style.right=left?'':'8px';
+  return i;
+}
+function prChartInit(el){
+  let cs=null;
+  el.addEventListener('pointerdown',e=>{const w=e.target.closest('#pchw');if(!w||e.button>0)return;cs={x:e.clientX,y:e.clientY,id:e.pointerId,scrub:false,t:Date.now()}});
+  el.addEventListener('pointermove',e=>{if(!cs||e.pointerId!==cs.id)return;const dx=e.clientX-cs.x,dy=e.clientY-cs.y;
+    if(!cs.scrub){if(Math.abs(dx)>6&&Math.abs(dx)>Math.abs(dy)){cs.scrub=true;try{document.getElementById('pchw').setPointerCapture(e.pointerId)}catch(_){}}else if(Math.abs(dy)>8){cs=null;return}else return}
+    const i=prChartAt(e.clientX,true);if(i!==cs.i){if(cs.i!=null)vib(3);cs.i=i}});
+  const end=e=>{if(!cs||e.pointerId!==cs.id)return;const c=cs;cs=null;
+    if(c.scrub){prChartAt(0,false);return}
+    if(e.type!=='pointerup')return;
+    /* Tryck: närmaste linje inom 18 px lyfts fram, tryck igen eller på tom yta = alla */
+    const w=document.getElementById('pchw');if(!w||!PCH)return;const b=w.getBoundingClientRect(),i=prChartAt(c.x,false),y=(c.y-b.top)*(PCH.H/b.height);
+    let best=null,bd=18*(PCH.H/b.height);PCH.series.forEach(sr=>{const v=sr.cv[i];if(v==null)return;const d=Math.abs(PCH.Y(v)-y);if(d<bd){bd=d;best=sr.id}});
+    ui.phl=best&&best!==ui.phl?best:null;
+    document.querySelectorAll('#pch .pchl').forEach(pa=>{const on=ui.phl===pa.dataset.sid;pa.style.opacity=ui.phl&&!on?'.14':'1';pa.setAttribute('stroke-width',on?3.4:2.4)});
+    if(best)vib(6)};
+  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
 }
 function prToggle(id,day){
   const p=PR.list.find(x=>x.id===id);if(!p)return;
@@ -4155,8 +4254,8 @@ function prMinus(id,k){
 /* Redigera/skapa: dagens rutor byter färg till de fem färgvalen på sina platser (rad 1 marinblå, rad 2 lila …).
    Saknas rader poppar nya rutor fram under. Resten av sidan tonas bort och inställningarna tar dess plats. */
 const PCHK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const PCN={navy:'marinblå',violet:'lila',red:'röd',coral:'korall',sky:'ljusblå'};
-function prFade(on){const el=document.getElementById('pr');if(!el)return;el.classList.toggle('pediting',!on);el.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd').forEach(x=>x.style.opacity=on?'':'0')}
+const PCN={navy:'marinblå',violet:'lila',red:'röd',coral:'korall',sky:'ljusblå',blue2:'ljus blå',lilac:'syren',rose:'rosé',peach:'persika',ice:'isblå',indigo:'indigo',magenta:'magenta',pink:'rosa',orange:'orange',cyan:'cyan'};
+function prFade(on){const el=document.getElementById('pr');if(!el)return;el.classList.toggle('pediting',!on);el.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd,.pch').forEach(x=>x.style.opacity=on?'':'0')}
 let prEd=null;
 function prEdit(id){
   if(prEd)return;
@@ -4165,7 +4264,7 @@ function prEdit(id){
   const f={kind:ex?ex.kind:'main',m:ex?(ex.freq==='w'?(ex.u==='h'?'h':'n'):'d'):'d',per:ex&&ex.freq==='w'?ex.per||4:3,gym:ex?!!ex.gym:false,c:ex&&ex.c?ex.c:prNextCol(ex)};
   const anim=(el,kf,o)=>RM()||!el.animate?null:el.animate(kf,Object.assign({duration:380,easing:'cubic-bezier(.32,.72,0,1)',fill:'backwards'},o));
   const rel=r=>{const b=pr.getBoundingClientRect();return {x:r.left-b.left,y:r.top-b.top,w:r.width,h:r.height}};
-  const cells=()=>[...pr.querySelectorAll('#pgin .prr')].map(r=>({id:r.dataset.pid,el:r.children[8]})).filter(c=>c.el);
+  const cells=(j=0)=>[...pr.querySelectorAll('#pgin .prr')].map(r=>({id:r.dataset.pid,el:r.children[8-j]})).filter(c=>c.el);
   /* Kolumnens geometri: dagens rutor, eller en tänkt kolumn om sidan är tom */
   const cs0=cells(),pb=pr.getBoundingClientRect();
   let col;
@@ -4185,10 +4284,13 @@ function prEdit(id){
     it.forEach((c,k)=>anim(c,[{opacity:1,transform:'none'},{opacity:0,transform:'translate3d(0,18px,0)'}],{duration:220,delay:k*OUT,easing:'cubic-bezier(.55,0,1,.45)',fill:'forwards'}));
     return (it.length-1)*OUT+220;
   };
-  const slot=i=>{const c=cs0[i];if(c){const r=rel(c.el.getBoundingClientRect());return {x:r.x,y:r.y}}return {x:col.x,y:col.y+i*col.pitch}};
+  /* Färg i (0–14): rad i%5, kolumn i/5 (0 = dagens kolumn, 1 = igår, 2 = i förrgår) */
+  const rowOf=i=>i%5,colOf=i=>Math.floor(i/5),cx=j=>col.x-j*(col.s+5);
+  const slot=i=>{const k=rowOf(i),j=colOf(i),row=pr.querySelectorAll('#pgin .prr')[k],c=row&&row.children[8-j];
+    if(c&&cs0[k]){const r=rel(c.getBoundingClientRect());return {x:r.x,y:r.y}}return {x:cx(j),y:col.y+k*col.pitch}};
   const ov=document.createElement('div');ov.className='pov';
   ov.innerHTML=PCOL.map(([n,rgb],i)=>{const q=slot(i);return `<button class="pcs${f.c===n?' on':''}" data-c="${n}" style="--hc:${rgb};left:${q.x}px;top:${q.y}px;width:${col.s}px;height:${col.s}px" aria-label="Färg ${PCN[n]}" aria-pressed="${f.c===n}">${PCHK}</button>`}).join('')+
-    `<div class="ped" style="left:${Math.max(12,(pb.width-Math.min(pb.width,520))/2+4)}px;top:${col.y}px;width:${Math.max(200,col.x-14-Math.max(12,(pb.width-Math.min(pb.width,520))/2+4))}px">
+    `<div class="ped" style="left:${Math.max(12,(pb.width-Math.min(pb.width,520))/2+4)}px;top:${col.y}px;width:${Math.max(170,cx(2)-12-Math.max(12,(pb.width-Math.min(pb.width,520))/2+4))}px">
       <input id="prt" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="${ex?'':'Ny habit'}" value="${ex?esc(ex.t):''}">
       <div class="seg2" data-g="m">${[['d','Varje dag'],['h','Timmar'],['n','Gånger']].map(([v,l])=>`<button data-v="${v}">${l}</button>`).join('')}</div>
       <div class="pgo" id="prw"><span>Mål per vecka</span><div class="stepper"><button data-st="-1" aria-label="Färre">${ico('minus')}</button><b id="prper">${f.per}</b><button data-st="1" aria-label="Fler">${ico('plus')}</button></div></div>
@@ -4196,12 +4298,12 @@ function prEdit(id){
       <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:linear-gradient(120deg,#6D3AF0,#B436D6);color:#fff">${ex?'Spara':'Lägg till'}</button></div>
       ${ex?'<button class="pdel" data-x="del">Ta bort habit</button>':''}</div>`;
   const sq=[...ov.querySelectorAll('.pcs')],ped=ov.querySelector('.ped'),inp=ov.querySelector('#prt');
-  pr.classList.add('pediting');pr.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd').forEach(x=>x.style.opacity='0');pr.appendChild(ov);
+  pr.classList.add('pediting');pr.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd,.pch').forEach(x=>x.style.opacity='0');pr.appendChild(ov);
   const fit=()=>{pr.style.minHeight=Math.max(col.y+5*col.pitch,ped.offsetTop+ped.offsetHeight)+24+'px'};
   /* In: dagens rutor försvinner med raderna och färgvalen ploppar upp en i taget */
   /* Plopp: 0,7 s – växer snabbt till lite större, sätter sig sedan mjukt i originalstorlek. Samma startfördröjning som innan. */
   const POP=[{transform:'scale(.3)',opacity:0,easing:'cubic-bezier(.2,.8,.3,1)'},{transform:'scale(1.12)',opacity:1,offset:.38,easing:'cubic-bezier(.45,0,.25,1)'},{transform:'none',opacity:1}];
-  sq.forEach((b,i)=>anim(b,POP,{duration:700,delay:90+i*55,easing:'linear',fill:'backwards'}));
+  sq.forEach((b,i)=>anim(b,POP,{duration:700,delay:90+rowOf(i)*55+colOf(i)*45,easing:'linear',fill:'backwards'}));
   const mx=()=>f.m==='h'?80:f.m==='n'?(f.gym?7:30):1;
   const sync=()=>{ped.querySelectorAll('.seg2 button').forEach(b=>b.classList.toggle('on',f.m===b.dataset.v));
     if(f.m!=='d')f.per=clampV(f.per,1,mx());
@@ -4223,10 +4325,10 @@ function prEdit(id){
         const a=anim(ov,[{opacity:1},{opacity:0}],{duration:FADE,fill:'forwards'});if(a)a.onfinish=()=>ov.remove();else ov.remove();cb&&cb()};
       if(RM()){fin();return}
       /* Färgvalen ploppar bort, och de riktiga dagsrutorna ploppar upp där det finns en rad */
-      sq.forEach((b,i)=>anim(b,[{transform:'none',opacity:1},{transform:'scale(1.08)',opacity:1,offset:.3},{transform:'scale(.3)',opacity:0}],{duration:200,delay:i*45,fill:'forwards',easing:'ease-in'}));
+      sq.forEach((b,i)=>anim(b,[{transform:'none',opacity:1},{transform:'scale(1.08)',opacity:1,offset:.3},{transform:'scale(.3)',opacity:0}],{duration:200,delay:rowOf(i)*45+colOf(i)*30,fill:'forwards',easing:'ease-in'}));
       setTimeout(()=>{
         const gi=pr.querySelector('#pgin');
-        cs.slice(0,5).forEach((c,i)=>anim(c.el,POP,{duration:700,delay:300+i*45,easing:'linear',fill:'backwards'}));
+        [0,1,2].forEach(j=>cells(j).slice(0,5).forEach((c,i)=>anim(c.el,POP,{duration:700,delay:300+i*45+j*30,easing:'linear',fill:'backwards'})));
         fin()},150);
     },tOut);
   };
@@ -4256,11 +4358,11 @@ function prEdit(id){
 const prSheet=prEdit;
 let prPress=null,gridDrag=0,prSw=null;
 function prInit(){
-  const el=document.getElementById('pr');
+  const el=document.getElementById('pr');prChartInit(el);
   el.addEventListener('pointerdown',e=>{
     const r=e.target.closest('[data-press]');
     if(r&&e.button===0){const pc=e.target.closest('.pc'),k=pc?pc.dataset.k:null,q=PR.list.find(x=>x.id===r.dataset.pid);
-      const rr=r.getBoundingClientRect();prPress={r,x:e.clientX,y:e.clientY,fired:false,k,id:e.pointerId,zone:(e.clientX-rr.left)/rr.width>=.6};
+      const rr=r.getBoundingClientRect();prPress={r,x:e.clientX,y:e.clientY,fired:false,k,id:e.pointerId,zone:(e.clientX-rr.left)/rr.width<=.4};
       if(q&&k&&prCnt(q)&&canEditDay(k)&&cnt(q,k)){
         /* Håll in en ruta med antal = −1 */
         prPress.cell=pc;prPress.ring=holdRing(pc,350,3);
@@ -4273,7 +4375,7 @@ function prInit(){
   });
   el.addEventListener('pointermove',e=>{
     if(prPress&&prPress.lifted){prDragMove(prPress,e.clientY);return}
-    /* Högra 2/5 av raden: dra direkt utan att hålla in */
+    /* Vänstra 2/5 av raden: dra direkt utan att hålla in (höger sida lämnas åt scroll) */
     if(prPress&&prPress.zone){const dx=e.clientX-prPress.x,dy=e.clientY-prPress.y;
       if(Math.abs(dy)>6&&Math.abs(dy)>=Math.abs(dx)){const p=prPress;clearTimeout(p.t);if(p.ring)p.ring.cancel();p.fired=true;p.lifted=true;p.r.classList.add('plift');
         try{p.r.setPointerCapture(e.pointerId)}catch(_){}vib(8);prDragMove(p,e.clientY);return}}
@@ -4308,6 +4410,7 @@ function prInit(){
     else if(a==='hprev')prShift(-1,0);
     else if(a==='hnext')prShift(1,0);
     else if(a==='rr'){ui.prr=b.dataset.r;renderPr()}
+    else if(a==='pcr'){if(ui.pcr===b.dataset.r)return;ui.pcr=b.dataset.r;ui.pchAnim=true;renderPr()}
     else if(a==='move'){const p=PR.list.find(x=>x.id===b.dataset.pid);if(p){p.kind='main';prsave();renderPr();gToast('Flyttad till habits')}}
   });
 }
@@ -4809,7 +4912,7 @@ function goPage(i){
   if(i!==1&&typeof prEd!=='undefined'&&prEd)prEd.close(prEd.id);
   if(!ui.boot)pgFlash();ui.page=i;document.documentElement.classList.toggle('treemode',i===0);document.documentElement.classList.toggle('gymmode',i===3);document.documentElement.classList.toggle('home',i===2);updGymHead();if(i===3)requestAnimationFrame(gymFit);
   if(i===2){const gb=document.querySelector('.gymb');if(gb){const tmp=document.createElement('div');tmp.innerHTML=gymBtn();gb.replaceWith(tmp.firstElementChild)}}
-  if(i===1)renderPr();
+  if(i===1){ui.pchAnim=true;renderPr()}
   const to=-i*pagesW(),panes=PANES.map(id=>document.getElementById(id)),hide=()=>panes.forEach((p,j)=>{if(j!==i){p.classList.add('off');p.inert=true}});
   document.querySelectorAll('.pager button').forEach((b,j)=>b.setAttribute('aria-current',j===i?'page':'false'));
   const from=Math.round(-pg.pos/pagesW()),lo=Math.min(from,i),hi=Math.max(from,i);
