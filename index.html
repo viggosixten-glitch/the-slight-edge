@@ -44,6 +44,7 @@
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overscroll-behavior:none}
 body{overscroll-behavior:none;font-optical-sizing:auto}
+html{overflow-x:hidden}body{overflow-x:clip;touch-action:pan-y}
 button,[role="button"],.chip,.mini,.tl{touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .swipe>.habit{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .lbl,.st,.sm,.mu,.legend span,.chip,.lbl2,.qmeta,.qlater,.hero-q span,.edge,.frow,.due,.warn{letter-spacing:.01em}
@@ -847,6 +848,10 @@ html.sq .qbox::before,html.sq .qbox::after{padding:0;-webkit-mask:var(--sq-ring)
 /* ---------- Fyra sidor ---------- */
 .pager i{background-size:100% 100%}
 html.treemode body{padding-bottom:0;overflow:hidden}
+/* Gymmets huvudsida är helt fast: figuren skalas till skärmen, ingen scroll */
+html.gymmode,html.gymmode body{overflow:hidden;height:100%}
+html.gymmode body{padding-bottom:0;touch-action:none}
+html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(safe-area-inset-bottom,0px) - 10px)}
 .bso{position:fixed;inset:0;z-index:90}
 .bso .scrim{position:absolute;inset:0;background:rgba(4,4,8,.5);opacity:0;transition:opacity .3s var(--ease-out)}
 .bso.on .scrim{opacity:1}
@@ -885,7 +890,7 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .tgl[disabled]{opacity:.45}
 .note{font-size:13px;color:var(--mu);font-weight:600;margin-top:8px;line-height:1.4}
 
-/* ---------- Principer ---------- */
+/* ---------- Habits (tidigare Principer) ---------- */
 .pwrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .phd{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 4px;margin-bottom:-4px}
 .tstage::before{content:'';position:absolute;left:0;right:0;top:0;height:36px;z-index:2;pointer-events:none;background:linear-gradient(180deg,#08080B,rgba(8,8,11,0))}
@@ -927,7 +932,7 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .pnav span{font-size:14px;font-weight:800;text-align:center;flex:1;font-variant-numeric:tabular-nums}
 .pnav button{width:38px;height:38px;border-radius:50%;background:var(--s2);display:grid;place-items:center;color:var(--tx)}
 .pnav button[disabled]{opacity:.3}
-.pgrid{margin-top:12px;overflow:hidden;touch-action:pan-y}
+.pgrid{margin-top:12px;touch-action:pan-y}
 .pgin{will-change:transform}
 .pband{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;border-radius:12px;padding:6px 3px;color:#fff;background:linear-gradient(90deg,#6D3AF0,#9B5CF6)}
 .pband span{text-align:center;font-size:9.5px;font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums}
@@ -965,7 +970,19 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .psum b{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .psum span{font-size:12px;font-weight:700;color:var(--mu)}
 .ppat{display:flex;flex-direction:column;gap:5px}
-.prh,.prr{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;align-items:center}
+.prh,.prr{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;align-items:center;padding:0 4px}
+.pgin{container-type:inline-size}
+/* Grön klar-bakgrund: hörnen koncentriska med rutorna (7 px radie + 4 px luft = 11 px).
+   Rader med ring rundas till höger koncentriskt med ringen (halva rutan + 4 px). */
+.prr{padding:4px;border-radius:11px;--hc:139,92,246;--cs:calc((100cqw - 48px) / 9)}
+.prr.rg{border-radius:11px calc(var(--cs) / 2 + 4px) calc(var(--cs) / 2 + 4px) 11px}
+.prr::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,#0A9E42,#10D95B);opacity:0;pointer-events:none}
+.prr.done::before,.prr.undone::before{opacity:1}
+.prr.fresh::before{animation:pin .48s cubic-bezier(.32,.72,0,1) both}
+.prr.undone::before{animation:pout .32s cubic-bezier(.32,.72,0,1) forwards}
+@keyframes pin{from{clip-path:inset(0 0 0 100% round 11px)}to{clip-path:inset(0 0 0 0 round 11px)}}
+@keyframes pout{from{clip-path:inset(0 0 0 0 round 11px)}to{clip-path:inset(0 0 0 100% round 11px)}}
+.prr>i{position:relative}
 .prr{position:relative}
 .prh span{text-align:center;font-size:10px;font-weight:800;color:var(--mu);line-height:1.25;font-variant-numeric:tabular-nums}
 .prh span em{display:block;font-style:normal;font-size:13px;color:var(--tx)}
@@ -973,13 +990,60 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .prh span.fu{opacity:.45}
 .prh span.td em{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .prr{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y;transition:opacity .15s ease}
-.prr.hold{opacity:.5;transition:opacity .8s linear .2s}
-.prn{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 6px rgba(8,8,11,.9),0 0 2px rgba(8,8,11,.8)}
-.prr .pc{display:block;height:auto;aspect-ratio:1;border-radius:7px;background:rgba(139,92,246,.15)}
-.prr .pc.on{background:#8B5CF6}
-.prr .pc.fut{background:rgba(139,92,246,.06);box-shadow:none}
+.prr.plift{transform:scale(1.03);z-index:5;transition:transform .2s cubic-bezier(.23,1,.32,1);background:#15151B;box-shadow:0 14px 34px rgba(0,0,0,.55)}
+.prr.plift.done{background:transparent}
+.prr.pdrag{transition:none}
+.prr>i:nth-child(n+7){touch-action:none}
+.hring{position:fixed;z-index:99;pointer-events:none;overflow:visible}
+.hring path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prr .pc{display:grid;place-items:center;height:auto;aspect-ratio:1;border-radius:7px;background:rgba(var(--hc),.16);transition:transform .5s var(--ease-out)}
+.prr .pc.on{background:rgb(var(--hc))}
+.prr .pc.fut{background:rgba(var(--hc),.06);box-shadow:none}
 .prr .pc.pre{background:transparent}
-.prr .pc.pend{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(167,139,250,.9)}
+.prr .pc.pend{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(var(--hc),.95)}
+.prr.done .pc.miss,.prr.done .pc.pend{background:rgba(0,0,0,.2);box-shadow:none}
+.prr.done .pc.fut{background:rgba(0,0,0,.1)}
+.prr .pc b{font-style:normal;font-family:var(--disp);font-size:12.5px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.prr .pc.pop{animation:dotpop .38s cubic-bezier(.2,.8,.2,1)}
+.prr .pc.hm{transform:scale(.86)}
+.prr .pwr{background:none!important;box-shadow:none!important;position:relative}
+.pwr svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.pwr .tk{stroke:rgba(255,255,255,.12)}
+.prr.done .pwr .tk{stroke:rgba(0,0,0,.2)}
+.pwr .pg{stroke:rgb(var(--hc));transition:stroke-dashoffset .6s var(--ease-out)}
+.pwr.anim .pg{animation:pring .6s var(--ease-out) both}
+@keyframes pring{from{stroke-dashoffset:var(--o0)}}
+.pwr b{position:relative;font-size:12px!important}
+.pwr .ck{position:relative;width:15px;height:15px;color:#fff}
+/* Färgval i dagens kolumn + inställningar där resten av sidan tonats bort */
+#pgin,.prh,#pr .phd,#pr .pempty{transition:opacity .22s var(--ease-out)}
+#pr{position:relative}
+#pr.pediting #pgin,#pr.pediting .phd{pointer-events:none}
+.pov{position:absolute;inset:0;pointer-events:none;z-index:3}
+.pcs{position:absolute;padding:0;border-radius:7px;background:rgb(var(--hc));display:grid;place-items:center;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+.pcs svg{opacity:0;transition:opacity .15s}
+.pcs.on svg{opacity:1}
+.ped{position:absolute;pointer-events:auto;display:flex;flex-direction:column;gap:10px}
+.ped input{background:var(--s2);font-size:17px;font-weight:700}
+.ped .seg2 button{padding:11px 2px;font-size:13.5px}
+.ped .pgo{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.07);border-radius:16px;padding:6px 6px 6px 14px}
+.ped .pgo[hidden],.ped .tgl[hidden]{display:none}
+.ped .pgo>span{font-size:14px;font-weight:700}
+.ped .pgo .stepper{gap:4px}
+.ped .pgo .stepper button{width:38px;height:38px;border-radius:12px;font-size:18px;display:grid;place-items:center}
+.ped .pgo .stepper b{min-width:40px;font-size:22px}
+.ped .tgl{padding:12px 14px;font-size:14.5px}
+.ped .acts{display:flex;gap:8px;margin-top:2px}
+.ped .btn{padding:13px 8px}
+.pdel{align-self:center;color:var(--red);font-weight:800;font-size:14px;padding:8px 12px}
+.bs .ptg{display:flex;align-items:center;gap:10px;margin-top:10px}
+.bs .ptg>span{flex:1;font-size:15px;font-weight:700}
+.bs .ptg .stepper{flex:none;gap:6px}
+.bs .ptg .stepper button{width:42px;height:42px;border-radius:14px;font-size:20px}
+.bs .ptg .stepper b{min-width:56px;font-size:24px}
+.bs .ptg[hidden]{display:none}
+.bs .pfx{display:flex;flex-direction:column;gap:10px;margin-top:10px}
 .prx{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);padding:10px 0 2px}
 .pback{align-self:center;color:#C4B5FD;font-size:13px;font-weight:800;padding:7px 12px;border-radius:99px;background:rgba(139,92,246,.14)}
 .padd{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(139,92,246,.2);color:#D8CCFF;font-size:22px;font-weight:800}
@@ -1004,7 +1068,7 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .tn.press{transform:scale(.95)}
 .tn .thr{position:absolute;left:-6px;top:-6px;width:124px;height:68px;pointer-events:none;overflow:visible}
 .tn .thr rect{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
-.tn.hold .thr rect{opacity:.9;stroke-dashoffset:0;transition:stroke-dashoffset .32s linear .18s,opacity .1s linear .18s}
+.tn.hold .thr rect{opacity:.9;stroke-dashoffset:0;transition:stroke-dashoffset .224s linear .126s,opacity .07s linear .126s}
 .tn .tm{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:var(--sg);display:grid;place-items:center;box-shadow:0 0 0 3px var(--bg)}
 .tn .tm svg{width:13px;height:13px}
 .tn.master{box-shadow:inset 0 0 0 2px var(--sc)}
@@ -1044,7 +1108,7 @@ html.treemode body{padding-bottom:0;overflow:hidden}
 .wi .wpr circle{fill:none;stroke-width:2.6;stroke-linecap:round;transition:stroke-dasharray .6s var(--ease-out)}
 .wi .whr{position:absolute;inset:-7px;width:74px;height:74px;pointer-events:none;transform:rotate(-90deg)}
 .wi .whr circle{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
-.wi.hold .whr circle{opacity:.95;stroke-dashoffset:0;transition:stroke-dashoffset .82s linear .18s,opacity .1s linear .18s}
+.wi.hold .whr circle{opacity:.95;stroke-dashoffset:0;transition:stroke-dashoffset .574s linear .126s,opacity .07s linear .126s}
 .wi.bump{animation:dotpop .5s cubic-bezier(.2,.8,.2,1)}
 .tlabel{position:absolute;left:92px;right:92px;text-align:center;pointer-events:none;z-index:1}
 .tlabel b{display:block;font-size:18px;font-weight:800;letter-spacing:-.02em}
@@ -1164,8 +1228,8 @@ html.kbd .bs{padding-bottom:16px}
 </head>
 <body>
 <div class="pl" id="pl" role="status" aria-label="Laddar"><div class="pl-s"><div class="pl-w" style="--i:0;--g:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)" aria-hidden="true"><b>Edge</b><i>Edge</i></div><div class="pl-w" style="--i:1;--g:linear-gradient(90deg,#7C3AED,#D946EF)" aria-hidden="true"><b>Edge</b><i>Edge</i></div><div class="pl-w" style="--i:2;--g:linear-gradient(90deg,#0A9E42,#10D95B)" aria-hidden="true"><b>Edge</b><i>Edge</i></div><div class="pl-w" style="--i:3;--g:linear-gradient(90deg,#2563EB,#22D3EE)" aria-hidden="true"><b>Edge</b><i>Edge</i></div></div></div>
-<div class="brand" id="brand" aria-hidden="true"><div class="bw"><span class="hdt" data-bt="2">Edge</span><span class="hdt g" data-bt="0" style="--g:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)">Skill tree</span><span class="hdt g" data-bt="1" style="--g:linear-gradient(90deg,#7C3AED,#D946EF)">Principer</span><span class="hdt g" data-bt="3" style="--g:linear-gradient(90deg,#2563EB,#22D3EE)">Gym</span></div></div>
-<nav class="pager" aria-label="Sidor"><button data-page="0" aria-label="Skill tree" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)">Skill tree</span><i style="background:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF);opacity:.3"></i></button><button data-page="1" aria-label="Principer" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#7C3AED,#D946EF)">Principer</span><i style="background:linear-gradient(90deg,#7C3AED,#D946EF);opacity:.3"></i></button><button data-page="2" aria-label="Din edge" aria-current="page" style="flex-grow:2.8"><span class="plbl" style="--pg:linear-gradient(90deg,#0A9E42,#10D95B)">Din edge</span><i style="background:linear-gradient(90deg,#0A9E42,#10D95B)"></i></button><button data-page="3" aria-label="Gym" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#2563EB,#22D3EE)">Gym</span><i style="background:linear-gradient(90deg,#2563EB,#22D3EE);opacity:.3"></i></button></nav>
+<div class="brand" id="brand" aria-hidden="true"><div class="bw"><span class="hdt" data-bt="2">Edge</span><span class="hdt g" data-bt="0" style="--g:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)">Skill tree</span><span class="hdt g" data-bt="1" style="--g:linear-gradient(90deg,#7C3AED,#D946EF)">Habits</span><span class="hdt g" data-bt="3" style="--g:linear-gradient(90deg,#2563EB,#22D3EE)">Gym</span></div></div>
+<nav class="pager" aria-label="Sidor"><button data-page="0" aria-label="Skill tree" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)">Skill tree</span><i style="background:linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF);opacity:.3"></i></button><button data-page="1" aria-label="Habits" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#7C3AED,#D946EF)">Habits</span><i style="background:linear-gradient(90deg,#7C3AED,#D946EF);opacity:.3"></i></button><button data-page="2" aria-label="Din edge" aria-current="page" style="flex-grow:2.8"><span class="plbl" style="--pg:linear-gradient(90deg,#0A9E42,#10D95B)">Din edge</span><i style="background:linear-gradient(90deg,#0A9E42,#10D95B)"></i></button><button data-page="3" aria-label="Gym" aria-current="false"><span class="plbl" style="--pg:linear-gradient(90deg,#2563EB,#22D3EE)">Gym</span><i style="background:linear-gradient(90deg,#2563EB,#22D3EE);opacity:.3"></i></button></nav>
 <div class="pages" id="pages"><div class="track" id="track"><div class="pane off" id="tree"><div class="tstage" id="tstage"><div class="tlayer" id="tlayer"><div class="tcont" id="tcont"></div></div><div class="tfade"></div><div class="wheel" id="wheel"></div><div class="tlabel" id="tlabel"></div></div></div><div class="pane off" id="pr"></div><div class="wrap pane" id="app"></div><div class="pane off" id="gym"></div></div></div>
 <script>
 const HEROES=[];
@@ -2388,10 +2452,10 @@ function daySheet(k){
     /* Håll in en rad = meny. Kort tryck på en ogjord = klar den dagen. */
     let lp=null;
     b.addEventListener('pointerdown',e=>{const r=e.target.closest('[data-tid]');if(!r||e.button>0)return;
-      lp={r,x:e.clientX,y:e.clientY,fired:false};r.classList.add('hold');
-      lp.t=setTimeout(()=>{if(!lp||lp.r!==r)return;lp.fired=true;r.classList.remove('hold');vib(10);menu(r)},500)});
-    b.addEventListener('pointermove',e=>{if(lp&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>8){clearTimeout(lp.t);lp.r.classList.remove('hold');lp=null}});
-    const up=e=>{if(!lp)return;const p=lp;lp=null;clearTimeout(p.t);p.r.classList.remove('hold');
+      lp={r,x:e.clientX,y:e.clientY,fired:false,ring:holdRing(r,350)};r.classList.add('hold');
+      lp.t=setTimeout(()=>{if(!lp||lp.r!==r)return;lp.fired=true;lp.ring.done();r.classList.remove('hold');vib(10);menu(r)},350)});
+    b.addEventListener('pointermove',e=>{if(lp&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>8){clearTimeout(lp.t);lp.ring.cancel();lp.r.classList.remove('hold');lp=null}});
+    const up=e=>{if(!lp)return;const p=lp;lp=null;clearTimeout(p.t);if(!p.fired)p.ring.cancel();p.r.classList.remove('hold');
       if(!p.fired&&e.type==='pointerup'&&p.r.classList.contains('dopen'))act('done',p.r.dataset.tid)};
     b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);
     b.addEventListener('contextmenu',e=>{if(e.target.closest('[data-tid]'))e.preventDefault()});
@@ -2974,6 +3038,7 @@ function renderGym(){
   const el=document.getElementById('gym');if(!el||!G)return;
   if(G.ex.some(e=>e.cat==='axlar')){G.ex.forEach(e=>{if(e.cat==='axlar')e.cat='armar'});gsave()}
   el.innerHTML=`<div class="ghd" id="ghd">${gymHeadHTML()}</div><div class="stage">${figSVG()}</div>`;
+  if(ui.page===3)requestAnimationFrame(gymFit);
   if(ui.gv){const g=el.querySelector(`[data-part="${ui.gv.part}"]`);if(g)gOn(g,true)}
 }
 
@@ -2987,6 +3052,9 @@ function gCommit(g){
   const k=g.dataset.part;
   setTimeout(()=>{if(k==='chest')showChoice(g);else openCat(k,g)},RM()?0:170);
 }
+/* Mät var figuren börjar så att den alltid får plats på skärmen */
+function gymFit(){const st=document.querySelector('#gym .stage');if(!st)return;const t=st.getBoundingClientRect().top+scrollY;if(t>0)document.documentElement.style.setProperty('--gtop',Math.round(t)+'px')}
+addEventListener('resize',()=>{if(ui.page===3)gymFit()});
 function gCancel(){if(gPress){gOn(gPress.g,false);gPress=null}}
 const gymEl=()=>document.getElementById('gym');
 document.addEventListener('pointerdown',e=>{const g=e.target.closest&&e.target.closest('#gym [data-part]');if(!g||gBusy||e.button>0)return;gPress={g,x:e.clientX,y:e.clientY};gOn(g,true)});
@@ -3831,6 +3899,22 @@ function bindGv(o){
 
 /* ================= GEMENSAMT: fjädrar och bladark ================= */
 const vib=n=>{try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}};
+/* Håll in: en vit linje ritas runt det man håller i. Hel linje = åtgärden sker. Används i hela appen. */
+function holdRing(el,ms,pad=4){
+  const r=el.getBoundingClientRect(),cs=getComputedStyle(el),W=r.width+pad*2,H=r.height+pad*2,sw=2.5,o=pad-sw/2;
+  /* Varje hörn får elementets egen radie + luften, så linjen följer kanten exakt (runt = runt, kantigt = kantigt) */
+  const rv=(v,d)=>{v=String(v).split(' ')[0];return v.endsWith('%')?parseFloat(v)/100*d:parseFloat(v)||0};
+  const x0=sw/2,y0=sw/2,w=W-sw,h=H-sw,mx=Math.min(w,h)/2,cr=v=>Math.min(mx,Math.max(0,v+o));
+  const tl=cr(rv(cs.borderTopLeftRadius,r.width)),tr=cr(rv(cs.borderTopRightRadius,r.width)),br=cr(rv(cs.borderBottomRightRadius,r.width)),bl=cr(rv(cs.borderBottomLeftRadius,r.width));
+  const d=`M${x0+tl} ${y0}H${x0+w-tr}A${tr} ${tr} 0 0 1 ${x0+w} ${y0+tr}V${y0+h-br}A${br} ${br} 0 0 1 ${x0+w-br} ${y0+h}H${x0+bl}A${bl} ${bl} 0 0 1 ${x0} ${y0+h-bl}V${y0+tl}A${tl} ${tl} 0 0 1 ${x0+tl} ${y0}Z`;
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','hring');svg.setAttribute('aria-hidden','true');
+  Object.assign(svg.style,{left:(r.left-pad)+'px',top:(r.top-pad)+'px',width:W+'px',height:H+'px'});svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=`<path d="${d}" pathLength="1"/>`;
+  document.body.appendChild(svg);const rc=svg.firstChild,lead=Math.min(180,ms*.36);
+  let a=null;if(!RM()&&rc.animate){a=rc.animate([{strokeDashoffset:1,opacity:0},{strokeDashoffset:1,opacity:.95,offset:lead/ms},{strokeDashoffset:0,opacity:.95}],{duration:ms,easing:'linear',fill:'forwards'})}else{rc.style.strokeDashoffset='0';rc.style.opacity='.95'}
+  const kill=d=>{if(!svg.isConnected)return;if(a)a.pause();const f=svg.animate&&!RM()?svg.animate([{opacity:1},{opacity:0}],{duration:d,fill:'forwards'}):null;if(f)f.onfinish=()=>svg.remove();else svg.remove()};
+  return {cancel:()=>kill(120),done:()=>kill(220)};
+}
 function springTo(st,to,o,onF,onDone){
   cancelAnimationFrame(st.raf);st.raf=0;
   if(RM()){st.x=to;st.v=0;onF(to);onDone&&onDone();return}
@@ -3897,16 +3981,31 @@ function prsave(mk){if(mk)prDirty.add(mk);clearTimeout(prSaveT);prSaveT=setTimeo
 window.addEventListener('pagehide',()=>{if(prSaveT){clearTimeout(prSaveT);prSaveT=null;flushPR()}});
 
 const prGym=p=>p.freq==='w'&&!!p.gym;
-function isChk(p,k){if(prGym(p))return !!(((G&&G.sess)||{})[k]);const m=PRD[k.slice(0,7)];return !!(m&&m[k]&&m[k].includes(p.id))}
+/* Habits: färg per habit (ingen grön – grön betyder klar). Ordning: marinblå, lila, röd, korall, ljusblå */
+const PCOL=[['navy','47,91,255'],['violet','139,92,246'],['red','240,48,74'],['coral','255,128,72'],['sky','44,196,245']];
+const hcOf=p=>(PCOL.find(c=>c[0]===(p&&p.c))||PCOL[1])[1];
+const prCnt=p=>p.freq==='w';
+const prUnit=(p,n)=>p.u==='h'?(n===1?'timme':'timmar'):(n===1?'gång':'gånger');
+function prNextCol(skip){const used=PR.list.filter(p=>p!==skip).map(p=>p.c);return (PCOL.find(c=>!used.includes(c[0]))||PCOL[PR.list.length%PCOL.length])[0]}
+function prMigrate(){let ch=false;PR.list.forEach(p=>{if(!p.c){p.c=prNextCol(p);ch=true}if(p.freq==='w'&&!p.u){p.u='n';ch=true}});if(ch)prsave()}
+/* Antal per dag lagras som upprepat id i dagens lista (bakåtkompatibelt: finns id = klar) */
+function cnt(p,k){if(prGym(p))return (((G&&G.sess)||{})[k])?1:0;const m=PRD[k.slice(0,7)],a=m&&m[k];if(!a)return 0;let n=0;for(const x of a)if(x===p.id)n++;return n}
+function isChk(p,k){return cnt(p,k)>0}
 function setChk(p,k,on){
   if(prGym(p)){G.sess=G.sess||{};if(on)G.sess[k]=1;else delete G.sess[k];gsave();updGymHead();return}
-  const mk=k.slice(0,7);PRD[mk]=PRD[mk]||{};const a=PRD[mk][k]||[],i=a.indexOf(p.id);
-  if(on&&i<0)a.push(p.id);if(!on&&i>-1)a.splice(i,1);
+  const mk=k.slice(0,7);PRD[mk]=PRD[mk]||{};const a=(PRD[mk][k]||[]).filter(x=>x!==p.id);
+  if(on)a.push(p.id);
+  if(a.length)PRD[mk][k]=a;else delete PRD[mk][k];prsave(mk);
+}
+function addCnt(p,k,d){
+  if(prGym(p)){setChk(p,k,d>0);return}
+  const mk=k.slice(0,7);PRD[mk]=PRD[mk]||{};const a=PRD[mk][k]||[];
+  if(d>0)a.push(p.id);else{const i=a.lastIndexOf(p.id);if(i>-1)a.splice(i,1)}
   if(a.length)PRD[mk][k]=a;else delete PRD[mk][k];prsave(mk);
 }
 const wkStart=k=>addDays(k,-((parseKey(k).getDay()+6)%7));
 function weekNo(k){const t=parseKey(k);t.setDate(t.getDate()+3-((t.getDay()+6)%7));const w1=new Date(t.getFullYear(),0,4,12);return 1+Math.round(((t-w1)/864e5-3+((w1.getDay()+6)%7))/7)}
-function wkCount(p,k){const s=wkStart(k),t=today();let n=0;for(let i=0;i<7;i++){const d=addDays(s,i);if(d>=p.start&&d<=t&&isChk(p,d))n++}return n}
+function wkCount(p,k){const s=wkStart(k),t=today();let n=0;for(let i=0;i<7;i++){const d=addDays(s,i);if(d>=p.start&&d<=t)n+=cnt(p,d)}return n}
 const dayDone=(p,k)=>p.freq==='w'?(isChk(p,k)||wkCount(p,k)>=p.per):isChk(p,k);
 /* Idag och igår går alltid att bocka av – ingen fråga om igår, ingen låsning */
 const canEditDay=k=>k===today()||k===addDays(today(),-1);
@@ -3916,8 +4015,8 @@ function prRate(p,from,to){
   if(p.freq!=='w'){let n=0,d=0;for(let k=s;k<=to;k=addDays(k,1)){const c=isChk(p,k);if(k===t&&!c)continue;n++;if(c)d++}return n?d/n:null}
   let num=0,den=0;
   for(let w=wkStart(s);w<=to;w=addDays(w,7)){const we=addDays(w,6),a=w>s?w:s,b=we<to?we:to;let c=0;
-    for(let k=a;k<=b;k=addDays(k,1))if(isChk(p,k))c++;
-    const tg=Math.min(p.per,diffDays(a,we)+1);if(we>=t&&c<tg)continue;num+=Math.min(c,tg);den+=tg}
+    for(let k=a;k<=b;k=addDays(k,1))c+=cnt(p,k);
+    const nd=diffDays(a,we)+1,tg=p.u==='h'?p.per*nd/7:Math.min(p.per,nd);if(we>=t&&c<tg)continue;num+=Math.min(c,tg);den+=tg}
   return den?num/den:null;
 }
 
@@ -3931,23 +4030,40 @@ function prRow(p,k){
 }
 function expRes(p){
   const dn=diffDays(p.start,today())+1;if(dn<=14)return '';
-  const e=addDays(p.start,13);let held=0;for(let k=p.start;k<=e;k=addDays(k,1))if(isChk(p,k))held++;
+  const e=addDays(p.start,13);let held=0;for(let k=p.start;k<=e;k=addDays(k,1))held+=p.freq==='w'?cnt(p,k):isChk(p,k)?1:0;
   const mains=PR.list.filter(q=>q.kind==='main');
   const avg=(a,b)=>{const r=mains.map(q=>prRate(q,a,b)).filter(v=>v!==null);return r.length?Math.round(r.reduce((s,v)=>s+v,0)/r.length*100):null};
   const before=avg(addDays(p.start,-14),addDays(p.start,-1)),during=avg(p.start,e);
-  let s=p.freq==='w'?`<b>${held} gånger på 14 dagar.</b>`:`<b>Du höll den ${held} av 14 dagar.</b>`;
-  if(during!==null&&before!==null)s+=` Huvudprinciperna gick ${during>before?'bättre':during<before?'sämre':'lika bra'} under experimentet: <b>${before} % → ${during} %</b>.`;
-  else if(during!==null)s+=` Huvudprinciperna under experimentet: <b>${during} %</b>.`;
-  return `<div class="pres">${s}<br><button class="pmove" data-pa="move" data-pid="${p.id}">${ARROW}Flytta till princip</button></div>`;
+  let s=p.freq==='w'?`<b>${held} ${prUnit(p,held)} på 14 dagar.</b>`:`<b>Du höll den ${held} av 14 dagar.</b>`;
+  if(during!==null&&before!==null)s+=` Dina habits gick ${during>before?'bättre':during<before?'sämre':'lika bra'} under experimentet: <b>${before} % → ${during} %</b>.`;
+  else if(during!==null)s+=` Dina habits under experimentet: <b>${during} %</b>.`;
+  return `<div class="pres">${s}<br><button class="pmove" data-pa="move" data-pid="${p.id}">${ARROW}Flytta till habits</button></div>`;
 }
 const PFO=[.1,.18,.28,.4,.54,.7];
+const prSeen={done:new Set(),init:false,ring:{}};
+function prRing(p,wc){
+  const C=2*Math.PI*18,f=Math.min(1,wc/p.per),off=(C*(1-f)).toFixed(2),prev=prSeen.ring[p.id],an=prev!==undefined&&prev!==off&&!ui.pdry;
+  if(!ui.pdry)prSeen.ring[p.id]=off;
+  const mid=wc>=p.per?`<svg class="ck" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="position:relative;transform:none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`<b>${wc}</b>`;
+  return `<i class="pc pwr${an?' anim':''}"${an?` style="--o0:${prev}"`:''} aria-hidden="true"><svg viewBox="0 0 40 40"><circle class="tk" cx="20" cy="20" r="18" fill="none" stroke-width="4"/><circle class="pg" cx="20" cy="20" r="18" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${off}"${f?'':' opacity="0"'}/></svg>${mid}</i>`;
+}
 function histSpan(){
   const t=today(),y=addDays(t,-1),c=addDays(t,7*ui.pwk),days=[...Array(9)].map((_,i)=>addDays(c,i-7)),k=ui.pday==='y'?y:t;
   const act=PR.list.filter(p=>p.start<=days[8]),main=act.filter(p=>p.kind==='main'),exp=act.filter(p=>p.kind==='exp');
   const fo=i=>i<6?` style="opacity:${PFO[i]}"`:'';
   const head=`<div class="prh" aria-hidden="true">${days.map((d,i)=>{const wd=parseKey(d).getDay();return `<span class="${wd===0?'sun':''}${d>t?' fu':''}${d===t?' td':''}"${fo(i)}>${DL[(wd+6)%7]}<em>${+d.slice(8)}</em></span>`}).join('')}</div>`;
-  const row=p=>`<div class="prr" data-press="1" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.t)}, ${isChk(p,k)?'klar':'inte klar'} ${k===t?'idag':'igår'}"><span class="prn">${esc(p.t)}</span>${days.map((d,i)=>{if(d<p.start)return '<i class="pc pre"></i>';if(d>t)return `<i class="pc fut"${fo(i)}></i>`;return `<i class="pc ${isChk(p,d)?'on':d===k?'pend':'miss'}" data-k="${d}"${fo(i)}></i>`}).join('')}</div>`;
+  const fk=days[7],row=p=>{
+    const w=prCnt(p),wc=w?wkCount(p,fk):0,done=w?wc>=p.per:isChk(p,fk);
+    const fresh=done&&!prSeen.done.has(p.id)&&prSeen.init,undone=!done&&prSeen.done.has(p.id)&&prSeen.init,cells=days.map((d,i)=>{
+      if(i===8&&w)return prRing(p,wc);
+      if(d<p.start)return '<i class="pc pre"></i>';if(d>t)return `<i class="pc fut"${fo(i)}></i>`;
+      const n=cnt(p,d),pop=ui.ppop===p.id+d?' pop':'';return `<i class="pc ${n?'on':d===k?'pend':'miss'}${pop}" data-k="${d}"${fo(i)}>${w&&n?`<b>${n}</b>`:''}</i>`}).join('');
+    prNext.done[done?'add':'delete'](p.id);
+    const lab=w?`${wc} av ${p.per} ${prUnit(p,p.per)} den här veckan`:`${isChk(p,k)?'klar':'inte klar'} ${k===t?'idag':'igår'}`;
+    return `<div class="prr${w?' rg':''}${done?' done':''}${fresh?' fresh':''}${undone?' undone':''}" style="--hc:${hcOf(p)}" data-press="1" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.t)}, ${lab}"><span class="prn">${esc(p.t)}</span>${cells}</div>`};
+  const prNext={done:new Set()};
   const html=head+main.map(row).join('')+(exp.length?'<div class="prx">Experiment</div>'+exp.map(row).join(''):'');
+  if(!ui.pdry){prSeen.done=prNext.done;prSeen.init=true}
   return {label:`${dlabel(days[0])} – ${dlabel(days[8])}`,prev:days[0]>prMin(),next:ui.pwk<0,html};
 }
 function histMonth(){
@@ -3990,68 +4106,161 @@ function prAnalysis(){
 }
 function renderPr(){
   const el=document.getElementById('pr');if(!el||!PR)return;
+  prMigrate();
   const t=today(),dt=parseKey(t),hv=histSpan(),fin=PR.list.filter(p=>p.kind==='exp'&&diffDays(p.start,t)>=14);
-  let h=`<div class="pwrap"><div class="phd"><button class="padd" data-pa="add" aria-label="Ny princip">${ico('plus')}</button></div>`;
-  if(!PR.list.length)h+=`<div class="pempty"><b>Skriv din första princip</b>En princip är en regel du lever efter. Tryck på + för att lägga till.</div>`;
+  let h=`<div class="pwrap"><div class="phd"><button class="padd" data-pa="add" aria-label="Ny habit">${ico('plus')}</button></div>`;
+  if(!PR.list.length)h+=`<div class="pempty"><b>Lägg till din första habit</b></div>`;
   else h+=`<div class="pgrid" id="pgrid"><div class="pgin ppat" id="pgin">${hv.html}</div></div>${ui.pwk?`<button class="pback" data-pa="now">${hv.label} · Till idag</button>`:''}`;
   h+=fin.map(expRes).join('')+'</div>';
   el.innerHTML=h;
+  if(prEd){el.appendChild(prEd.ov);prFade(false)}
 }
-function prToggle(id){
+function prToggle(id,day){
   const p=PR.list.find(x=>x.id===id);if(!p)return;
-  const t=today(),k=ui.pday==='y'?addDays(t,-1):t;
+  const t=today(),k=day||(ui.pday==='y'?addDays(t,-1):t);
   if(!canEditDay(k)){gToast('Igår är låst');return}
-  const on=!isChk(p,k);setChk(p,k,on);
-  if(on){vib(10);ui.ppop=id}
-  renderPr();
-  if(on){const act=PR.list.filter(q=>q.start<=k);if(act.length>1&&act.every(q=>dayDone(q,k))){sparks(document.querySelector('#pr .pring'),['#8B5CF6','#E879F9','#F5F4F7'],20);gToast(k===t?'Alla principer klara idag':'Alla principer klara igår')}}
+  const w=prCnt(p),before=w?wkCount(p,k)>=p.per:false;
+  let on;
+  if(w){if(prGym(p)&&isChk(p,k))return;addCnt(p,k,1);on=true}
+  else{on=!isChk(p,k);setChk(p,k,on)}
+  if(on){vib(10);ui.ppop=p.id+k}
+  renderPr();ui.ppop=null;
+  if(!on)return;
+  const row=document.querySelector(`#pr .prr[data-pid="${p.id}"]`);
+  if(w&&!before&&wkCount(p,k)>=p.per)sparks(row&&row.querySelector('.pwr'),['#10D95B','#F5F4F7','rgb('+hcOf(p)+')'],18);
+  const act=PR.list.filter(q=>q.start<=k);
+  if(act.length>1&&act.every(q=>dayDone(q,k))){sparks(row,['#10D95B','#F5F4F7','#8B5CF6'],20);gToast(k===t?'Alla habits klara idag':'Alla habits klara igår')}
 }
-function prSheet(id){
+function prMinus(id,k){
+  const p=PR.list.find(x=>x.id===id);if(!p||!canEditDay(k)||!cnt(p,k))return;
+  addCnt(p,k,-1);vib(8);renderPr();
+}
+/* Redigera/skapa: dagens rutor byter färg till de fem färgvalen på sina platser (rad 1 marinblå, rad 2 lila …).
+   Saknas rader poppar nya rutor fram under. Resten av sidan tonas bort och inställningarna tar dess plats. */
+const PCHK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const PCN={navy:'marinblå',violet:'lila',red:'röd',coral:'korall',sky:'ljusblå'};
+function prFade(on){const el=document.getElementById('pr');if(!el)return;el.classList.toggle('pediting',!on);el.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd').forEach(x=>x.style.opacity=on?'':'0')}
+let prEd=null;
+function prEdit(id){
+  if(prEd)return;
+  const pr=document.getElementById('pr');if(!pr)return;
   const ex=id?PR.list.find(p=>p.id===id):null;
-  const f={kind:ex?ex.kind:'main',freq:ex?ex.freq:'d',per:ex?ex.per||4:4,gym:ex?!!ex.gym:false};
-  bsheet(`<h3>${ex?'Redigera princip':'Ny princip'}</h3>
-    <div class="fld"><span>Princip</span><textarea id="prt" placeholder="När jag vaknar rör jag inte mobilen förrän dagens Att göra är satt">${ex?esc(ex.t):''}</textarea></div>
-    <div class="fld"><span>Typ</span><div class="seg2" data-g="kind"><button data-v="main">Princip<small>Tills vidare</small></button><button data-v="exp">Experiment<small>14 dagar</small></button></div></div>
-    <div class="fld"><span>Hur ofta</span><div class="seg2" data-g="freq"><button data-v="d">Varje dag</button><button data-v="w">Antal per vecka</button></div></div>
-    <div class="fld" id="prw"><span>Gånger per vecka</span><div class="stepper"><button data-st="-1" aria-label="Färre">${ico('minus')}</button><b id="prper">${f.per}</b><button data-st="1" aria-label="Fler">${ico('plus')}</button></div></div>
-    <div class="fld" id="prgy"><button class="tgl" role="switch" aria-checked="${f.gym}" id="prgt"><span>Räkna gympass automatiskt<small>Bocken sätts när du registrerar ett pass på huvudsidan eller gymsidan.</small></span><span class="sw"></span></button></div>
-    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:linear-gradient(120deg,#6D3AF0,#B436D6)">${ex?'Spara':'Lägg till'}</button></div>
-    ${ex&&ex.kind==='exp'?`<button class="danger" data-x="move" style="color:var(--mu)">Flytta till princip</button>`:''}
-    ${ex?'<button class="danger" data-x="del">Ta bort princip</button>':''}`,
-  (bs,o)=>{
-    const sync=()=>{bs.querySelectorAll('.seg2').forEach(s=>s.querySelectorAll('button').forEach(b=>b.classList.toggle('on',f[s.dataset.g]===b.dataset.v)));
-      bs.querySelector('#prw').hidden=f.freq!=='w';bs.querySelector('#prgy').hidden=f.freq!=='w';bs.querySelector('#prper').textContent=f.per;bs.querySelector('#prgt').setAttribute('aria-checked',f.gym)};
-    sync();
-    bs.addEventListener('click',e=>{
-      const sb=e.target.closest('.seg2 button');if(sb){f[sb.parentNode.dataset.g]=sb.dataset.v;sync();return}
-      const st=e.target.closest('[data-st]');if(st){f.per=clampV(f.per+(+st.dataset.st),1,7);sync();return}
-      if(e.target.closest('#prgt')){f.gym=!f.gym;sync();return}
-      const x=e.target.closest('[data-x]');if(!x)return;
-      if(x.dataset.x==='no')o.close();
-      else if(x.dataset.x==='ok'){const t=bs.querySelector('#prt').value.trim();if(!t){bs.querySelector('#prt').focus();return}
-        const v={t,kind:f.kind,freq:f.freq,per:f.per,gym:f.freq==='w'&&f.gym};
-        if(ex){if(ex.kind==='main'&&v.kind==='exp')v.start=today();Object.assign(ex,v)}
-        else PR.list.push({id:'p'+newId(),...v,start:today()});
-        prsave();o.close();renderPr();gToast(ex?'Ändringar sparade':'Princip tillagd')}
-      else if(x.dataset.x==='move'){ex.kind='main';prsave();o.close();renderPr();gToast('Flyttad till principer')}
-      else if(x.dataset.x==='del'){const i=PR.list.indexOf(ex);PR.list.splice(i,1);prsave();o.close();renderPr();
-        showUndo('Princip borttagen',()=>{PR.list.splice(Math.min(i,PR.list.length),0,ex);prsave();renderPr()})}
-    });
-    if(!ex)setTimeout(()=>{try{bs.querySelector('#prt').focus({preventScroll:true})}catch(e){}},350);
+  const f={kind:ex?ex.kind:'main',m:ex?(ex.freq==='w'?(ex.u==='h'?'h':'n'):'d'):'d',per:ex&&ex.freq==='w'?ex.per||4:3,gym:ex?!!ex.gym:false,c:ex&&ex.c?ex.c:prNextCol(ex)};
+  const anim=(el,kf,o)=>RM()||!el.animate?null:el.animate(kf,Object.assign({duration:380,easing:'cubic-bezier(.32,.72,0,1)',fill:'backwards'},o));
+  const rel=r=>{const b=pr.getBoundingClientRect();return {x:r.left-b.left,y:r.top-b.top,w:r.width,h:r.height}};
+  const cells=()=>[...pr.querySelectorAll('#pgin .prr')].map(r=>({id:r.dataset.pid,el:r.children[8]})).filter(c=>c.el);
+  /* Kolumnens geometri: dagens rutor, eller en tänkt kolumn om sidan är tom */
+  const cs0=cells(),pb=pr.getBoundingClientRect();
+  let col;
+  if(cs0.length){const r0=rel(cs0[0].el.getBoundingClientRect()),r1=cs0[1]?rel(cs0[1].el.getBoundingClientRect()):null;
+    col={x:r0.x,y:r0.y,s:r0.w,pitch:r1&&r1.y-r0.y<r0.h*2.2?r1.y-r0.y:r0.h+13}}
+  else{const w=Math.min(pb.width,520),s=(w-48)/9,left=(pb.width-w)/2,e=pr.querySelector('.pempty,.phd');const ey=e?rel(e.getBoundingClientRect()).y+e.offsetHeight+16:80;
+    col={x:left+8+7*(s+5),y:ey,s,pitch:s+13}}
+  /* Öppna: raderna tonas bort direkt, sedan glider fälten in underifrån ett i taget (0,2 s mellan varje).
+     Stäng: samma sak baklänges men snabbare (0,1 s), sist kommer raderna tillbaka. */
+  const STG=120,OUT=60,FADE=150,EZ='cubic-bezier(.32,.72,0,1)';
+  const items=()=>[...ped.querySelectorAll('#prt,.seg2,#prw,#prex,.acts,.pdel')].filter(c=>!c.hidden&&c.offsetParent!==null);
+  const morphIn=()=>{
+    const g=pr.querySelector('#pgin');if(g&&!RM())anim(g,[{opacity:1},{opacity:0}],{duration:FADE,easing:'ease-out'});
+    items().forEach((c,k)=>anim(c,[{opacity:0,transform:'translate3d(0,18px,0)'},{opacity:1,transform:'none'}],{duration:380,delay:FADE+k*STG,easing:EZ,fill:'backwards'}));
+  };
+  const morphOut=()=>{const it=items().reverse();
+    it.forEach((c,k)=>anim(c,[{opacity:1,transform:'none'},{opacity:0,transform:'translate3d(0,18px,0)'}],{duration:220,delay:k*OUT,easing:'cubic-bezier(.55,0,1,.45)',fill:'forwards'}));
+    return (it.length-1)*OUT+220;
+  };
+  const slot=i=>{const c=cs0[i];if(c){const r=rel(c.el.getBoundingClientRect());return {x:r.x,y:r.y}}return {x:col.x,y:col.y+i*col.pitch}};
+  const ov=document.createElement('div');ov.className='pov';
+  ov.innerHTML=PCOL.map(([n,rgb],i)=>{const q=slot(i);return `<button class="pcs${f.c===n?' on':''}" data-c="${n}" style="--hc:${rgb};left:${q.x}px;top:${q.y}px;width:${col.s}px;height:${col.s}px" aria-label="Färg ${PCN[n]}" aria-pressed="${f.c===n}">${PCHK}</button>`}).join('')+
+    `<div class="ped" style="left:${Math.max(12,(pb.width-Math.min(pb.width,520))/2+4)}px;top:${col.y}px;width:${Math.max(200,col.x-14-Math.max(12,(pb.width-Math.min(pb.width,520))/2+4))}px">
+      <input id="prt" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="${ex?'':'Ny habit'}" value="${ex?esc(ex.t):''}">
+      <div class="seg2" data-g="m">${[['d','Varje dag'],['h','Timmar'],['n','Gånger']].map(([v,l])=>`<button data-v="${v}">${l}</button>`).join('')}</div>
+      <div class="pgo" id="prw"><span>Mål per vecka</span><div class="stepper"><button data-st="-1" aria-label="Färre">${ico('minus')}</button><b id="prper">${f.per}</b><button data-st="1" aria-label="Fler">${ico('plus')}</button></div></div>
+      <button class="tgl" role="switch" aria-checked="${f.kind==='exp'}" id="prex"><span>Experiment<small>14 dagar</small></span><span class="sw"></span></button>
+      <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:linear-gradient(120deg,#6D3AF0,#B436D6);color:#fff">${ex?'Spara':'Lägg till'}</button></div>
+      ${ex?'<button class="pdel" data-x="del">Ta bort habit</button>':''}</div>`;
+  const sq=[...ov.querySelectorAll('.pcs')],ped=ov.querySelector('.ped'),inp=ov.querySelector('#prt');
+  pr.classList.add('pediting');pr.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd').forEach(x=>x.style.opacity='0');pr.appendChild(ov);
+  const fit=()=>{pr.style.minHeight=Math.max(col.y+5*col.pitch,ped.offsetTop+ped.offsetHeight)+24+'px'};
+  /* In: dagens rutor försvinner med raderna och färgvalen ploppar upp en i taget */
+  /* Plopp: 0,7 s – växer snabbt till lite större, sätter sig sedan mjukt i originalstorlek. Samma startfördröjning som innan. */
+  const POP=[{transform:'scale(.3)',opacity:0,easing:'cubic-bezier(.2,.8,.3,1)'},{transform:'scale(1.12)',opacity:1,offset:.38,easing:'cubic-bezier(.45,0,.25,1)'},{transform:'none',opacity:1}];
+  sq.forEach((b,i)=>anim(b,POP,{duration:700,delay:90+i*55,easing:'linear',fill:'backwards'}));
+  const mx=()=>f.m==='h'?80:f.m==='n'?(f.gym?7:30):1;
+  const sync=()=>{ped.querySelectorAll('.seg2 button').forEach(b=>b.classList.toggle('on',f.m===b.dataset.v));
+    if(f.m!=='d')f.per=clampV(f.per,1,mx());
+    ped.querySelector('#prw').hidden=f.m==='d';ped.querySelector('#prper').textContent=f.per;
+    ped.querySelector('#prex').setAttribute('aria-checked',f.kind==='exp');fit()};
+  sync();
+  morphIn();
+  const pick=b=>{f.c=b.dataset.c;sq.forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b)});vib(6);
+    anim(b,[{transform:'scale(.86)'},{transform:'scale(1.08)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'})};
+  /* Ut: vald ruta landar i habitens egen ruta, övriga byter tillbaka till sina rader. Extra rutor krymper bort. */
+  const close=(toId,cb)=>{
+    if(!prEd)return;prEd=null;document.removeEventListener('keydown',esck);
+    const tOut=RM()?0:morphOut();
+    sq.forEach(b=>{const ck=b.querySelector('svg');if(ck)anim(ck,[{opacity:getComputedStyle(ck).opacity},{opacity:0}],{duration:120,fill:'forwards'})});
+    setTimeout(()=>{
+      renderPr();pr.appendChild(ov);prFade(false);
+      const cs=cells(),sel=toId?cs.find(c=>c.id===toId):null,rest=cs.filter(c=>c!==sel);let ri=0;
+      const fin=()=>{pr.style.minHeight='';const g=pr.querySelector('#pgin');if(g)g.style.transition='';prFade(true);
+        const a=anim(ov,[{opacity:1},{opacity:0}],{duration:FADE,fill:'forwards'});if(a)a.onfinish=()=>ov.remove();else ov.remove();cb&&cb()};
+      if(RM()){fin();return}
+      /* Färgvalen ploppar bort, och de riktiga dagsrutorna ploppar upp där det finns en rad */
+      sq.forEach((b,i)=>anim(b,[{transform:'none',opacity:1},{transform:'scale(1.08)',opacity:1,offset:.3},{transform:'scale(.3)',opacity:0}],{duration:200,delay:i*45,fill:'forwards',easing:'ease-in'}));
+      setTimeout(()=>{
+        const gi=pr.querySelector('#pgin');
+        cs.slice(0,5).forEach((c,i)=>anim(c.el,POP,{duration:700,delay:300+i*45,easing:'linear',fill:'backwards'}));
+        fin()},150);
+    },tOut);
+  };
+  const esck=e=>{if(e.key==='Escape')close(ex?ex.id:null)};
+  document.addEventListener('keydown',esck);
+  prEd={close,ov,id:ex?ex.id:null};
+  ov.addEventListener('click',e=>{
+    const b=e.target.closest('.pcs');if(b){pick(b);return}
+    const sb=e.target.closest('.seg2 button');if(sb){f.m=sb.dataset.v;if(f.m==='h'&&f.per<5&&!ex)f.per=10;sync();return}
+    const st=e.target.closest('[data-st]');if(st){f.per=clampV(f.per+(+st.dataset.st),1,mx());sync();return}
+    if(e.target.closest('#prex')){f.kind=f.kind==='exp'?'main':'exp';sync();return}
+    const x=e.target.closest('[data-x]');if(!x)return;
+    if(x.dataset.x==='no'){inp.blur();close(ex?ex.id:null)}
+    else if(x.dataset.x==='ok'){const t=inp.value.trim();if(!t){inp.focus();anim(inp,[{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260});return}
+      inp.blur();
+      const v={t,kind:f.kind,freq:f.m==='d'?'d':'w',per:f.m==='d'?(ex&&ex.per||4):f.per,gym:f.m==='n'&&f.gym,c:f.c};
+      let tid;
+      if(ex){if(ex.kind==='main'&&v.kind==='exp')v.start=today();Object.assign(ex,v);if(f.m==='d')delete ex.u;else ex.u=f.m;tid=ex.id}
+      else{tid='p'+newId();const n={id:tid,...v,start:today()};if(f.m!=='d')n.u=f.m;PR.list.push(n)}
+      prsave();close(tid,()=>gToast(ex?'Ändringar sparade':'Habit tillagd'))}
+    else if(x.dataset.x==='del'){inp.blur();const i=PR.list.indexOf(ex);PR.list.splice(i,1);prsave();
+      close(null,()=>showUndo('Habit borttagen',()=>{PR.list.splice(Math.min(i,PR.list.length),0,ex);prsave();renderPr()}))}
   });
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.blur()}});
+  if(!ex)setTimeout(()=>{try{inp.focus({preventScroll:true})}catch(e){}},300);
 }
+const prSheet=prEdit;
 let prPress=null,gridDrag=0,prSw=null;
 function prInit(){
   const el=document.getElementById('pr');
   el.addEventListener('pointerdown',e=>{
     const r=e.target.closest('[data-press]');
-    if(r&&e.button===0){const pc=e.target.closest('.pc');prPress={r,x:e.clientX,y:e.clientY,fired:false,k:pc?pc.dataset.k:null};r.classList.add('press','hold');
-      prPress.t=setTimeout(()=>{if(!prPress||prPress.r!==r)return;prPress.fired=true;r.classList.remove('press','hold');vib(12);prSheet(r.dataset.pid)},1000)}
-    const g=e.target.closest('#pgrid');
-    if(g&&e.button===0)prSw={x0:e.clientX,y0:e.clientY,s:[],drag:false,id:e.pointerId,g};
+    if(r&&e.button===0){const pc=e.target.closest('.pc'),k=pc?pc.dataset.k:null,q=PR.list.find(x=>x.id===r.dataset.pid);
+      const rr=r.getBoundingClientRect();prPress={r,x:e.clientX,y:e.clientY,fired:false,k,id:e.pointerId,zone:(e.clientX-rr.left)/rr.width>=.6};
+      if(q&&k&&prCnt(q)&&canEditDay(k)&&cnt(q,k)){
+        /* Håll in en ruta med antal = −1 */
+        prPress.cell=pc;prPress.ring=holdRing(pc,350,3);
+        prPress.t=setTimeout(()=>{if(!prPress||prPress.r!==r)return;prPress.fired=true;prPress.ring.done();prMinus(q.id,k)},350)}
+      else{prPress.ring=holdRing(r,700);prPress.id=e.pointerId;
+        /* Hel linje = raden lyfts. Dra = flytta. Släpp utan att dra = redigera. */
+        prPress.t=setTimeout(()=>{if(!prPress||prPress.r!==r)return;prPress.fired=true;prPress.lifted=true;prPress.ring.done();vib(12);r.classList.add('plift');
+          try{r.setPointerCapture(prPress.id)}catch(_){}},700)}}
+
   });
   el.addEventListener('pointermove',e=>{
-    if(prPress&&Math.hypot(e.clientX-prPress.x,e.clientY-prPress.y)>10){clearTimeout(prPress.t);prPress.r.classList.remove('press','hold');prPress=null}
+    if(prPress&&prPress.lifted){prDragMove(prPress,e.clientY);return}
+    /* Högra 2/5 av raden: dra direkt utan att hålla in */
+    if(prPress&&prPress.zone){const dx=e.clientX-prPress.x,dy=e.clientY-prPress.y;
+      if(Math.abs(dy)>6&&Math.abs(dy)>=Math.abs(dx)){const p=prPress;clearTimeout(p.t);if(p.ring)p.ring.cancel();p.fired=true;p.lifted=true;p.r.classList.add('plift');
+        try{p.r.setPointerCapture(e.pointerId)}catch(_){}vib(8);prDragMove(p,e.clientY);return}}
+    if(prPress&&Math.hypot(e.clientX-prPress.x,e.clientY-prPress.y)>10){clearTimeout(prPress.t);if(prPress.ring)prPress.ring.cancel();prPress=null}
     if(!prSw||e.pointerId!==prSw.id)return;pushS(prSw.s,e);
     const dx=e.clientX-prSw.x0,dy=e.clientY-prSw.y0;
     if(!prSw.drag){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3){prSw.drag=true;prSw.x0=e.clientX;try{prSw.g.setPointerCapture(e.pointerId)}catch(_){}}else if(Math.abs(dy)>10){prSw=null}return}
@@ -4060,7 +4269,8 @@ function prInit(){
     prSw.x=x;document.getElementById('pgin').style.transform=`translate3d(${x}px,0,0)`;
   });
   const up=e=>{
-    if(prPress){const p=prPress;prPress=null;clearTimeout(p.t);p.r.classList.remove('press','hold');if(!p.fired&&e.type==='pointerup'){const y=addDays(today(),-1);if(p.k===y&&ui.pday!=='y'){const q=PR.list.find(x=>x.id===p.r.dataset.pid);if(!q)return;if(!canEditDay(y)){gToast('Igår är låst');return}const on=!isChk(q,y);setChk(q,y,on);if(on)vib(8);renderPr()}else prToggle(p.r.dataset.pid)}}
+    if(prPress&&prPress.lifted){if(e.type==='pointercancel'&&!prPress.drag)return;const p=prPress;prPress=null;prDragEnd(p);return}
+    if(prPress){const p=prPress;prPress=null;clearTimeout(p.t);if(p.ring&&!p.fired)p.ring.cancel();if(!p.fired&&e.type==='pointerup'){const y=addDays(today(),-1);prToggle(p.r.dataset.pid,p.k===y&&ui.pday!=='y'?y:null)}}
     if(prSw&&e.pointerId===prSw.id){const s=prSw;prSw=null;if(!s.drag)return;gridDrag=Date.now();
       const hv=histSpan(),v=velOf(s.s).x,proj=(s.x||0)+project(v,.99);
       const dir=proj<-70&&hv.next?1:proj>70&&hv.prev?-1:0,gin=document.getElementById('pgin');
@@ -4068,6 +4278,7 @@ function prInit(){
       prShift(dir,s.x||0)}
   };
   el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  el.addEventListener('touchmove',e=>{if(prPress&&prPress.lifted)e.preventDefault()},{passive:false});
   el.addEventListener('keydown',e=>{const r=e.target.closest&&e.target.closest('[data-press]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();prToggle(r.dataset.pid)}else if(r&&e.key==='e')prSheet(r.dataset.pid)});
   el.addEventListener('click',e=>{
     const r=e.target.closest('[data-press]');if(r&&e.detail===0){prToggle(r.dataset.pid);return}
@@ -4080,8 +4291,45 @@ function prInit(){
     else if(a==='hprev')prShift(-1,0);
     else if(a==='hnext')prShift(1,0);
     else if(a==='rr'){ui.prr=b.dataset.r;renderPr()}
-    else if(a==='move'){const p=PR.list.find(x=>x.id===b.dataset.pid);if(p){p.kind='main';prsave();renderPr();gToast('Flyttad till principer')}}
+    else if(a==='move'){const p=PR.list.find(x=>x.id===b.dataset.pid);if(p){p.kind='main';prsave();renderPr();gToast('Flyttad till habits')}}
   });
+}
+/* Sortera habits genom att dra. Släpps en habit under "Experiment" blir den ett experiment (14 dagar från idag),
+   och dras ett experiment upp bland habits blir det en riktig habit. Finns inga experiment visas rubriken under draget. */
+const prKind=r=>{const o=PR.list.find(x=>x.id===r.dataset.pid);return o?o.kind:'main'};
+function prDragMove(p,y){
+  if(!p.drag){if(Math.abs(y-p.y)<6)return;
+    const gin=document.getElementById('pgin');if(!gin)return;
+    const rows=[...gin.querySelectorAll('.prr')];let div=gin.querySelector('.prx'),tmp=false;
+    if(!div){div=document.createElement('div');div.className='prx';div.textContent='Experiment';rows[rows.length-1].after(div);tmp=true;
+      if(div.animate&&!RM())div.animate([{opacity:0,transform:'translate3d(0,-6px,0)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.23,1,.32,1)'})}
+    const top=el=>el.getBoundingClientRect().top,tops=new Map();rows.forEach(r=>tops.set(r,top(r)));tops.set(div,top(div));
+    const mainR=rows.filter(r=>r!==p.r&&prKind(r)==='main'),expR=rows.filter(r=>r!==p.r&&prKind(r)==='exp');
+    const gap=parseFloat(getComputedStyle(gin).rowGap)||5;
+    p.drag={rows,div,tmp,tops,gap,h:p.r.offsetHeight,hd:div.offsetHeight,mainR,expR,top0:Math.min(...rows.map(r=>tops.get(r))),start:tops.get(p.r),slot:-1,kind:prKind(p.r)};
+    rows.concat(div).forEach(el=>{if(el!==p.r)el.style.transition='transform .26s cubic-bezier(.23,1,.32,1)'});p.r.classList.add('pdrag')}
+  const d=p.drag,seq=i=>{const q=[...d.mainR,d.div,...d.expR];q.splice(i,0,p.r);return q};
+  const lay=q=>{const m=new Map();let t=d.top0;q.forEach(el=>{m.set(el,t);t+=(el===d.div?d.hd:d.h)+d.gap});return m};
+  const n=d.mainR.length+1+d.expR.length,lo=d.top0-d.start,hi=lay(seq(n)).get(p.r)-d.start,dy=y-p.y;
+  const cy=dy<lo?lo-rubber(lo-dy,6):dy>hi?hi+rubber(dy-hi,6):dy,cur=d.start+cy; /* stannar inom listan, bara ett litet gummiband */
+  let best=0,bd=1e9,bl=null;for(let i=0;i<=n;i++){const l=lay(seq(i)),dd=Math.abs(l.get(p.r)-cur);if(dd<bd){bd=dd;best=i;bl=l}}
+  p.r.style.transform=`translate3d(0,${cy.toFixed(1)}px,0) scale(1.03)`;
+  if(best!==d.slot){const k=best<=d.mainR.length?'main':'exp';if(d.slot>=0)vib(k!==d.kind?10:4);d.slot=best;d.kind=k;
+    bl.forEach((t,el)=>{if(el===p.r)return;const o=d.tops.get(el),sh=t-o;el.style.transform=Math.abs(sh)>.5?`translate3d(0,${sh.toFixed(1)}px,0)`:''})}
+}
+function prDragEnd(p){
+  const r=p.r;r.classList.remove('plift');
+  if(!p.drag){r.style.transform='';prSheet(r.dataset.pid);return}
+  const d=p.drag,before=r.getBoundingClientRect().top,id=r.dataset.pid,q=PR.list.find(x=>x.id===id);
+  if(q&&d.slot>=0){
+    const order=[...d.mainR,d.div,...d.expR];order.splice(d.slot,0,r);const di=order.indexOf(d.div);
+    const mains=order.slice(0,di).map(x=>x.dataset.pid),exps=order.slice(di+1).map(x=>x.dataset.pid),by={};PR.list.forEach(x=>by[x.id]=x);
+    const was=q.kind;q.kind=d.kind;if(was==='main'&&d.kind==='exp')q.start=today();
+    const seen=new Set([...mains,...exps]);PR.list=[...mains.map(i=>by[i]),...exps.map(i=>by[i]),...PR.list.filter(x=>!seen.has(x.id))].filter(Boolean);
+    prsave();if(was!==d.kind)gToast(d.kind==='exp'?'Experiment i 14 dagar':'Nu en riktig habit')}
+  renderPr();
+  const nr=document.querySelector(`#pgin .prr[data-pid="${id}"]`);
+  if(nr&&nr.animate&&!RM()){const dy=before-nr.getBoundingClientRect().top;nr.animate([{transform:`translate3d(0,${dy}px,0) scale(1.03)`},{transform:'none'}],{duration:320,easing:'cubic-bezier(.32,.72,0,1)'})}
 }
 function prShift(dir,from){
   const gin=document.getElementById('pgin'),w=gin?gin.offsetWidth:320;
@@ -4485,9 +4733,9 @@ function tInit(){
     const node=e.target.closest('.tn'),plus=e.target.closest('.tplus'),wi=e.target.closest('.wi'),zone=y>g.oy-40;
     tg={kind:wi?'icon':node?'node':plus?'plus':zone?'rot':'pan',el:wi||node||plus,x0:e.clientX,y0:e.clientY,s:[],moved:false,fired:false,id:e.pointerId,zone:!!wi||zone};
     pushS(tg.s,e);try{st.setPointerCapture(e.pointerId)}catch(_){}
-    if(node){node.classList.add('press','hold');tg.cx=e.clientX;tg.cy=e.clientY;tg.t=setTimeout(()=>{if(!tg||tg.moved||tg.el!==node)return;tLift(tg)},500)}
+    if(node){node.classList.add('press','hold');tg.cx=e.clientX;tg.cy=e.clientY;tg.t=setTimeout(()=>{if(!tg||tg.moved||tg.el!==node)return;tLift(tg)},350)}
     if(plus)plus.classList.add('press');
-    if(wi&&+wi.dataset.wi===actIdx()&&!ws.raf){wi.classList.add('hold');tg.t=setTimeout(()=>{if(!tg||tg.moved||tg.el!==wi)return;tg.fired=true;wi.classList.remove('hold');vib(12);tSkillSheet()},1000)}
+    if(wi&&+wi.dataset.wi===actIdx()&&!ws.raf){wi.classList.add('hold');tg.t=setTimeout(()=>{if(!tg||tg.moved||tg.el!==wi)return;tg.fired=true;wi.classList.remove('hold');vib(12);tSkillSheet()},700)}
   });
   st.addEventListener('pointermove',e=>{
     if(!tg||e.pointerId!==tg.id)return;pushS(tg.s,e);if(tg.lifted){tDragMove(tg,e);return}const dx=e.clientX-tg.x0,dy=e.clientY-tg.y0;
@@ -4541,7 +4789,8 @@ function setTrack(x){
 }
 function goPage(i){
   if(ui.page===i&&!pg.raf)return;
-  if(!ui.boot)pgFlash();ui.page=i;document.documentElement.classList.toggle('treemode',i===0);document.documentElement.classList.toggle('home',i===2);updGymHead();
+  if(i!==1&&typeof prEd!=='undefined'&&prEd)prEd.close(prEd.id);
+  if(!ui.boot)pgFlash();ui.page=i;document.documentElement.classList.toggle('treemode',i===0);document.documentElement.classList.toggle('gymmode',i===3);document.documentElement.classList.toggle('home',i===2);updGymHead();if(i===3)requestAnimationFrame(gymFit);
   if(i===2){const gb=document.querySelector('.gymb');if(gb){const tmp=document.createElement('div');tmp.innerHTML=gymBtn();gb.replaceWith(tmp.firstElementChild)}}
   if(i===1)renderPr();
   const to=-i*pagesW(),panes=PANES.map(id=>document.getElementById(id)),hide=()=>panes.forEach((p,j)=>{if(j!==i){p.classList.add('off');p.inert=true}});
@@ -4595,7 +4844,7 @@ addEventListener('online',async()=>{saving=saving.then(flush).then(flushGym).the
   const s={x:0,v:0,raf:0};let st=null;
   const el=()=>document.getElementById('pages'),set=y=>{const p=el();if(p)p.style.transform=Math.abs(y)<.3?'':`translate3d(0,${y.toFixed(2)}px,0)`};
   const blocked=t=>!t.closest||t.closest('.bso,.qo,.gv,.gchoice,.tstage,input,textarea,.swipe,.cost,#pgrid,.pl,.bubw,.cm');
-  document.addEventListener('touchstart',e=>{st=null;if(e.touches.length!==1||document.documentElement.classList.contains('treemode')||document.body.style.overflow==='hidden'||blocked(e.target))return;
+  document.addEventListener('touchstart',e=>{st=null;if(e.touches.length!==1||document.documentElement.classList.contains('treemode')||document.documentElement.classList.contains('gymmode')||document.body.style.overflow==='hidden'||blocked(e.target))return;
     st={x0:e.touches[0].clientX,y0:e.touches[0].clientY,mode:null,smp:[]}},{passive:true});
   document.addEventListener('touchmove',e=>{if(!st)return;const t=e.touches[0],dy=t.clientY-st.y0,dx=t.clientX-st.x0;
     if(!st.mode){if(Math.abs(dy)<6&&Math.abs(dx)<6)return;if(Math.abs(dx)>Math.abs(dy)){st=null;return}
@@ -4612,17 +4861,17 @@ const SKEL='<div class="sk" style="height:22px;width:72%;border-radius:10px;marg
 /* ---------- Kontextmeny på påminnelser ---------- */
 let cmPress=null,rd=null;
 document.addEventListener('pointerdown',e=>{const h=e.target.closest&&e.target.closest('.swipe>.habit[data-act="rem"]');if(!h||e.button>0||rd)return;
-  cmPress={h,x:e.clientX,y:e.clientY,lifted:false,touch:e.pointerType==='touch'};
-  cmPress.t=setTimeout(()=>{if(!cmPress||cmPress.h!==h||openSw||(rs&&rs.drag))return;cmPress.lifted=true;vib(10);h.parentNode.classList.add('lift')},500)});
+  cmPress={h,x:e.clientX,y:e.clientY,lifted:false,touch:e.pointerType==='touch',ring:holdRing(h,350)};
+  cmPress.t=setTimeout(()=>{if(!cmPress||cmPress.h!==h)return;if(openSw||(rs&&rs.drag)){cmPress.ring.cancel();return}cmPress.lifted=true;cmPress.ring.done();vib(10);h.parentNode.classList.add('lift')},350)});
 function cmMove(x,y){if(!cmPress)return;
-  if(!cmPress.lifted){if(Math.hypot(x-cmPress.x,y-cmPress.y)>8){clearTimeout(cmPress.t);cmPress=null}return}
+  if(!cmPress.lifted){if(Math.hypot(x-cmPress.x,y-cmPress.y)>8){clearTimeout(cmPress.t);cmPress.ring.cancel();cmPress=null}return}
   if(!rd){if(Math.hypot(x-cmPress.x,y-cmPress.y)<8)return;rd=dragStart(cmPress.h,cmPress.y);if(!rd)return}
   rd.cy=y;dragMove()}
 document.addEventListener('pointermove',e=>cmMove(e.clientX,e.clientY));
 document.addEventListener('touchmove',e=>{if(cmPress&&cmPress.lifted){e.preventDefault();const t=e.touches[0];cmMove(t.clientX,t.clientY)}},{passive:false});
-function cmEnd(e){if(!cmPress)return;if(e&&e.type==='pointercancel'&&cmPress.lifted)return;clearTimeout(cmPress.t);const p=cmPress;cmPress=null;
+function cmEnd(e){if(!cmPress)return;if(e&&e.type==='pointercancel'&&cmPress.lifted)return;clearTimeout(cmPress.t);const p=cmPress;cmPress=null;if(!p.lifted)p.ring.cancel();
   if(!p.lifted)return;noClick=Date.now();if(rd)dragEnd();else{p.h.parentNode.classList.remove('lift');openCM(p.h)}}
-document.addEventListener('pointerup',cmEnd);document.addEventListener('pointercancel',cmEnd);document.addEventListener('touchend',cmEnd);document.addEventListener('touchcancel',()=>{if(cmPress&&cmPress.lifted&&!rd){cmPress.h.parentNode.classList.remove('lift');clearTimeout(cmPress.t);cmPress=null}});
+document.addEventListener('pointerup',cmEnd);document.addEventListener('pointercancel',cmEnd);document.addEventListener('touchend',cmEnd);document.addEventListener('touchcancel',()=>{if(cmPress&&!cmPress.lifted){cmPress.ring.cancel()}if(cmPress&&cmPress.lifted&&!rd){cmPress.h.parentNode.classList.remove('lift');clearTimeout(cmPress.t);cmPress=null}});
 function dragStart(h,y){const sw=h.parentNode,list=[...document.querySelectorAll('#app .swipe[data-id]')].filter(el=>!S.doneLog[el.dataset.id]),from=list.indexOf(sw);if(from<0)return null;
   const r={sw,list,from,to:from,tops:list.map(el=>el.getBoundingClientRect().top+scrollY),hs:list.map(el=>el.offsetHeight),y0:y+scrollY,cy:y,gap:12,raf:0};
   list.forEach(el=>{if(el!==sw)el.style.transition='transform .26s cubic-bezier(.23,1,.32,1)'});sw.classList.add('dragging');
