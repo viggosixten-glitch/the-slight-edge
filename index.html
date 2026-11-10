@@ -997,7 +997,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 .prr>i:nth-child(-n+5){touch-action:none}
 .hring{position:fixed;z-index:99;pointer-events:none;overflow:visible}
 .hring path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
-.prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgb(var(--hc))}
+.prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ht,rgb(var(--hc)))}
 .prr .pc{display:grid;place-items:center;height:auto;aspect-ratio:1;border-radius:7px;background:rgba(var(--hc),.16);transition:transform .5s var(--ease-out)}
 .prr .pc.on{background:rgb(var(--hc))}
 .prr .pc.fut{background:rgba(var(--hc),.06);box-shadow:none}
@@ -1005,7 +1005,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 .prr .pc.pend{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(var(--hc),.95)}
 .prr.done .pc.miss,.prr.done .pc.pend{background:rgba(0,0,0,.2);box-shadow:none}
 .prr.done .pc.fut{background:rgba(0,0,0,.1)}
-.prr .pc b{font-style:normal;font-family:var(--disp);font-size:12.5px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.prr .pc b{color:var(--hf,#fff)!important;font-style:normal;font-family:var(--disp);font-size:12.5px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .prr .pc.pop{animation:dotpop .38s cubic-bezier(.2,.8,.2,1)}
 .prr .pc.hm{transform:scale(.86)}
 .prr .pwr{background:none!important;box-shadow:none!important;position:relative}
@@ -1015,7 +1015,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 .pwr .pg{stroke:rgb(var(--hc));transition:stroke-dashoffset .6s var(--ease-out)}
 .pwr.anim .pg{animation:pring .6s var(--ease-out) both}
 @keyframes pring{from{stroke-dashoffset:var(--o0)}}
-.pwr b{position:relative;font-size:12px!important}
+.pwr b{position:relative;font-size:12px!important;color:#fff!important}
 .pwr .ck{position:relative;width:15px;height:15px;color:#fff}
 /* Mönster-diagrammet */
 .pch{margin:26px 18px 0}
@@ -4016,15 +4016,25 @@ window.addEventListener('pagehide',()=>{if(prSaveT){clearTimeout(prSaveT);prSave
 
 const prGym=p=>p.freq==='w'&&!!p.gym;
 /* Habits: färg per habit (ingen grön – grön betyder klar). Ordning: marinblå, lila, röd, korall, ljusblå */
-/* 15 färger i tre kolumner (5 per kolumn): dagens kolumn = originalen, sedan ljusare toner, sedan andra nyanser. Ingen grön, ingen gul. */
-const PCOL=[['navy','47,91,255'],['violet','139,92,246'],['red','240,48,74'],['coral','255,128,72'],['sky','44,196,245'],
-  ['blue2','122,152,255'],['lilac','190,158,255'],['rose','255,118,140'],['peach','255,172,128'],['ice','150,222,255'],
-  ['indigo','94,92,230'],['magenta','217,70,239'],['pink','255,45,140'],['orange','255,140,0'],['cyan','0,182,212']];
+/* 15 vibranta färger, ordnade som ett färghjul: läses vänster→höger, uppifrån och ned
+   (grön → turkos → blå → lila → rosa → röd → orange). Kolumn 0 i PCOL = dagens kolumn (längst till höger). */
+const PGRID=[['green','0,150,80'],['turquoise','0,199,190'],['petrol','0,120,150'],
+  ['sky','44,196,245'],['electric','10,132,255'],['navy','47,91,255'],
+  ['deeppurple','110,30,220'],['violet','139,92,246'],['magenta','214,58,249'],
+  ['plum','150,0,130'],['hotpink','255,45,149'],['crimson','176,16,48'],
+  ['red','240,48,74'],['coral','255,128,72'],['orange','255,149,0']];
+const PCOL=[0,1,2].flatMap(j=>[0,1,2,3,4].map(r=>PGRID[r*3+(2-j)]));
+/* Färger från v1.10 som byttes ut → närmaste nya */
+const PCOLOLD={blue2:'electric',lilac:'deeppurple',rose:'hotpink',peach:'orange',ice:'turquoise',indigo:'deeppurple',pink:'hotpink',cyan:'turquoise'};
 const hcOf=p=>(PCOL.find(c=>c[0]===(p&&p.c))||PCOL[1])[1];
+/* Namnets färg: mörka färger (mörkröd, djuplila, plommon …) lyfts lite mot vitt så namnet går att läsa mot svart */
+const htOf=rgb=>{const c=rgb.split(',').map(Number),l=(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;if(l>=.32)return `rgb(${rgb})`;const k=Math.min(.45,(.32-l)*2.2);return `rgb(${c.map(v=>Math.round(v+(255-v)*k)).join(',')})`};
+/* Ljusa färger får mörk text/bock ovanpå sig */
+const hfOf=rgb=>{const [r,g,b]=rgb.split(',').map(Number);return (0.2126*r+0.7152*g+0.0722*b)/255>.72?'#08080B':'#fff'};
 const prCnt=p=>p.freq==='w';
 const prUnit=(p,n)=>p.u==='h'?(n===1?'timme':'timmar'):(n===1?'gång':'gånger');
 function prNextCol(skip){const used=PR.list.filter(p=>p!==skip).map(p=>p.c);return (PCOL.find(c=>!used.includes(c[0]))||PCOL[PR.list.length%PCOL.length])[0]}
-function prMigrate(){let ch=false;PR.list.forEach(p=>{if(!p.c){p.c=prNextCol(p);ch=true}if(p.freq==='w'&&!p.u){p.u='n';ch=true}});if(ch)prsave()}
+function prMigrate(){let ch=false;PR.list.forEach(p=>{if(p.c&&PCOLOLD[p.c]){p.c=PCOLOLD[p.c];ch=true}if(!p.c){p.c=prNextCol(p);ch=true}if(p.freq==='w'&&!p.u){p.u='n';ch=true}});if(ch)prsave()}
 /* Antal per dag lagras som upprepat id i dagens lista (bakåtkompatibelt: finns id = klar) */
 function cnt(p,k){if(prGym(p))return (((G&&G.sess)||{})[k])?1:0;const m=PRD[k.slice(0,7)],a=m&&m[k];if(!a)return 0;let n=0;for(const x of a)if(x===p.id)n++;return n}
 function isChk(p,k){return cnt(p,k)>0}
@@ -4097,7 +4107,7 @@ function histSpan(){
       const n=cnt(p,d),pop=ui.ppop===p.id+d?' pop':'';return `<i class="pc ${n?'on':d===k?'pend':'miss'}${pop}" data-k="${d}"${fo(i)}>${w&&n?`<b>${n}</b>`:''}</i>`}).join('');
     prNext.done[done?'add':'delete'](p.id);
     const lab=w?`${wc} av ${p.per} ${prUnit(p,p.per)} den här veckan`:`${isChk(p,k)?'klar':'inte klar'} ${k===t?'idag':'igår'}`;
-    return `<div class="prr${w?' rg':''}${done?' done':''}${fresh?' fresh':''}${undone?' undone':''}" style="--hc:${hcOf(p)}" data-press="1" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.t)}, ${lab}"><span class="prn">${esc(p.t)}</span>${cells}</div>`};
+    return `<div class="prr${w?' rg':''}${done?' done':''}${fresh?' fresh':''}${undone?' undone':''}" style="--hc:${hcOf(p)};--hf:${hfOf(hcOf(p))};--ht:${htOf(hcOf(p))}" data-press="1" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.t)}, ${lab}"><span class="prn">${esc(p.t)}</span>${cells}</div>`};
   const prNext={done:new Set()};
   const html=head+main.map(row).join('')+(exp.length?'<div class="prx">Experiment</div>'+exp.map(row).join(''):'');
   if(!ui.pdry){prSeen.done=prNext.done;prSeen.init=true}
@@ -4253,8 +4263,8 @@ function prMinus(id,k){
 }
 /* Redigera/skapa: dagens rutor byter färg till de fem färgvalen på sina platser (rad 1 marinblå, rad 2 lila …).
    Saknas rader poppar nya rutor fram under. Resten av sidan tonas bort och inställningarna tar dess plats. */
-const PCHK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const PCN={navy:'marinblå',violet:'lila',red:'röd',coral:'korall',sky:'ljusblå',blue2:'ljus blå',lilac:'syren',rose:'rosé',peach:'persika',ice:'isblå',indigo:'indigo',magenta:'magenta',pink:'rosa',orange:'orange',cyan:'cyan'};
+const PCHK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const PCN={navy:'marinblå',violet:'lila',red:'röd',coral:'korall',sky:'ljusblå',orange:'orange',green:'mörkgrön',electric:'elblå',deeppurple:'djuplila',crimson:'mörkröd',magenta:'magenta',hotpink:'rosa',turquoise:'turkos',plum:'plommon',petrol:'petrolblå'};
 function prFade(on){const el=document.getElementById('pr');if(!el)return;el.classList.toggle('pediting',!on);el.querySelectorAll('#pgin,.pback,.pres,.pempty,.phd,.pch').forEach(x=>x.style.opacity=on?'':'0')}
 let prEd=null;
 function prEdit(id){
@@ -4289,7 +4299,7 @@ function prEdit(id){
   const slot=i=>{const k=rowOf(i),j=colOf(i),row=pr.querySelectorAll('#pgin .prr')[k],c=row&&row.children[8-j];
     if(c&&cs0[k]){const r=rel(c.getBoundingClientRect());return {x:r.x,y:r.y}}return {x:cx(j),y:col.y+k*col.pitch}};
   const ov=document.createElement('div');ov.className='pov';
-  ov.innerHTML=PCOL.map(([n,rgb],i)=>{const q=slot(i);return `<button class="pcs${f.c===n?' on':''}" data-c="${n}" style="--hc:${rgb};left:${q.x}px;top:${q.y}px;width:${col.s}px;height:${col.s}px" aria-label="Färg ${PCN[n]}" aria-pressed="${f.c===n}">${PCHK}</button>`}).join('')+
+  ov.innerHTML=PCOL.map(([n,rgb],i)=>{const q=slot(i);return `<button class="pcs${f.c===n?' on':''}" data-c="${n}" style="--hc:${rgb};color:${hfOf(rgb)};left:${q.x}px;top:${q.y}px;width:${col.s}px;height:${col.s}px" aria-label="Färg ${PCN[n]}" aria-pressed="${f.c===n}">${PCHK}</button>`}).join('')+
     `<div class="ped" style="left:${Math.max(12,(pb.width-Math.min(pb.width,520))/2+4)}px;top:${col.y}px;width:${Math.max(170,cx(2)-12-Math.max(12,(pb.width-Math.min(pb.width,520))/2+4))}px">
       <input id="prt" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="${ex?'':'Ny habit'}" value="${ex?esc(ex.t):''}">
       <div class="seg2" data-g="m">${[['d','Varje dag'],['h','Timmar'],['n','Gånger']].map(([v,l])=>`<button data-v="${v}">${l}</button>`).join('')}</div>
