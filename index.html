@@ -1083,7 +1083,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 /* Egen lager-yta per ruta: flytt och fjäder sker på GPU:n utan att meshen målas om */
 .pbw{will-change:transform;backface-visibility:hidden}
 .pbnfly,.pbghost{will-change:transform}
-#pb{position:relative}
+#pb{position:relative}.pblay{position:absolute;inset:0;overflow:clip;pointer-events:none;z-index:30}.pbw.pbtxtg{position:absolute;transform:none;margin:0;background:none!important;box-shadow:none!important;pointer-events:none}.pbw.pbtxtg::before,.pbw.pbtxtg::after{display:none!important}
 /* Namnet: samma storlek i alla rutor (--pbfs sätts så att längsta namnet ryms), centrerat, aldrig ihoppressat */
 .pbn{display:block;text-align:center;font:800 var(--pbfs,30px)/1 var(--disp);letter-spacing:-.02em;white-space:nowrap;text-shadow:0 1px 14px rgba(0,0,0,.14)}
 .pbn span{display:inline-block}
@@ -2778,29 +2778,12 @@ function pctAnim(card,rev){
     ui.pctBusy=0},D+40);
 }
 
-/* ---- Rubrikerna vid start: vita Edge delas i fyra färgade Edge (en per sida), som tonar bort när vita Edge tonar upp till mitten igen ---- */
+/* ---- Rubriken vid start: vita Edge tonar upp till sin centrerade plats (inga färgade Edge över pillren) ---- */
 function pagerIntro(){
   if(RM())return;
-  const br=document.querySelector('#brand [data-bt="2"]'),btns=[...document.querySelectorAll('.pager button[data-page]')];if(!br||btns.length<4||!document.body.animate)return;
-  const GR=['linear-gradient(90deg,#E8964E,#F4CF82)','linear-gradient(90deg,#7C3AED,#D946EF)','linear-gradient(90deg,#0A9E42,#10D95B)','linear-gradient(90deg,#2563EB,#22D3EE)'];
-  const b=br.getBoundingClientRect(),sy=scrollY;
-  const box=document.createElement('div');box.className='pgi';box.style.top=sy+'px';document.body.appendChild(box);
-  const cx0=b.left+b.width/2,cy=b.top+b.height/2;
-  const bw=br.closest('.bw')||br,out=bw.animate([{opacity:1,transform:'scale(1)',filter:'blur(0px)'},{opacity:0,transform:'scale(.9)',filter:'blur(5px)'}],{duration:300,easing:'cubic-bezier(.23,1,.32,1)',fill:'forwards'});
-  bw.style.transformOrigin=`${(cx0-bw.getBoundingClientRect().left).toFixed(1)}px ${(cy-bw.getBoundingClientRect().top).toFixed(1)}px`;
-  const T=860;/* när de färgade har spridit ut sig */
-  btns.forEach((btn,i)=>{
-    const r=btn.getBoundingClientRect(),dx=r.left+r.width/2-cx0;
-    const w=document.createElement('span');w.className='pgw';w.style.setProperty('--g',GR[i]);w.textContent='Edge';w.style.left=cx0+'px';w.style.top=cy+'px';box.appendChild(w);
-    const end=`translate(calc(-50% + ${dx.toFixed(1)}px),-50%) scale(.58)`;
-    w.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:0},{transform:end,opacity:1}],{duration:620,delay:i*45,easing:'cubic-bezier(.23,1,.32,1)',fill:'forwards'});
-    setTimeout(()=>{w.animate([{transform:end,opacity:1},{transform:`translate(calc(-50% + ${(dx*.85).toFixed(1)}px),-50%) scale(.5)`,opacity:0}],{duration:300,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'})},T+i*30);
-  });
-  setTimeout(()=>{
-    out.cancel();
-    bw.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:440,easing:'cubic-bezier(.23,1,.32,1)'});
-  },T+60);
-  setTimeout(()=>box.remove(),T+460);
+  const br=document.querySelector('#brand [data-bt="2"]');if(!br||!document.body.animate)return;
+  const bw=br.closest('.bw')||br;
+  bw.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:520,easing:'cubic-bezier(.23,1,.32,1)'});
 }
 /* ---- Frågorna i bildrutan ---- */
 /* Rutan ligger inuti bilden, så den följer med vid skroll, flikbyte och omritning */
@@ -4599,7 +4582,7 @@ function pbRefresh(){const o=pbV();if(!o)return;const w=pbOpen&&pbW(pbOpen);if(!
 const PBEZ='cubic-bezier(.32,.72,0,1)',PBR=39,PBD=620;
 const PBPOP=[{transform:'scale(.3)',opacity:0,easing:'cubic-bezier(.2,.8,.3,1)'},{transform:'scale(1.12)',opacity:1,offset:.38,easing:'cubic-bezier(.45,0,.25,1)'},{transform:'none',opacity:1}];
 /* Namnet glider mellan liten och stor widget och växer proportionerligt på vägen */
-const pbHost=()=>{const h=document.getElementById('pb'),r=h.getBoundingClientRect();return{h,x:r.left,y:r.top}};
+const pbHost=()=>{const pb=document.getElementById('pb'),r=pb.getBoundingClientRect();let h=pb.querySelector(':scope>.pblay');if(!h){h=document.createElement('div');h.className='pblay';pb.appendChild(h)}return{h,x:r.left,y:r.top}};
 function pbNameFly(a,b,txt,fs,dur){
   const H=pbHost(),f=document.createElement('div');f.className='pbnfly';f.textContent=txt;f.style.fontSize=fs;H.h.appendChild(f);
   const k=b.width/a.width,T=(r,sc)=>`translate3d(${r.left-H.x}px,${r.top-H.y}px,0) scale(${sc})`;
@@ -4628,15 +4611,17 @@ function pbMorph(mut,o={}){
   if(o.shrink){const e=g.querySelector(`.pbw[data-wid="${o.shrink}"]`);if(e){gr=e.getBoundingClientRect();const ns=nameOf(e);if(ns)gName={r:ns.getBoundingClientRect(),fs:getComputedStyle(ns).fontSize,t:ns.textContent};
     const H=pbHost();ghost=e.cloneNode(true);ghost.classList.add('pbghost');ghost.removeAttribute('data-wid');
     Object.assign(ghost.style,{position:'absolute',left:(gr.left-H.x)+'px',top:(gr.top-H.y)+'px',width:gr.width+'px',height:gr.height+'px',margin:'0',zIndex:'30'});
-    const ins=e.querySelectorAll('input');ghost.querySelectorAll('input').forEach((x,i)=>{x.value=ins[i]?ins[i].value:''});const gn=nameOf(ghost);if(gn)gn.style.visibility='hidden';H.h.appendChild(ghost)}}
+    const ins=e.querySelectorAll('input');ghost.querySelectorAll('input').forEach((x,i)=>{x.value=ins[i]?ins[i].value:''});H.h.appendChild(ghost)}}
   const icOf=e=>e&&e.querySelector(':scope>.pbic'),icR=e=>{const i=icOf(e);return i?i.getBoundingClientRect():null};
   const gIcF=o.grow&&icR(g.querySelector(`.pbw[data-wid="${o.grow}"]`)),sIcF=o.shrink&&icR(g.querySelector(`.pbw[data-wid="${o.shrink}"]`));
-  const gN=o.grow&&nameOf(g.querySelector(`.pbw[data-wid="${o.grow}"]`)),growName=gN?{r:gN.getBoundingClientRect(),fs:getComputedStyle(gN).fontSize,t:gN.textContent}:null;
+  let txtG=null;if(o.grow){const e=g.querySelector(`.pbw[data-wid="${o.grow}"]:not(.big)`);if(e){const r=e.getBoundingClientRect(),H=pbHost();txtG=e.cloneNode(true);txtG.className='pbw pbtxtg';txtG.removeAttribute('data-wid');txtG.removeAttribute('style');
+    txtG.querySelectorAll('.pbic').forEach(x=>x.remove());Object.assign(txtG.style,{left:(r.left-H.x)+'px',top:(r.top-H.y)+'px',width:r.width+'px',height:r.height+'px'});H.h.appendChild(txtG)}}
   pbMorphing=true;clearTimeout(pbMorphT);pbMorphT=setTimeout(()=>{pbMorphing=false},PBD+60);
   pbSprReset();
   /* Sidan får inte krympa på en gång (då hoppar scrollen när en ruta långt ner stängs). Höjden hålls och krymper i takt med morphen. */
   const pg=document.getElementById('pb');cancelAnimationFrame(pbHgtR);const h0=pg.offsetHeight,gh0=g.offsetHeight;pg.style.minHeight=h0+'px';
   mut();renderPb();
+  if(txtG){const x=txtG;x.animate([{opacity:1},{opacity:0}],{duration:200,easing:'ease-out',fill:'forwards'}).onfinish=()=>x.remove()}
   const g2=document.getElementById('pbg'),h1=Math.max(0,h0-(gh0-g2.offsetHeight));
   if(h1<h0-.5){const t0=performance.now(),E=pbEase(.32,.72,0,1),f=now=>{const u=Math.min(1,(now-t0)/PBD);pg.style.minHeight=(h0+(h1-h0)*E(u)).toFixed(1)+'px';if(u<1)pbHgtR=requestAnimationFrame(f);else pg.style.minHeight=''};pbHgtR=requestAnimationFrame(f)}
   else pg.style.minHeight='';
@@ -4648,8 +4633,7 @@ function pbMorph(mut,o={}){
         {transform:'none',clipPath:`inset(0 0 0 0 round ${PBR}px)`}],{duration:PBD,easing:PBEZ});
       else e.animate([{transform:'scale(.92)',opacity:0},{transform:'none',opacity:1}],{duration:480,easing:PBEZ});
       if(ic){if(f&&gIcF)pbIcX(ic,icC,gIcF,[f.left-l.left,f.top-l.top],icC,[0,0],true,PBD);else ic.animate([{opacity:0},{opacity:1}],{duration:PBD*.7,easing:'ease-out'})}
-      if(tn&&growName){tn.style.visibility='hidden';pbNameFly(growName.r,tnr,growName.t,growName.fs,PBD);setTimeout(()=>{tn.style.visibility=''},PBD)}
-      [...e.querySelectorAll('.pbin>*')].forEach((c,k)=>{if(c.classList.contains('pbbn')&&growName)return;
+      [...e.querySelectorAll('.pbin>*')].forEach((c,k)=>{
         c.animate([{opacity:0,transform:'translate3d(0,14px,0)'},{opacity:1,transform:'none'}],{duration:420,delay:(o.edit?170:140)+k*(o.edit?90:45),easing:'cubic-bezier(.23,1,.32,1)',fill:'backwards'})});
       if(o.edit)e.querySelectorAll('.pbsw button,.pbis button').forEach((b,i)=>b.animate(PBPOP,{duration:700,delay:320+(i%6)*40+Math.floor(i/6)*50,easing:'linear',fill:'backwards'}));
       return}
@@ -4659,7 +4643,6 @@ function pbMorph(mut,o={}){
         {transform:`translate3d(${l.left-gr.left}px,${l.top-gr.top}px,0)`,clipPath:`inset(0 ${Math.max(0,gr.width-l.width)}px ${Math.max(0,gr.height-l.height)}px 0 round ${PBR}px)`}],{duration:PBD-80,easing:PBEZ,fill:'forwards'});
       const gi=gh.querySelector('.pbin');if(gi)gi.animate([{opacity:1},{opacity:0}],{duration:160,fill:'forwards'});
       gh.animate([{opacity:1},{opacity:1,offset:.75},{opacity:0}],{duration:PBD-80,fill:'forwards'}).onfinish=()=>gh.remove();
-      const tn=nameOf(e);if(tn&&gName){tn.style.visibility='hidden';pbNameFly(gName.r,tn.getBoundingClientRect(),gName.t,gName.fs,PBD-80);setTimeout(()=>{tn.style.visibility=''},PBD-80)}
       e.animate([{opacity:0},{opacity:0,offset:.5},{opacity:1}],{duration:PBD-80,easing:'ease-out'});
       return}
     if(!f){e.animate([{transform:'scale(.92)',opacity:0},{transform:'none',opacity:1}],{duration:420,easing:PBEZ});return}
