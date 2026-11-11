@@ -991,7 +991,7 @@ html.gymmode #gym .stage svg{max-height:calc(100svh - var(--gtop,200px) - env(sa
 .prr.plift.done{background:transparent}
 .prr.pdrag{transition:none}
 .prr.done .prn{color:#fff}
-.prr>i:nth-child(-n+5){touch-action:none}
+
 .hring{position:fixed;z-index:99;pointer-events:none;overflow:visible}
 .hring path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
 .prn{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:calc((100% - 40px) * 6 / 9 + 22px);z-index:1;pointer-events:none;font-size:17px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ht,rgb(var(--hc)))}
@@ -2778,49 +2778,30 @@ function pctAnim(card,rev){
     ui.pctBusy=0},D+40);
 }
 
-/* ---- Rubrikerna vid start: de fyra färgade Edge faller ner bakom sina piller ---- */
+/* ---- Rubrikerna vid start: vita Edge delas i fyra färgade Edge (en per sida), som tonar bort när vita Edge tonar upp till mitten igen ---- */
 function pagerIntro(){
   if(RM())return;
   const br=document.querySelector('#brand [data-bt="2"]'),btns=[...document.querySelectorAll('.pager button[data-page]')];if(!br||btns.length<4||!document.body.animate)return;
-  const GR=['linear-gradient(90deg,#FF6B5A,#12B76A,#0BB5C9,#2F6BFF,#7C4DFF)','linear-gradient(90deg,#7C3AED,#D946EF)','linear-gradient(90deg,#0A9E42,#10D95B)','linear-gradient(90deg,#2563EB,#22D3EE)'];
-  const DR=[['#FF6B5A','#12B76A','#0BB5C9','#7C4DFF'],['#7C3AED','#D946EF'],['#0A9E42','#10D95B'],['#2563EB','#22D3EE']];
-  const b=br.getBoundingClientRect(),sy=scrollY,pillTop=Math.min(...btns.map(x=>x.getBoundingClientRect().top));
+  const GR=['linear-gradient(90deg,#E8964E,#F4CF82)','linear-gradient(90deg,#7C3AED,#D946EF)','linear-gradient(90deg,#0A9E42,#10D95B)','linear-gradient(90deg,#2563EB,#22D3EE)'];
+  const b=br.getBoundingClientRect(),sy=scrollY;
   const box=document.createElement('div');box.className='pgi';box.style.top=sy+'px';document.body.appendChild(box);
-  const cx0=b.left+b.width/2,cy=b.top+b.height/2,order=[0,1,2,3].sort(()=>Math.random()-.5);let left=4,lastEnd=0;
+  const cx0=b.left+b.width/2,cy=b.top+b.height/2;
   const bw=br.closest('.bw')||br,out=bw.animate([{opacity:1,transform:'scale(1)',filter:'blur(0px)'},{opacity:0,transform:'scale(.9)',filter:'blur(5px)'}],{duration:300,easing:'cubic-bezier(.23,1,.32,1)',fill:'forwards'});
   bw.style.transformOrigin=`${(cx0-bw.getBoundingClientRect().left).toFixed(1)}px ${(cy-bw.getBoundingClientRect().top).toFixed(1)}px`;
+  const T=860;/* när de färgade har spridit ut sig */
   btns.forEach((btn,i)=>{
     const r=btn.getBoundingClientRect(),dx=r.left+r.width/2-cx0;
     const w=document.createElement('span');w.className='pgw';w.style.setProperty('--g',GR[i]);w.textContent='Edge';w.style.left=cx0+'px';w.style.top=cy+'px';box.appendChild(w);
     const end=`translate(calc(-50% + ${dx.toFixed(1)}px),-50%) scale(.58)`;
     w.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:0},{transform:end,opacity:1}],{duration:620,delay:i*45,easing:'cubic-bezier(.23,1,.32,1)',fill:'forwards'});
-    const k=order.indexOf(i),dl=i*45+760+k*(90+Math.random()*190)+Math.random()*90,rot=((Math.random()-.5)*16).toFixed(1),dur=360+Math.random()*140;
-    const fall=r.top+r.height/2-cy;lastEnd=Math.max(lastEnd,dl+dur);
-    setTimeout(()=>{
-      w.style.opacity='1';w.getAnimations().forEach(a=>a.cancel());
-      const sc=Math.min(.58,(r.height*1.6)/w.offsetHeight);
-      w.animate([{transform:end,opacity:1},{transform:`translate(calc(-50% + ${dx.toFixed(1)}px),calc(-50% + ${(fall*.78).toFixed(1)}px)) scale(.5) rotate(${rot}deg)`,opacity:1,offset:.78},{transform:`translate(calc(-50% + ${dx.toFixed(1)}px),calc(-50% + ${fall.toFixed(1)}px)) scale(${(sc*.35).toFixed(3)},${(sc*.12).toFixed(3)}) rotate(0deg)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.5,0,.9,.55)',fill:'forwards'});
-      setTimeout(()=>splash(btn,DR[i],sy),dur*.8);
-      setTimeout(()=>{w.remove();if(--left===0)box.remove()},dur+20);
-    },dl);
+    setTimeout(()=>{w.animate([{transform:end,opacity:1},{transform:`translate(calc(-50% + ${(dx*.85).toFixed(1)}px),-50%) scale(.5)`,opacity:0}],{duration:300,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'})},T+i*30);
   });
   setTimeout(()=>{
-    const g=btns[2].getBoundingClientRect(),gx=g.left+g.width/2,gy=g.top+g.height/2;
-    splash(btns[2],['#10D95B','#0A9E42','#3BE37B','#10D95B'],sy,true);
     out.cancel();
-    bw.animate([{opacity:0,transform:`translate(${(gx-cx0).toFixed(1)}px,${(gy-cy).toFixed(1)}px) scale(.2)`},{opacity:1,offset:.25},{transform:'translate(0px,-4px) scale(1.07)',offset:.72},{opacity:1,transform:'none'}],{duration:640,easing:'cubic-bezier(.2,.8,.2,1)'});
-  },lastEnd+140);
+    bw.animate([{opacity:0,transform:'translateY(10px) scale(.96)'},{opacity:1,transform:'none'}],{duration:440,easing:'cubic-bezier(.23,1,.32,1)'});
+  },T+60);
+  setTimeout(()=>box.remove(),T+460);
 }
-function splash(btn,cols,sy,big){
-  const bar=btn.querySelector('i');if(bar){const op=getComputedStyle(bar).opacity;
-    bar.animate([{opacity:1,filter:'brightness(1.7)',transform:'scaleY(1.45)'},{opacity:op,filter:'brightness(1)',transform:'scaleY(1)'}],{duration:520,easing:'cubic-bezier(.23,1,.32,1)'})}
-  const r=(bar||btn).getBoundingClientRect(),R=Math.random,n=big?26:6;
-  for(let j=0;j<n;j++){const d=document.createElement('i');d.className='pgd';const sz=big?5+R()*6:3+R()*4;d.style.width=d.style.height=sz+'px';d.style.background=cols[j%cols.length];
-    d.style.left=(r.left+r.width/2+(R()-.5)*Math.min(26,r.width*.5)-sz/2)+'px';d.style.top=(r.top+scrollY-sz/2)+'px';document.body.appendChild(d);
-    const ang=(-90+(R()-.5)*(big?150:120))*Math.PI/180,dist=big?18+R()*34:10+R()*16;
-    d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${(Math.cos(ang)*dist).toFixed(1)}px,${(Math.sin(ang)*dist).toFixed(1)}px) scale(.9)`,opacity:1,offset:.55},{transform:`translate(${(Math.cos(ang)*dist*1.25).toFixed(1)}px,${(Math.sin(ang)*dist+8).toFixed(1)}px) scale(.4)`,opacity:0}],{duration:460+R()*160,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'}).onfinish=()=>d.remove()}
-}
-
 /* ---- Frågorna i bildrutan ---- */
 /* Rutan ligger inuti bilden, så den följer med vid skroll, flikbyte och omritning */
 function qPos(o){
@@ -4122,7 +4103,7 @@ function histSpan(){
     const fresh=done&&!prSeen.done.has(p.id)&&prSeen.init,undone=!done&&prSeen.done.has(p.id)&&prSeen.init,cells=days.map((d,i)=>{
       if(i===8&&w)return prRing(p,wc);
       if(d<p.start)return '<i class="pc pre"></i>';if(d>t)return `<i class="pc fut"${fo(i)}></i>`;
-      const n=cnt(p,d),pop=ui.ppop===p.id+d?' pop':'';return `<i class="pc ${n?'on':d===k?'pend':'miss'}${pop}" data-k="${d}"${fo(i)}>${w&&n?`<b>${n}</b>`:''}</i>`}).join('');
+      const n=cnt(p,d),pop=ui.ppop===p.id+d?' pop':'';return `<i class="pc ${n?'on':d===k?'pend':'miss'}${pop}" data-k="${d}"${fo(i)}>${w&&(n>1||(n===1&&p.u==='h'))?`<b>${n}</b>`:''}</i>`}).join('');
     prNext.done[done?'add':'delete'](p.id);
     const lab=w?`${wc} av ${p.per} ${prUnit(p,p.per)} den här veckan`:`${isChk(p,k)?'klar':'inte klar'} ${k===t?'idag':'igår'}`;
     return `<div class="prr${w?' rg':''}${done?' done':''}${fresh?' fresh':''}${undone?' undone':''}" style="--hc:${hcOf(p)};--hf:${hfOf(hcOf(p))};--ht:${htOf(hcOf(p))}" data-press="1" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.t)}, ${lab}"><span class="prn">${esc(p.t)}</span>${cells}</div>`};
@@ -4390,7 +4371,7 @@ function prInit(){
   el.addEventListener('pointerdown',e=>{
     const r=e.target.closest('[data-press]');
     if(r&&e.button===0){const pc=e.target.closest('.pc'),k=pc?pc.dataset.k:null,q=PR.list.find(x=>x.id===r.dataset.pid);
-      const rr=r.getBoundingClientRect();prPress={r,x:e.clientX,y:e.clientY,fired:false,k,id:e.pointerId,zone:(e.clientX-rr.left)/rr.width<=.4};
+      prPress={r,x:e.clientX,y:e.clientY,fired:false,k,id:e.pointerId};
       if(q&&k&&prCnt(q)&&canEditDay(k)&&cnt(q,k)){
         /* Håll in en ruta med antal = −1 */
         prPress.cell=pc;prPress.ring=holdRing(pc,350,3);
@@ -4403,10 +4384,6 @@ function prInit(){
   });
   el.addEventListener('pointermove',e=>{
     if(prPress&&prPress.lifted){prDragMove(prPress,e.clientY);return}
-    /* Vänstra 2/5 av raden: dra direkt utan att hålla in (höger sida lämnas åt scroll) */
-    if(prPress&&prPress.zone){const dx=e.clientX-prPress.x,dy=e.clientY-prPress.y;
-      if(Math.abs(dy)>6&&Math.abs(dy)>=Math.abs(dx)){const p=prPress;clearTimeout(p.t);if(p.ring)p.ring.cancel();p.fired=true;p.lifted=true;p.r.classList.add('plift');
-        try{p.r.setPointerCapture(e.pointerId)}catch(_){}vib(8);prDragMove(p,e.clientY);return}}
     if(prPress&&Math.hypot(e.clientX-prPress.x,e.clientY-prPress.y)>10){clearTimeout(prPress.t);if(prPress.ring)prPress.ring.cancel();prPress=null}
     if(!prSw||e.pointerId!==prSw.id)return;pushS(prSw.s,e);
     const dx=e.clientX-prSw.x0,dy=e.clientY-prSw.y0;
@@ -4640,6 +4617,8 @@ function pbIcX(ic,cur,A,tA,B,tB,toBlur,dur){
   if(!full){const T=[{transform:tf(A,tA)},{transform:tf(B,tB)}];an.push(ic.animate(T,{duration:dur,easing:PBEZ,fill:'forwards'}),sh.animate(T,{duration:dur,easing:PBEZ,fill:'forwards'}))}
   if(toBlur)setTimeout(()=>{sh.remove();an.forEach(a=>a.cancel())},dur+20);
 }
+let pbHgtR=0;
+const pbEase=(x1,y1,x2,y2)=>t=>{let a=t;for(let i=0;i<8;i++){const x=3*(1-a)*(1-a)*a*x1+3*(1-a)*a*a*x2+a*a*a-t,dx=3*(1-a)*(1-a)*x1+6*(1-a)*a*(x2-x1)+3*a*a*(1-x2);if(Math.abs(dx)<1e-6)break;a-=x/dx;a=Math.min(1,Math.max(0,a))}return 3*(1-a)*(1-a)*a*y1+3*(1-a)*a*a*y2+a*a*a};
 function pbMorph(mut,o={}){
   const g=document.getElementById('pbg');
   if(!g||RM()||o.fast||!g.animate){mut();renderPb();return}
@@ -4655,8 +4634,12 @@ function pbMorph(mut,o={}){
   const gN=o.grow&&nameOf(g.querySelector(`.pbw[data-wid="${o.grow}"]`)),growName=gN?{r:gN.getBoundingClientRect(),fs:getComputedStyle(gN).fontSize,t:gN.textContent}:null;
   pbMorphing=true;clearTimeout(pbMorphT);pbMorphT=setTimeout(()=>{pbMorphing=false},PBD+60);
   pbSprReset();
+  /* Sidan får inte krympa på en gång (då hoppar scrollen när en ruta långt ner stängs). Höjden hålls och krymper i takt med morphen. */
+  const pg=document.getElementById('pb');cancelAnimationFrame(pbHgtR);const h0=pg.offsetHeight,gh0=g.offsetHeight;pg.style.minHeight=h0+'px';
   mut();renderPb();
-  const g2=document.getElementById('pbg');
+  const g2=document.getElementById('pbg'),h1=Math.max(0,h0-(gh0-g2.offsetHeight));
+  if(h1<h0-.5){const t0=performance.now(),E=pbEase(.32,.72,0,1),f=now=>{const u=Math.min(1,(now-t0)/PBD);pg.style.minHeight=(h0+(h1-h0)*E(u)).toFixed(1)+'px';if(u<1)pbHgtR=requestAnimationFrame(f);else pg.style.minHeight=''};pbHgtR=requestAnimationFrame(f)}
+  else pg.style.minHeight='';
   g2.querySelectorAll('.pbw').forEach(e=>{
     const id=e.dataset.wid,f=F.get(id),l=e.getBoundingClientRect();
     if(id===o.grow){
@@ -4774,6 +4757,7 @@ function pbEdClose(act){
 }
 function pbDragMove(p,dx,dy){
   if(!p.drag){if(Math.hypot(dx,dy)<6)return;
+    pbSprReset();
     const tiles=[...document.querySelectorAll('#pbg .pbw')];
     p.drag={tiles,slots:tiles.map(t=>t.getBoundingClientRect()),from:tiles.indexOf(p.el),cur:tiles.indexOf(p.el)};
     tiles.forEach(t=>{if(t!==p.el)t.style.transition='transform .26s cubic-bezier(.23,1,.32,1)'});p.el.classList.add('drag')}
@@ -4788,11 +4772,17 @@ function pbDragMove(p,dx,dy){
 function pbDragEnd(p){
   const t=p.el;t.classList.remove('lift','drag');
   if(!p.drag){t.style.transform='';pbEdit(t.dataset.wid);return}
-  const d=p.drag,before=t.getBoundingClientRect(),id=t.dataset.wid;
+  const d=p.drag,id=t.dataset.wid;
+  /* Var varje ruta syns just nu (mitt i sin glidning) */
+  const vis=new Map(d.tiles.map(x=>[x.dataset.wid,x.getBoundingClientRect()]));
+  /* Rutorna återanvänds vid omritning: rensa all förskjutning först, annars hamnar de dubbelt förskjutna */
+  d.tiles.forEach(x=>{x.getAnimations().forEach(a=>a.cancel());x.style.transition='';x.style.transform='';x.style.translate=''});
   if(d.cur!==d.from){const w=PB.list.splice(d.from,1)[0];PB.list.splice(d.cur,0,w);pbsave()}
   renderPb();
-  const n=document.querySelector(`#pbg .pbw[data-wid="${id}"]`);
-  if(n&&n.animate&&!RM()){const a=n.getBoundingClientRect();n.animate([{transform:`translate3d(${before.left-a.left+(before.width-a.width)/2}px,${before.top-a.top+(before.height-a.height)/2}px,0) scale(1.05)`},{transform:'none'}],{duration:340,easing:PBEZ})}
+  if(RM()||!document.body.animate)return;
+  document.querySelectorAll('#pbg .pbw').forEach(n=>{const b=vis.get(n.dataset.wid);if(!b)return;const a=n.getBoundingClientRect(),x=b.left-a.left+(b.width-a.width)/2,y=b.top-a.top+(b.height-a.height)/2;
+    if(n.dataset.wid===id)n.animate([{transform:`translate3d(${x}px,${y}px,0) scale(1.05)`},{transform:'none'}],{duration:340,easing:PBEZ});
+    else if(Math.abs(x)+Math.abs(y)>.5)n.animate([{transform:`translate3d(${x}px,${y}px,0)`},{transform:'none'}],{duration:260,easing:PBEZ})});
 }
 
 /* ---------- gummiband i hela appen: kort, rader och widgets hänger efter lite när man scrollar och fjädrar tillbaka.
@@ -4898,7 +4888,10 @@ function pbBind(o){
       if(ib.animate&&!RM())ib.animate([{transform:'scale(.86)'},{transform:'scale(1.08)'},{transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});return}
     const b=e.target.closest('[data-pbx]');
     if(!b){if(e.detail===0){const rc=e.target.closest('.pbru:not(.ed) .pbrc');if(rc)pbVote(rc.parentNode)}return}
-    e.stopPropagation();pbNoClick=Date.now();const a=b.dataset.pbx;
+    e.stopPropagation();const a=b.dataset.pbx;
+    /* iOS skickar klicket efter att widgeten redan vuxit: det landar då på namnet (= stäng). Ignorera det klicket. */
+    if(a==='close'&&(pbMorphing||Date.now()-pbNoClick<450))return;
+    pbNoClick=Date.now();
     if(a==='close')pbClose();
     else if(a==='add')pbStartAdd();
     else if(a==='ifc'){const n=b.closest('.pbnew'),f=n.querySelector('.pbifw');f.hidden=false;b.hidden=true;const i=f.querySelector('input');
