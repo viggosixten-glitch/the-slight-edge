@@ -156,8 +156,12 @@ input::placeholder,textarea::placeholder{color:#6E6D78}
 .bubble{position:fixed;z-index:60;display:grid;place-items:center;pointer-events:none;overflow:hidden;will-change:transform,opacity}
 .bubble .bt{position:absolute;left:78px;right:16px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:700;line-height:1.2;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bubble svg{width:52%;height:52%;opacity:0}
+.bubland{position:fixed;z-index:60;pointer-events:none;background:#10D95B;will-change:transform,clip-path;transform-origin:50% 50%}
+.bubland>svg{position:absolute;left:50%;top:50%}
+.bubland>.blc{position:absolute;left:0;top:0;margin:0;opacity:0;background:transparent!important}
 body{overflow-anchor:none}
 .swipe.arriving{opacity:0;transform:scale(.96)}
+.swipe.landed{transition:none!important;opacity:1;transform:none}
 .swipe.arrived{transition:opacity .28s var(--ease-out),transform .32s var(--ease-out)}
 .habit .ck,.del .ck{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:1}
 .del .ck svg{width:38px;height:38px;animation:popin .3s var(--ease-out) .12s both}
@@ -190,6 +194,38 @@ body{overflow-anchor:none}
 .swipe>.habit.out{transition:transform .2s var(--ease-out),opacity .2s var(--ease-out);transform:translateX(-110%)!important;opacity:0}
 .hbtn{display:flex;gap:8px;align-items:center}
 .rbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--s1);color:var(--tx);font-size:22px;font-weight:800}
+/* Imorgon: ihopfälld rad under dagens påminnelser */
+.tomh{display:flex;align-items:center;gap:8px;padding:6px 0 0}
+.tomh{justify-content:center;gap:6px}
+.tomh .tomn{gap:8px;padding-left:4px}
+.tomp{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--s2);color:var(--mu);transition:transform .12s var(--ease-out)}
+.tomp:active{transform:scale(.88)}
+.tomh .tmi{display:grid;color:#B9B4FF}
+/* Att göra: centrerad rubrik med ikon, ljusare rader */
+.today-h.tc3{display:grid;grid-template-columns:40px 1fr 40px;align-items:start;padding:12px 4px 4px;text-align:center}
+.tc3 .tth{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tc3 .h2{display:flex;align-items:center;gap:8px}
+.tc3 .tti{display:grid;color:var(--green)}
+.tc3 .tts{font-size:14px;font-weight:600;color:var(--mu)}
+.tc3 .tts{display:flex;align-items:center;gap:6px}
+.tc3 .tts>i{font-style:normal;opacity:.5}
+.tc3 .tq{display:inline-flex;align-items:center;gap:3px}
+.tc3 .tq.on{color:var(--green)}
+.swipe:not(.tom)>.habit:not(.done){background:#1B1B21}
+.swipe.lift>.habit:not(.done){background:#24242B}
+.tomh .tomt{flex:none;min-width:0;display:flex;align-items:center;gap:8px;height:48px;padding:0 2px;color:var(--mu);font-size:17px;font-weight:800;letter-spacing:-.01em;text-align:left;transition:opacity .15s ease}
+.tomh .tomt:active{opacity:.6}
+.tomh .tc{display:grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--s2);color:var(--tx);font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.tomh .tch{display:grid;color:var(--mu);transform:rotate(-90deg);transition:transform .3s var(--ease-out)}
+.tomh .tch svg{width:16px;height:16px}
+.tomh.open .tch{transform:rotate(90deg)}
+.tomh.anim .tch{animation:tchO .3s var(--ease-out) both}
+@keyframes tchO{from{transform:rotate(-90deg)}}
+.swipe.tom>.habit{padding:12px 16px}
+.swipe.tom .dot{width:30px;height:30px;background:rgba(16,217,91,.1)}
+.swipe.tom .txt{color:var(--mu)}
+.swipe.tin{animation:tin .38s var(--ease-out) both}
+@keyframes tin{from{opacity:0;transform:translateY(-10px) scale(.98)}}
 .undo-w{position:fixed;left:0;right:0;bottom:0;padding:0 12px calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:40}
 .undo{pointer-events:auto;display:flex;align-items:center;gap:14px;background:rgba(40,40,46,.72);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%);color:var(--tx);border-radius:999px;padding:8px 8px 8px 18px;font-weight:800;font-size:15px;max-width:496px;width:100%;justify-content:space-between;animation:up .2s ease-out}
 .undo button{background:var(--tx);color:var(--bg);border-radius:999px;padding:10px 16px;font-weight:800;font-size:14px}
@@ -793,6 +829,12 @@ button.wbig{padding:2px 8px;margin-left:-8px;border-radius:14px;transition:backg
 .edgecard .pctfloor::after{content:'';position:absolute;left:10%;right:10%;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(16,217,91,0),#5BFF9A 30%,#C9FFDA 50%,#5BFF9A 70%,rgba(16,217,91,0));box-shadow:0 -4px 12px -1px rgba(16,217,91,.6)}
 .edgecard.pcting .pct svg{position:relative;z-index:1}
 .edgecard.pctmode .ewrap{display:none}
+/* Dagens edge och Att göra är en grupp: ringen har ingen ruta och sitter tätt ovanför listan */
+.card.edgecard.glow.nobox:not(.pctmode){padding-bottom:4px}
+/* Ingen ruta och inget ljus runt ringen: varken kantljus eller ljuspuls */
+.edgecard.nobox::after,.edgecard.nobox::before{display:none!important}
+.edgecard.nobox{box-shadow:none!important;overflow:visible}
+.edgecard.nobox+.today-h{margin-top:-6px}
 .edgecard.nobox,html.sq .edgecard.nobox{background:transparent!important;background-image:none!important;clip-path:none!important;-webkit-clip-path:none!important}
 .edgecard .rrow{cursor:default;user-select:none;-webkit-user-select:none}
 .edgecard.held .pct::before,.edgecard.held .pct::after{display:none!important}
@@ -1442,7 +1484,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const KEY='lifedesigner:v1';
 let S=null, ui={range:'30',tab:0,cost:'priv',chart:'edge',tl:{},anim:'',canim:'',page:2,pday:'t',phv:'w',pwk:0,pmo:0,prr:'30',openEx:{}}, storageOK=false, undoT=null, lastDel=null, noClick=0;
 function fresh(){const t=today();return{start:t,north:'Jag lever på mitt företag.',target:addDays(t,365),goal:3,doneLog:{},fixed:[],bizFixed:[],invoices:[],days:{},salary:null,revenue:{},refl:{},salarySnooze:null}}
-const MAIN_KEYS=['start','startV','north','target','goal','doneLog','fixed','bizFixed','invoices','salary','salaryHist','revenue','refl','salarySnooze','rem','archive','logs','gsolved','gsteps','bestStreak','lastExport','doneAt','stairSeen','goals','pctDay','poffDay'];
+const MAIN_KEYS=['start','startV','north','target','goal','doneLog','fixed','bizFixed','invoices','salary','salaryHist','revenue','refl','salarySnooze','rem','archive','logs','gsolved','gsteps','bestStreak','lastExport','doneAt','stairSeen','goals','pctDay','poffDay','tom','tomPre'];
 let mainRef=null,daysCol=null,loaded=false,lastMain='',lastDay={},saveT=null,saving=Promise.resolve();
 const clone=o=>JSON.parse(JSON.stringify(o));
 function mainData(){const o={};MAIN_KEYS.forEach(k=>{if(S[k]!==undefined)o[k]=S[k]});return clone(o)}
@@ -1578,20 +1620,20 @@ function render(){
 
   ${journeyCard()}${edgeCard()}
 
-  <div class="today-h">
-    <div><div class="h2">Att göra</div><div class="mu" style="font-size:14px;font-weight:600;margin-top:2px"><span data-roll="cnt" data-v="${cnt}">${cnt}</span> av ${S.goal} klara idag</div>
-      <div class="dots" style="margin-top:8px">${Array.from({length:S.goal},(_,i)=>`<i class="${i<cnt?'on':''}${ui.popDot&&i===cnt-1?' pop':''}" style="background:var(--green)"></i>`).join('')}</div></div>
-    <div class="hbtn" id="remh"><button class="rbtn" data-act="addrem" aria-label="Ny påminnelse">${ico('plus')}</button><button class="rbtn" data-act="editrem" aria-label="Redigera påminnelser">${DOTS}</button></div>
+  <div class="today-h tc3">
+    <span></span>
+    <div class="tth"><div class="h2"><span class="tti">${ico('list',22)}</span>Att göra</div><div class="tts"><span class="tq${cnt>=S.goal?' on':''}">${cnt>=S.goal?ico('check',14):''}<span data-roll="cnt" data-v="${cnt}">${cnt}</span>&nbsp;av ${S.goal} Ärenden</span><i>·</i><span class="tq${answered(t)?' on':''}">${answered(t)?`${ico('check',14)}Frågor`:'Frågor kvar'}</span></div></div>
+    <div id="remh"><button class="rbtn" data-act="addrem" aria-label="Ny påminnelse">${ico('plus')}</button></div>
   </div>`;
 
   const RC='#10D95B';
   const order=[...S.rem.filter(x=>!S.doneLog[x.id]),...S.rem.filter(x=>S.doneLog[x.id])];
-  if(!order.length)h+=`<div class="card mu" style="font-weight:600">Inga påminnelser. Tryck på + för att lägga till.</div>`;
+  if(!order.length)h+=`<div class="card mu" style="font-weight:600;text-align:center">Inga påminnelser. Tryck på + för att lägga till.</div>`;
   order.forEach(x=>{
     const d=!!S.doneLog[x.id];
     const over=x.due&&x.due<t, dueTxt=x.due?(over?'Förfallen ':'Senast ')+dlabel(x.due):'';
     h+=`<div class="swipe${(ui.fresh||[]).includes(x.id)?' rise':''}${ui.arriving===x.id?' arriving':''}" data-id="${x.id}"><button class="del" data-act="delrem" tabindex="-1"><span class="dt">Ta bort</span></button><button class="habit ${d?'done':''}${d&&ui.justDone===x.id?' justdone':''}" data-act="rem" data-id="${x.id}" aria-pressed="${d}" style="${d?'background:var(--green)':''}">
-      <span class="dot" style="background:${d?'var(--bg)':RC+'33'};color:${d?'var(--green)':RC}">${CHECK}</span>
+      <span class="dot" style="background:${d?'var(--bg)':RC+'2E'};color:${d?'var(--green)':RC}">${CHECK}</span>
       <span class="mid"><span class="txt" style="display:block;font-size:17px">${esc(x.t)}</span>
       ${dueTxt?`<span class="due" style="background:${over?'var(--red)':'var(--s2)'};color:${over?'var(--bg)':'var(--tx)'}">${dueTxt}</span>`:''}</span>
     </button></div>`;
@@ -1599,6 +1641,11 @@ function render(){
 
   const doneN=S.rem.filter(x=>S.doneLog[x.id]).length;
   if(doneN)h+=`<button class="clearbtn" data-act="cleardone"><span class="cbi">${CHECK}</span><span>Rensa ${doneN} ${doneN===1?'klar':'klara'}</span></button>`;
+  {const tom=S.tom||[],tn=tom.length,op=!!(ui.tomOpen&&tn),an=ui.tomAnim&&op;
+    h+=`<div class="tomh${op?' open':''}${an?' anim':''}"><button class="tomt" data-act="tomtog" aria-expanded="${op}"><span class="tmi">${ico('moon',19)}</span><span>Imorgon</span></button><button class="tomp" data-act="addtom" aria-label="Lägg till imorgon">${ico('plus',16)}</button>${tn?`<button class="tomt tomn" data-act="tomtog" aria-label="${op?'Fäll ihop':'Visa'} imorgon"><span class="tc">${tn}</span><i class="tch">${CHEV}</i></button>`:''}</div>`;
+    if(op)tom.forEach((x,i)=>{const fr=(ui.fresh||[]).includes(x.id);
+      h+=`<div class="swipe tom${an?' tin':fr?' rise':''}" data-id="${x.id}"${an?` style="animation-delay:${40+i*45}ms"`:''}><button class="del" data-act="deltom" tabindex="-1"><span class="dt">Ta bort</span></button><button class="habit" data-act="tomedit" data-id="${x.id}"><span class="dot"></span><span class="mid"><span class="txt" style="display:block;font-size:17px">${esc(x.t)}</span></span></button></div>`});
+    ui.tomAnim=false}
   h+=`
   ${costCard()}
 `;
@@ -1628,7 +1675,7 @@ const months=()=>{const out=[];let m=S.start.slice(0,7);const end=today().slice(
 const totalRev=()=>months().reduce((s,m)=>s+revOf(m),0);
 const salOf=m=>{const hs=S.salaryHist||{};const k=Object.keys(hs).filter(x=>x<=m).sort().pop();return k?hs[k]:(S.salary?S.salary.amount:0)};
 const krK=n=>n>=1000?dec(n/1000,n>=100000||n%1000===0?0:1)+'k':String(Math.round(n));
-const ICP={plus:'<path d="M12 5v14M5 12h14"/>',check:'<path d="M5 12.5l4.2 4.2L19 7"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+const ICP={list:'<rect x="5" y="4" width="14" height="17" rx="3"/><path d="M9 4.5V3.5h6v1"/><path d="M8.5 10l1.3 1.3L12 9M14 10.5h2M8.5 15.5l1.3 1.3L12 14.5M14 16h2"/>',moon:'<path d="M19.5 14.6A7.6 7.6 0 0 1 9.4 4.5a7.6 7.6 0 1 0 10.1 10.1z"/>',plus:'<path d="M12 5v14M5 12h14"/>',check:'<path d="M5 12.5l4.2 4.2L19 7"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
   pencil:'<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',top:'<path d="M5 4.5h14"/><path d="M12 20V9"/><path d="M7 13.5l5-5 5 5"/>',
   cal:'<rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8.5 3.5v4M15.5 3.5v4M4 10.5h16"/>',
   folder:'<path d="M3.5 7.6a2 2 0 0 1 2-2h3.8l2.1 2.2h7.1a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',
@@ -1661,6 +1708,10 @@ function openQ(k){
   const t0=today();k=typeof k==='string'?k:t0;
   {const ex=document.getElementById('qo');if(ex){if(qs&&qs.t===k)return;ex.remove()}}
   const t=k,d=day(t);d.a=d.a||{top3:['','',''],why:'',disc:'',self:''};
+  /* Det man lade till igår kväll står redan ifyllt bland dagens tre */
+  if(S.tomPre&&S.tomPre.d===t&&t===t0){const top=d.a.top3;let j=0;
+    S.tomPre.t.forEach(s=>{if(top.some(v=>v&&v.trim().toLowerCase()===s.trim().toLowerCase()))return;while(j<3&&top[j]&&top[j].trim())j++;if(j<3)top[j++]=s});
+    S.tomPre=null;save()}
   qs={step:0,t,past:t<t0};
   const o=document.createElement('div');o.className='qo inhero';o.id='qo';const dt=parseKey(t);
   o.innerHTML=`<div class="qbg"></div><div class="qbox" role="dialog" aria-modal="true" aria-label="Dagens frågor">
@@ -1718,7 +1769,7 @@ function finishQ(){
   const add=d.a.top3.map(s=>s.trim()).filter(Boolean).map(s=>{const old=S.rem.find(r=>!S.doneLog[r.id]&&r.t.trim().toLowerCase()===s.toLowerCase());return old||{id:newId(),t:s,day:t}});
   S.rem=[...add,...S.rem.filter(r=>!add.includes(r))];save();
   const o=document.getElementById('qo');
-  const done=()=>{if(o)o.remove();document.body.style.overflow='';render();pulse('#edgecard');qReceipt();sparks(document.querySelector('.rcpt'),['#10D95B','#5BE38A','#FFD04D']);afterQ()};
+  const done=()=>{if(o)o.remove();document.body.style.overflow='';render();qReceipt();sparks(document.querySelector('.rcpt'),['#10D95B','#5BE38A','#FFD04D']);afterQ()};
   if(!o||RM()){done();return}
   const box=o.querySelector('.qbox');
   [...box.children].forEach(c=>c.animate([{opacity:1},{opacity:0,transform:'scale(.94)',filter:'blur(6px)'}],{duration:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}));
@@ -1765,29 +1816,77 @@ function countUps(root){
   });
 }
 function flyBubble(fr,id,text){
-  const R=Math.random,size=Math.round(46+R()*34),s2=size/2;
+  /* Bubblans diameter är radens höjd, så den bara behöver växa på bredden när den glider in */
+  const R=Math.random,tgs=document.querySelector(`.swipe[data-id="${id}"]`),th=tgs?tgs.offsetHeight:62,size=Math.max(40,th),s2=size/2;
   const cx0=fr.left+fr.width/2,cy0=fr.top+fr.height/2;
   const b=document.createElement('div');b.className='bubble';
-  Object.assign(b.style,{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',background:'#1F1F23'});
-  b.innerHTML=`<span class="bt">${esc(text)}</span><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#1F1F23" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  Object.assign(b.style,{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',background:'#1B1B21'});
+  b.innerHTML=`<span class="bt" style="left:68px">${esc(text)}</span><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="#1F1F23" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   document.body.appendChild(b);
   const reveal=()=>{b.remove();const t2=document.querySelector(`.swipe[data-id="${id}"]`);if(t2){t2.classList.add('arrived');t2.classList.remove('arriving');setTimeout(()=>t2.classList.remove('arrived'),340)}};
   if(!b.animate){reveal();return}
   const M=240,E='cubic-bezier(.23,1,.32,1)';
-  b.animate([{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',backgroundColor:'#1F1F23'},
+  b.animate([{left:fr.left+'px',top:fr.top+'px',width:fr.width+'px',height:fr.height+'px',borderRadius:'24px',backgroundColor:'#1B1B21'},
     {left:(cx0-s2)+'px',top:(cy0-s2)+'px',width:size+'px',height:size+'px',borderRadius:s2+'px',backgroundColor:'#10D95B'}],{duration:M,easing:E,fill:'forwards'});
   b.querySelector('.bt').animate([{opacity:1},{opacity:0}],{duration:M*.45,easing:E,fill:'forwards'});
   b.querySelector('svg').animate([{opacity:0,transform:'scale(.5)'},{opacity:1,transform:'scale(1)'}],{duration:M*.8,delay:M*.35,easing:E,fill:'forwards'});
   setTimeout(()=>{
     const tg=document.querySelector(`.swipe[data-id="${id}"]`);const tr=tg?tg.getBoundingClientRect():{left:cx0-s2,top:innerHeight,width:size,height:size};
-    const x1=tr.left+tr.width/2-cx0,y1=Math.min(tr.top+tr.height/2,innerHeight-s2-24)-cy0;
+    const ty=tr.top+tr.height/2,cl=ty>innerHeight-s2-24||ty<s2,x1=tr.left+tr.width/2-cx0,y1=Math.min(ty,innerHeight-s2-24)-cy0;
     const dir=R()<.5?-1:1,cx=x1/2+dir*(50+R()*110),cy=y1*(.25+R()*.3)-(10+R()*50);
-    const peak=1.05+R()*.4,rot=dir*(10+R()*28),dur=620+R()*300,N=10,kf=[];
-    for(let i=0;i<=N;i++){const t=i/N,u=1-t,x=2*u*t*cx+t*t*x1,y=2*u*t*cy+t*t*y1;
-      kf.push({transform:`translate(${x}px,${y}px) scale(${1+(peak-1)*Math.sin(Math.PI*t)}) rotate(${rot*Math.sin(Math.PI*t)}deg)`,opacity:1,offset:t*.9})}
-    kf.push({transform:`translate(${x1}px,${y1}px) scale(1.25)`,opacity:0,offset:1});
-    const an=b.animate(kf,{duration:dur,easing:'cubic-bezier(.45,0,.3,1)',fill:'forwards'});an.onfinish=reveal;
+    const peak=1.05+R()*.4,rot=dir*(10+R()*28),dur=620+R()*300;
+    /* Raden syns inte: bubblan flyger iväg och tonar bort som förut */
+    if(cl||!tg){const N=10,kf=[];
+      for(let i=0;i<=N;i++){const t=i/N,u=1-t,x=2*u*t*cx+t*t*x1,y=2*u*t*cy+t*t*y1;
+        kf.push({transform:`translate(${x}px,${y}px) scale(${1+(peak-1)*Math.sin(Math.PI*t)}) rotate(${rot*Math.sin(Math.PI*t)}deg)`,opacity:1,offset:t*.9})}
+      kf.push({transform:`translate(${x1}px,${y1}px) scale(1.25)`,opacity:0,offset:1});
+      b.animate(kf,{duration:dur,easing:'cubic-bezier(.45,0,.3,1)',fill:'forwards'}).onfinish=reveal;return}
+    flyLand(tg,dur,cx,cy,x1,y1,peak,rot);
   },M);
+  /* Flygtur + landning i en enda rörelse, styrd bildruta för bildruta.
+     Ett lager lika stort som den färdiga raden ligger på radens plats; formen ritas med clip-path (ingen layout per bildruta).
+     Utbredningen startar medan bubblan fortfarande är på väg in och fjädrar ut från mitten med en liten överstuds. */
+  function flyLand(tg,dur,qx,qy,x1,y1,peak,rot){
+    /* Raden står förminskad (scale .96) medan den väntar, så storleken tas från offsetWidth/-Height och läget från mitten */
+    const box=el=>{const q=el.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;return{left:q.left+q.width/2-w/2,top:q.top+q.height/2-h/2,width:w,height:h}};
+    const hb=tg.querySelector('.habit');let r=box(tg);const W=r.width,H=r.height,RAD=H/2;
+    const L=document.createElement('div');L.className='bubland';
+    const PAD=24;/* lite luft runt raden för formen */
+    Object.assign(L.style,{left:(r.left-PAD)+'px',top:r.top+'px',width:(W+2*PAD)+'px',height:H+'px'});
+    const sw2=Math.round(size*.52),dotX=35-W/2;
+    L.innerHTML=`<svg viewBox="0 0 24 24" fill="none" style="width:${sw2}px;height:${sw2}px;margin:${-sw2/2}px 0 0 ${-sw2/2}px"><path d="M5 12.5l4.2 4.2L19 7" stroke="#1F1F23" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const cln=hb.cloneNode(true);cln.removeAttribute('data-act');cln.className+=' blc';Object.assign(cln.style,{left:PAD+'px',width:W+'px',height:H+'px',clipPath:'none'});L.prepend(cln);
+    document.body.appendChild(L);b.remove();
+    const sv=L.querySelector(':scope>svg');
+    /* Startpunkten är där den gamla bubblan var, mätt från radens mitt */
+    const ox=cx0-(r.left+W/2),oy=cy0-(r.top+H/2);
+    /* Först flyger bubblan ner till radens höjd, sedan vecklas den ut åt sidorna.
+       Flygningen bromsar inte ända till stopp (in-ut-kurvan kapas vid 82 %), och utbredningen startar snabbt,
+       så att farten går över från glidningen till utbredningen utan paus. */
+    const f=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,CUT=.82,ease=t=>f(t*CUT)/f(CUT);
+    /* Samma totala tid som förut: flygning + utbredning ryms i den ursprungliga flygtiden */
+    const SP=Math.round(Math.min(340,dur*.4)),FD=dur-SP,es=x=>1-Math.pow(1-x,3);let t0=null,buzz=false;
+    const step=now=>{
+      if(!L.isConnected)return;
+      if(t0===null)t0=now;
+      const el=now-t0,t=Math.min(1,el/FD),e=ease(t),u=1-e,p=es(Math.max(0,Math.min(1,(el-FD)/SP)));
+      if(p>0&&!buzz){buzz=true;if(navigator.vibrate)navigator.vibrate(6)}
+      /* Ritas sidan om under tiden byts raden ut – följ den nya och håll den dold tills bubblan är klar */
+      if(!tg.isConnected){const n=document.querySelector(`.swipe[data-id="${id}"]`);if(n){tg=n;tg.classList.add('arriving')}}
+      const rr=tg.isConnected?box(tg):r;if(rr.left!==r.left||rr.top!==r.top){r=rr;L.style.left=(r.left-PAD)+'px';L.style.top=r.top+'px'}
+      const bx=ox+2*u*e*qx+e*e*x1,by=oy+2*u*e*qy+e*e*y1;
+      const ang=rot*Math.sin(Math.PI*t),sc=1+(peak-1)*Math.sin(Math.PI*t);
+      const q=p,w=size+(W-size)*q,h=size+(H-size)*q;
+      const ix=(W+2*PAD-w)/2,iy=(H-h)/2,rd=Math.min(h/2,RAD);
+      L.style.clipPath=`inset(${iy.toFixed(2)}px ${ix.toFixed(2)}px round ${rd.toFixed(2)}px)`;
+      L.style.transform=`translate(${bx.toFixed(2)}px,${by.toFixed(2)}px) rotate(${ang.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+      const k=Math.min(1,q);
+      sv.style.transform=`translateX(${(dotX*k).toFixed(2)}px) scale(${(1-.25*k).toFixed(3)})`;sv.style.opacity=String(Math.max(0,1-Math.max(0,k-.35)/.3));
+      cln.style.opacity=String(Math.min(1,Math.max(0,(k-.3)/.35)));
+      if(el>=dur){tg.classList.remove('arriving');tg.classList.add('landed');requestAnimationFrame(()=>{L.remove();setTimeout(()=>tg.classList.remove('landed'),50)});return}
+      requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  }
 }
 function flipRender(){
   const first={};document.querySelectorAll('.swipe[data-id]').forEach(el=>first[el.dataset.id]=el.getBoundingClientRect().top);
@@ -1930,6 +2029,40 @@ function addRemSheet(){
     o.querySelector('#nr').focus();
   });
 }
+/* ---- Imorgon: saker man lägger till i förväg. Flyttas in i Att göra vid 04:00 ---- */
+function addTomSheet(){
+  anchorEl=document.querySelector('.tomh');
+  sheet(`<h3>Imorgon</h3>
+    <div class="fld"><input id="nt" placeholder="Vad ska göras imorgon?" autocomplete="off" enterkeyhint="done"></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--green)">Lägg till</button></div>`,
+  o=>{const inp=o.querySelector('#nt');
+    const ok=()=>{const v=inp.value.trim();if(!v)return;const nid=newId(),was=!!(ui.tomOpen&&(S.tom||[]).length);
+      S.tom=[...(S.tom||[]),{id:nid,t:v,d:addDays(today(),1)}];ui.tomOpen=true;if(was)ui.fresh=[nid];else ui.tomAnim=true;save();o.remove();flipRender()};
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();o.querySelector('[data-x=ok]').onclick=ok;
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok()});inp.focus();
+  });
+}
+function tomEditSheet(id){const x=(S.tom||[]).find(r=>r.id===id);if(!x)return;anchorEl=document.querySelector(`.swipe[data-id="${id}"]`);
+  sheet(`<h3>Imorgon</h3><div class="fld"><input id="et" value="${esc(x.t)}" autocomplete="off" enterkeyhint="done"></div>
+    <div class="acts"><button class="btn" data-x="no">Avbryt</button><button class="btn fill" data-x="ok" style="background:var(--green)">Spara</button></div>`,
+  o=>{const inp=o.querySelector('#et');const ok=()=>{const v=inp.value.trim();if(!v)return;x.t=v;save();o.remove();render()};
+    o.querySelector('[data-x=no]').onclick=()=>o.remove();o.querySelector('[data-x=ok]').onclick=ok;
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok()});inp.focus()});
+}
+function deleteTom(id){const a=S.tom||[],i=a.findIndex(x=>x.id===id);if(i<0)return;const it=a.splice(i,1)[0];save();flipRender();
+  showUndo('Borttagen från imorgon',()=>{S.tom=S.tom||[];S.tom.splice(Math.min(i,S.tom.length),0,it);ui.tomOpen=true;ui.fresh=[it.id];save();flipRender()})}
+/* Fäll ihop: raderna tonar uppåt, pilen vänder, sedan ritas sidan om */
+function tomToggle(){const n=(S.tom||[]).length;if(!n){addTomSheet();return}
+  if(!ui.tomOpen){ui.tomOpen=true;ui.tomAnim=true;render();return}
+  const rows=[...document.querySelectorAll('.swipe.tom')],hd=document.querySelector('.tomh');
+  if(RM()||!rows.length){ui.tomOpen=false;render();return}
+  if(hd)hd.classList.remove('open','anim');
+  rows.reverse().forEach((el,i)=>el.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-8px) scale(.98)'}],{duration:180,delay:i*25,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}));
+  setTimeout(()=>{ui.tomOpen=false;const sy=scrollY;render();if(scrollY!==sy)scrollTo(0,sy)},180+rows.length*25)}
+/* Vid ny dag: morgondagens saker hamnar överst i Att göra och fyller i dagens tre när frågorna öppnas */
+function promoteTom(){const t=today(),a=S.tom||[],due=a.filter(x=>x.d<=t);if(!due.length)return false;
+  S.tom=a.filter(x=>x.d>t);S.rem=[...due.map(x=>({id:x.id,t:x.t,day:t})),...S.rem];
+  if(!answered(t))S.tomPre={d:t,t:due.map(x=>x.t)};return true}
 function editRemSheet(){
   anchorEl=document.getElementById('remh').closest('.today-h');
   let rows=S.rem.map(x=>({...x}));
@@ -1964,7 +2097,6 @@ function clearDone(){
     S.archive=[...S.rem.filter(x=>ids.includes(x.id)).map(x=>({id:x.id,t:x.t,done:S.doneLog[x.id],at:(S.doneAt||{})[x.id]})),...(S.archive||[])];
     S.rem=S.rem.filter(x=>!ids.includes(x.id));clearing=false;save();flipRender();
     sparks(document.querySelector('.today-h'),['#10D95B','#10D95B','#FFD04D'],Math.min(30,10+ids.length*6));
-    pulse('#edgecard');
     if(ids.length>=3)receipt(`${ids.length} avklarade`,'Serie avslutad. Listan är ren.');
     showUndo(ids.length===1?'1 påminnelse rensad':ids.length+' påminnelser rensade',()=>{ui.fresh=ids;S.rem=before;S.archive=archBefore;save();flipRender()});
   };
@@ -2113,8 +2245,7 @@ function costCard(){
   const biz=ui.cost==='biz',c=biz?'var(--biz)':'var(--priv)',hex=biz?'#1A8FE3':'#10D95B';
   const r=cfRange('m',0),ev=cfEvents(ui.cost,r.from,r.to),v=cfSeries(ev,r.from,r.to),net=v[v.length-1],t=today(),nx=ev.find(e=>e.d>=t);
   const full=`<div class="full ${ui.anim||''}" data-act="cfopen" role="button" tabindex="0" aria-label="Öppna cashflow ${biz?'företaget':'privat'}">
-    <div class="top"><div><div class="ttl" style="color:${c}">${biz?'Företaget':'Privat'}</div><div class="st">Netto ${MON[+t.slice(5,7)-1]}</div></div>
-    <button class="more" data-act="editcost" aria-label="Redigera fasta kostnader">${DOTS}</button></div>
+    <div class="top"><div><div class="ttl" style="color:${c}">${biz?'Företaget':'Privat'}</div><div class="st">Netto ${MON[+t.slice(5,7)-1]}</div></div></div>
     <div class="sum" data-roll="cf${ui.cost}" data-v="${sgn(net)}" style="color:${net<0?'var(--red)':'var(--tx)'}">${sgn(net)}</div>
     <div class="cfnx">${nx?`${nx.d===t?'Idag':dlabel(nx.d)}: <b>${esc(nx.n)} ${nx.a>0?'+':''}${kr(nx.a)}</b>`:'Inget mer den här månaden'}</div>
     <div class="cfspark">${cfChart(v,r.from,{spark:true,col:hex,stairs:biz?t.slice(0,7):null})}</div>
@@ -2546,7 +2677,7 @@ function edgeCard(){
   const R=46,C=60;
   const wasFull=!ui.rShown||(ui.rShown.q>=1&&ui.rShown.r>=1);
   const pctOn=f>1.009&&S.pctDay===t&&!ui.showRing&&!ui.pctForce&&wasFull;
-  return `<section class="card edgecard glow ${f>1.009?'lit nobox':''}${pctOn?' pctmode':''}" id="edgecard" style="${gc}">
+  return `<section class="card edgecard glow nobox ${f>1.009?'lit':''}${pctOn?' pctmode':''}" id="edgecard" style="${gc}">
     <div class="ewrap"><div class="ring${full?' full':''}" id="ring">
       <svg viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="${C}" cy="${C}" r="${R}" class="rt"/>
@@ -2557,13 +2688,7 @@ function edgeCard(){
       <div class="rmid"><b class="eff" style="color:${col}${f>1&&f<=1.009?';font-size:21px':''}" data-roll="eff" data-v="${effTxt(f)}">${effTxt(f)}</b><small>idag</small></div>
       ${f>1.009?`<div class="rback" role="button" tabindex="0" data-act="showpct" aria-label="Visa 1 %"></div>`:''}
     </div>
-    <div class="rside">
-      <div class="lbl2">Dagens edge</div>
-      <div class="rrow"><i class="${q?'on':''}"></i><span>${q?'Frågor klara':'Frågorna ej besvarade'}</span></div>
-      <div class="rrow"><i class="${rf>=1?'on':rf>0?'half':''}"></i><span>${Math.min(c,S.goal)} av ${S.goal} påminnelser</span></div>
-      ${streakDays()>=2?`<div class="streaktxt">${streakDays()} dagar i rad</div>`:''}
-      ${(()=>{const y=addDays(t,-1);return y>=S.start&&dayFactor(y)===1&&f<=1?'<div class="rnudge">Igår blev det 0 %</div>':''})()}
-    </div></div>${f>1.009?pctSVG():''}</section>`;
+</div>${f>1.009?pctSVG():''}</section>`;
 }
 /* Kör ringens fyllnad efter render och lyft på resan när ringen sluts */
 function ringSync(){
@@ -2798,14 +2923,14 @@ document.addEventListener('click',e=>{
   if(openSw&&!e.target.closest('[data-act]')){closeSw(openSw);return}
   const b=e.target.closest('[data-act]');if(!b)return;
   anchorEl=b;const a=b.dataset.act,t=today();
-  if(a==='delrem'){const sw=b.closest('.swipe'),card=sw.querySelector('.habit'),id=sw.dataset.id;openSw=null;if(navigator.vibrate)navigator.vibrate(8);
-    if(RM()){deleteRem(id);return}
+  if(a==='delrem'||a==='deltom'){const sw=b.closest('.swipe'),card=sw.querySelector('.habit'),id=sw.dataset.id,delF=a==='deltom'?deleteTom:deleteRem;openSw=null;if(navigator.vibrate)navigator.vibrate(8);
+    if(RM()){delF(id);return}
     b.classList.add('full');card.style.transition='opacity .18s var(--ease-out)';card.style.opacity='0';
     const ck=document.createElement('span');ck.className='ck';
     ck.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#FFE1DC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16" pathLength="1"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" pathLength="1"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" pathLength="1"/><path d="M10 11v6M14 11v6" pathLength="1"/></svg>';
     b.appendChild(ck);
     setTimeout(()=>{sw.classList.add('gone','gone-l')},620);
-    setTimeout(()=>deleteRem(id),620+450);return}
+    setTimeout(()=>delF(id),620+450);return}
   if(a==='cleardone'){clearDone();return}
   else if(a==='addlog'){const i=document.getElementById('logi');if(!i.value.trim())return;addLog(i.value);save();render();return}
   else if(a==='logall'){ui.logAll=!ui.logAll;render();return}
@@ -2820,13 +2945,16 @@ document.addEventListener('click',e=>{
   if(openSw){closeSw(openSw);return}
   if(a==='rem'&&Date.now()-noClick<450)return;
   if(a==='addrem'){addRemSheet();return}
+  if(a==='addtom'){addTomSheet();return}
+  if(a==='tomtog'){tomToggle();return}
+  if(a==='tomedit'){if(Date.now()-noClick<450)return;tomEditSheet(b.dataset.id);return}
   if(a==='editrem'){editRemSheet();return}
   if(a==='rem'){const id=b.dataset.id;
     if(S.doneLog[id]){delete S.doneLog[id];if(S.doneAt)delete S.doneAt[id];save();flipRender();return}
     S.doneLog[id]=t;S.doneAt=S.doneAt||{};S.doneAt[id]=new Date().toISOString();{const k=S.rem.findIndex(x=>x.id===id);if(k>-1)S.rem.push(...S.rem.splice(k,1))}save();if(navigator.vibrate)navigator.vibrate(10);
     if(RM()){ui.popDot=true;render();return}
     const sw=b.closest('.swipe'),from=sw.getBoundingClientRect(),txt=(S.rem.find(x=>x.id===id)||{}).t||'';
-    b.blur();ui.popDot=true;ui.arriving=id;ringFly(from);flipRender();flyBubble(from,id,txt);setTimeout(()=>pulse('#edgecard'),260);
+    b.blur();ui.popDot=true;ui.arriving=id;flipRender();flyBubble(from,id,txt);
   }
   else if(a==='editcost'){anchorEl=document.getElementById('cost');costSheet()}
   else if(a==='cfopen'){cfOpen()}
@@ -5019,8 +5147,8 @@ document.addEventListener('touchmove',e=>{if(cmPress&&cmPress.lifted){e.preventD
 function cmEnd(e){if(!cmPress)return;if(e&&e.type==='pointercancel'&&cmPress.lifted)return;clearTimeout(cmPress.t);const p=cmPress;cmPress=null;if(!p.lifted)p.ring.cancel();
   if(!p.lifted)return;noClick=Date.now();if(rd)dragEnd();else{p.h.parentNode.classList.remove('lift');openCM(p.h)}}
 document.addEventListener('pointerup',cmEnd);document.addEventListener('pointercancel',cmEnd);document.addEventListener('touchend',cmEnd);document.addEventListener('touchcancel',()=>{if(cmPress&&!cmPress.lifted){cmPress.ring.cancel()}if(cmPress&&cmPress.lifted&&!rd){cmPress.h.parentNode.classList.remove('lift');clearTimeout(cmPress.t);cmPress=null}});
-function dragStart(h,y){const sw=h.parentNode,list=[...document.querySelectorAll('#app .swipe[data-id]')].filter(el=>!S.doneLog[el.dataset.id]),from=list.indexOf(sw);if(from<0)return null;
-  const r={sw,list,from,to:from,tops:list.map(el=>el.getBoundingClientRect().top+scrollY),hs:list.map(el=>el.offsetHeight),y0:y+scrollY,cy:y,gap:12,raf:0};
+function dragStart(h,y){const sw=h.parentNode,list=[...document.querySelectorAll('#app .swipe[data-id]:not(.tom)')].filter(el=>!S.doneLog[el.dataset.id]),from=list.indexOf(sw);if(from<0)return null;
+  const r={sw,list,from,to:from,tops:list.map(el=>el.getBoundingClientRect().top+scrollY),hs:list.map(el=>el.offsetHeight),y0:y+scrollY,cy:y,gap:12,raf:0};if(list.length>1){const a=list[0].getBoundingClientRect(),b2=list[1].getBoundingClientRect();r.gap=Math.max(0,b2.top-a.bottom)}
   list.forEach(el=>{if(el!==sw)el.style.transition='transform .26s cubic-bezier(.23,1,.32,1)'});sw.classList.add('dragging');
   const loop=()=>{if(rd!==r)return;const E=90;let d=0;if(r.cy<E)d=-Math.ceil((E-r.cy)/9);else if(r.cy>innerHeight-E)d=Math.ceil((r.cy-innerHeight+E)/9);if(d){scrollBy(0,d);dragMove()}r.raf=requestAnimationFrame(loop)};
   r.raf=requestAnimationFrame(loop);return r}
@@ -5114,14 +5242,14 @@ function preEnd(){const el=document.getElementById('pl');if(!el)return;wake();
   await Promise.race([Promise.all([st,heroReady]),sleep(T_END+600)]);
   await sleep(T_END);
   const early=done;
-  const boot=()=>{day(today());autoClear();ui.boot=true;ui.draw=true;render();renderGym();renderPr();renderPb();setTrack(-2*pagesW());ui.boot=false};
+  const boot=()=>{day(today());autoClear();promoteTom();ui.boot=true;ui.draw=true;render();renderGym();renderPr();renderPb();setTrack(-2*pagesW());ui.boot=false};
   if(early){await new Promise(r=>setTimeout(r,Math.max(0,T_END-performance.now())));boot();requestAnimationFrame(preEnd)}
   else{document.getElementById('app').innerHTML=SKEL;setTrack(-2*pagesW());requestAnimationFrame(preEnd);await st;boot()}
   if(!navigator.onLine)netPill('Offline · ändringar sparas när nätet är tillbaka');
   save();gsave();prsave();pbsave();
   if(!answered(today()))setTimeout(openQ,RM()?0:900);else afterQ();
   let last=today();
-  setInterval(()=>{if(today()!==last){last=today();day(last);if(autoClear())save();render();renderPr();updGymHead();if(!answered(last))openQ()}},60000);
+  setInterval(()=>{if(today()!==last){last=today();day(last);{const c=autoClear(),p=promoteTom();if(c||p)save()}render();renderPr();updGymHead();if(!answered(last))openQ()}},60000);
 })();
 </script>
 <script>
